@@ -16,7 +16,7 @@
 <div class="form-row">
     <div class="form-group col-md-6">
         <label for="">Nombre</label>
-        <input wire:model='nombre' type="text" class="form-control" placeholder="Ingresar Nombre">
+        <input wire:model='name' type="text" class="form-control" placeholder="Ingresar Nombre">
     </div>
     <div class="form-group col-md-6">
         <label for="">DNI</label>
@@ -33,12 +33,18 @@
     </div>
     <div class="form-group col-md-6">
         <label for="">Email</label>
-        <input wire:model='email' type="text" class="form-control" placeholder="Ingresar Correo">
+        <input wire:model='email' type="email" class="form-control" placeholder="Ingresar Correo">
     </div>
 </div>
 
   <br>
-  <button wire:click='update' type="submit" class="btn btn-primary">Actualizar</button>
-  <button wire:click='default' type="submit" class="btn btn-secondary">Cancelar</button>
+  
+  <button wire:click="update" wire:loading.attr="disabled" class="btn btn-primary" type="button"> <i
+    class="fas fa-pencil-alt"></i> <i wire:target="update" wire:loading.class="fa fa-spinner fa-spin"
+    aria-hidden="true"></i> Actualizar</button>
+
+<button wire:click="default" wire:loading.attr="disabled" class="btn btn-secondary" type="button"> <i
+    class="fa fa-window-close"></i> <i wire:target="default" wire:loading.class="fa fa-spinner fa-spin"
+    aria-hidden="true"></i> Cancelar</button>
   <br>
   

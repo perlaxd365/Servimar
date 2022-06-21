@@ -27,10 +27,11 @@ class User extends Authenticatable
      */
     protected $fillable = [
         'id_sede',
-        'nombre',
+        'name',
         'dni',
         'email',
         'password',
+        'estado',
     ];
 
     /**
@@ -62,4 +63,10 @@ class User extends Authenticatable
     protected $appends = [
         'profile_photo_url',
     ];
+    public function adminlte_image(){
+        return 'https://images.vexels.com/media/users/3/147101/isolated/lists/b4a49d4b864c74bb73de63f080ad7930-bot-n-de-perfil-de-instagram.png';
+    }
+    public function adminlte_desc(){
+        return 'Usuario de Sistema';
+    }
 }

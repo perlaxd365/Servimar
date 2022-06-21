@@ -2,12 +2,9 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\Sede;
-use App\Models\User;
 use Illuminate\Http\Request;
-use Spatie\Permission\Models\Role;
 
-class UserController extends Controller
+class ClienteController extends Controller
 {
     /**
      * Display a listing of the resource.
@@ -16,6 +13,7 @@ class UserController extends Controller
      */
     public function index()
     {
+        
         return view('admin.users.index');
     }
 
@@ -46,9 +44,9 @@ class UserController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function show(Request $request, User $user)
+    public function show($id)
     {
-        
+        //
     }
 
     /**
@@ -57,11 +55,9 @@ class UserController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function edit(User $user)
+    public function edit($id)
     {
-        $roles = Role::all();
-        $sedes = Sede::all();
-        return view('admin.users.edit', compact('user', 'roles', 'sedes'));
+        //
     }
 
     /**
@@ -71,20 +67,9 @@ class UserController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, User $user)
+    public function update(Request $request, $id)
     {
-        if ($request->roles != null) {
-            //rol
-            $user->roles()->sync($request->roles);
-        } elseif ($request->sede != null) {
-
-            //sede
-            $usuario = User::find($user->id);
-            $usuario->id_sede = $request->sede;
-            $usuario->save();
-        }
-
-        return redirect()->route('admin.users.edit', $user)->with('info', 'Se actualizó  correctamente');
+        //
     }
 
     /**

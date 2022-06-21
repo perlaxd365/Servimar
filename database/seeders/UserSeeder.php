@@ -17,10 +17,11 @@ class UserSeeder extends Seeder
     {
         User::create([
             "id_sede"=>'1',
-            "nombre"=>'Cesar Raul Baca',
+            "name"=>'Cesar Raul Baca',
             "dni"=>'73888312',
             "email"=>'perlaxd365@gmail.com',
-            "password"=>bcrypt('12345678')
+            "password"=>bcrypt('12345678'),
+            "estado"=>'1',
         ])->assignRole('Admin');
         
         User::factory(99)->create();

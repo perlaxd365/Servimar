@@ -4,6 +4,10 @@
 
 @section('content')
     
+    {{
+        
+        'Bienvenido '.auth()->user()->name
+    }}
 
 @endsection
     

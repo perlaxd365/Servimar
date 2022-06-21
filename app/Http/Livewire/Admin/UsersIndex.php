@@ -10,21 +10,33 @@ use Livewire\WithPagination;
 class UsersIndex extends Component
 {
 
-    public $id_user, $nombre, $dni, $email, $pass1, $pass2, $id_sede;
+    public $id_user, $name, $dni, $email, $pass1, $pass2, $id_sede;
     use WithPagination;
     protected $paginationTheme = "bootstrap";
     public $search;
     public $view = "create";
+    public $show;
 
 
+    public function mount()
+    {
+
+        $this->show = 8;
+    }
     public function render()
     {
         $sedes = Sede::all();
-        $users = User::where('nombre', 'LIKE', '%' . $this->search . '%')
-            ->orWhere('dni', 'LIKE', '%' . $this->search . '%')
-            ->orWhere('email', 'LIKE', '%' . $this->search . '%')
+        $users = User::select('*')
             ->join('sedes', 'sedes.id_sede', '=', 'users.id_sede')
-            ->paginate();
+            ->where(function ($query) {
+                return $query
+                    ->orwhere('name', 'LIKE', '%' . $this->search . '%')
+                    ->orWhere('dni', 'LIKE', '%' . $this->search . '%')
+                    ->orWhere('email', 'LIKE', '%' . $this->search . '%');
+            })
+            ->where('users.estado', '=', true)
+            ->orderby('users.id', 'asc')->paginate($this->show);
+
         return view('livewire.admin.users-index', compact('users', 'sedes'));
     }
 
@@ -35,33 +47,51 @@ class UsersIndex extends Component
 
     public function store()
     {
+        $messages = [
+            'name.required' => 'Introduce names y apellidos',
+            'dni.required' => 'Por favor introducir número de DNI',
+            'id_sede.required' => 'Por favor selecciona una sede',
+            'email.required' => 'Por favor introdir email, para inicio de sesión',
+            'pass1.required' => 'Por favor introdir contraseña , para inicio de sesión',
+            'pass2.required' => 'Vuelve a introducir la contraseña',
+            'pass2.same' => 'Las contraseñas deben coincidir',
+            'dni.min' => 'El dni consta de 8 digitos',
+        ];
 
-        $this->validate([
+        $rules = [
+
+
+            'name' => 'required',
+            'dni' => 'required|max:8|min:8|unique:users',
             'id_sede' => 'required',
-            'nombre' => 'required',
-            'dni' => 'required',
-            'email' => 'required',
+            'email' => 'required|email|unique:users',
             'pass1' => 'required',
             "pass2" => "required|same:pass1",
-        ]);
+
+        ];
+        $this->validate($rules, $messages);
 
         User::create([
             'id_sede' => $this->id_sede,
-            'nombre' => $this->nombre,
+            'name' => $this->name,
             'dni'   => $this->dni,
             'email' => $this->email,
-            'password' => bcrypt($this->pass1)
+            'password' => bcrypt($this->pass1),
+            'estado' => true,
 
         ]);
+
+        $this->dispatchBrowserEvent('respuesta', ['res' => 'Agregó a ' . $this->name . ' con éxito.']);
+        $this->default();
     }
 
     public function editar($id)
     {
         $this->view = "editar";
         $user = User::find($id);
-        $this->id_user=$user->id;
+        $this->id_user = $user->id;
         $this->id_sede = $user->id_sede;
-        $this->nombre = $user->nombre;
+        $this->name = $user->name;
         $this->dni = $user->dni;
         $this->email = $user->email;
     }
@@ -70,20 +100,32 @@ class UsersIndex extends Component
     {
         $this->view = "create";
         $this->id_sede = "";
-        $this->nombre = "";
+        $this->name = "";
         $this->dni = "";
         $this->email = "";
         $this->pass1 = "";
         $this->pass2 = "";
     }
-    public function update(){
-        $usuario=User::find($this->id_user);
+    public function update()
+    {
+        $usuario = User::find($this->id_user);
         $usuario->update([
             'id_sede' => $this->id_sede,
-            'nombre' => $this->nombre,
+            'name' => $this->name,
             'dni'   => $this->dni,
             'email' => $this->email
         ]);
-        $this->view="create";
+        $this->dispatchBrowserEvent('respuesta', ['res' => 'Se actualizó a  ' . $this->name . ' con éxito.']);
+        $this->default();
+    }
+    
+    public function delete($id)
+    {
+        $usuario = User::find($id);
+        $usuario->update([
+            'estado' => false
+        ]);
+        $this->dispatchBrowserEvent('respuesta', ['res' => 'Se eliminó a  ' . $usuario->name . ' con éxito.']);
+        $this->default();
     }
 }
