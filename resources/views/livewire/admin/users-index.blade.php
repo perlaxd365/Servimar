@@ -24,7 +24,7 @@
                                     <td>{{ $user->email }}</td>
                                     <td>
                                         <a href="{{ route('admin.users.edit', $user) }}"
-                                            class="btn btn-primary btn-sm">Editar</a>
+                                            class="btn btn-primary btn-sm">Permisos</a>
                                     </td>
                                 </tr>
                             @endforeach

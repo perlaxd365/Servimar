@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Sede;
 use App\Models\User;
 use Illuminate\Http\Request;
 use Spatie\Permission\Models\Role;
@@ -58,7 +59,8 @@ class UserController extends Controller
      */
     public function edit(User $user)
     {   $roles=Role::all();
-        return view('admin.users.edit',compact('user','roles'));
+        $sedes=Sede::all();
+        return view('admin.users.edit',compact('user','roles','sedes'));
     }
 
     /**
@@ -72,6 +74,15 @@ class UserController extends Controller
     {
         $user->roles()->sync($request->roles);
         return redirect()->route('admin.users.edit',$user)->with('info','Se actualizó el rol correctamente');
+    }
+
+    public function updatesede(Request $request,User $user)
+    {
+        $usuario=User::find($user->id);
+        $usuario->id_sede = $request->sedes;
+        $usuario->save();
+
+        return redirect()->route('admin.users.edit',$user)->with('info','Se actualizó la sede correctamente');
     }
 
     /**
