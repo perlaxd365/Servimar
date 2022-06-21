@@ -29,3 +29,4 @@ Route::middleware([
 
 
 Route::resource('users', UserController::class)->names('admin.users');
+

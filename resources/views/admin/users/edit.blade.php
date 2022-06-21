@@ -41,7 +41,7 @@
                         <div>
         
                             <label for="">
-                                {!! Form::checkbox('sedes[]', $sede->id, null, ['class' => 'mr-1']) !!}
+                                {!! Form::radio('sede', $sede->id_sede, $user->id_sede==$sede->id_sede  ? true:false , ['class' => 'mr-1']) !!}
                                 {{ $sede->descripcion }}
                             </label>
                         </div>

@@ -17,7 +17,8 @@ class UserSeeder extends Seeder
     {
         User::create([
             "id_sede"=>'1',
-            "name"=>'Cesar Raul Baca',
+            "nombre"=>'Cesar Raul Baca',
+            "dni"=>'73888312',
             "email"=>'perlaxd365@gmail.com',
             "password"=>bcrypt('12345678')
         ])->assignRole('Admin');

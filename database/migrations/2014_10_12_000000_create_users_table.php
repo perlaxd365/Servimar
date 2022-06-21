@@ -17,7 +17,8 @@ return new class extends Migration
             $table->id();  
             $table->unsignedBigInteger('id_sede')->nullable()->comment('id de sede ');
    
-            $table->string('name');
+            $table->string('nombre');
+            $table->string('dni');
             $table->string('email')->unique();
             $table->timestamp('email_verified_at')->nullable();
             $table->string('password');
@@ -27,7 +28,7 @@ return new class extends Migration
             $table->timestamps();
 
 
-            $table->foreign('id_sede')->references('id')->on('sedes');
+            $table->foreign('id_sede')->references('id_sede')->on('sedes');
 
         });
     }
