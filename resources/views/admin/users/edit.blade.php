@@ -1,6 +1,9 @@
 @extends('layout.app')
 
 @section('title', 'Editar Privilegios')
+@section('subtitulo', 'Usuario:  '.$user->name)
+@section('descripcion', 'En este apartado podras editar los privilegios de cada usuario del sistema')
+@section('color', 'primary')
 
 @section('content')
 

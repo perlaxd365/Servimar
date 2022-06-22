@@ -3,13 +3,23 @@
 @section('title', 'Dashboard')
 
 @section('content_header')
-    <h1>@yield('title')</h1>
+
+    <div class="container">
+        <div class="card text-white bg-@yield('color') mb-12" >
+            <div class="card-header">@yield('title')</div>
+            <div class="card-body">
+                <h5 class="card-title">@yield('subtitulo')</h5>
+                <p class="card-text">@yield('descripcion')</p>
+            </div>
+        </div>
+    </div>
+    
     @livewireStyles
 
 @stop
 
 @section('content')
-   @yield('content')
+    @yield('content')
 @stop
 
 @section('css')
@@ -18,5 +28,7 @@
 @stop
 
 @section('js')
-    <script> console.log('Hi!'); </script>
+    <script>
+        console.log('Hi!');
+    </script>
 @stop

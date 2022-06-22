@@ -15,7 +15,7 @@ return new class extends Migration
     {
         Schema::create('users', function (Blueprint $table) {
             $table->id();  
-            $table->unsignedBigInteger('id_sede')->nullable()->comment('id de sede ');
+            $table->unsignedBigInteger('id_sede')->nullable()->comment('id de sede');
    
             $table->string('name');
             $table->string('dni');
@@ -27,6 +27,7 @@ return new class extends Migration
             $table->string('profile_photo_path', 2048)->nullable();
             $table->string('estado');
             $table->timestamps();
+            $table->foreign('id_sede')->references('id_sede')->on('sedes');
         });
     }
 

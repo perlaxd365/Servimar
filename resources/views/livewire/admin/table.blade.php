@@ -1,9 +1,12 @@
 <div class="card-header">
-    <input wire:model='search' type="text" class="form-control" placeholder="Buscar">
+    <h3>
+        Listado de Usuarios
+    </h3>
 </div>
 
 @if ($users->count())
     <div class="card-body">
+        <input wire:model='search' type="text" class="form-control" placeholder="Buscar">
         <div class="card-body">
             <table class="table table-striped table-sm table-responsive-sm">
                 <thead>
@@ -23,19 +26,18 @@
                             <td>{{ $user->dni }}</td>
                             <td>{{ $user->email }}</td>
                             @can('admin.users.update')
-                                
-                            <td>
-                                <a href="{{ route('admin.users.edit', $user) }}"
-                                    class="btn btn-primary btn-sm">Permisos</a>
-                            </td>
-                            <td>
-                                <a wire:click="editar({{ $user->id }})" class="btn btn-secondary btn-sm">Editar</a>
-                            </td>
+                                <td>
+                                    <a href="{{ route('admin.users.edit', $user) }}"
+                                        class="btn btn-primary btn-sm">Permisos</a>
+                                </td>
+                                <td>
+                                    <a wire:click="editar({{ $user->id }})" class="btn btn-secondary btn-sm">Editar</a>
+                                </td>
                             @endcan
                             @can('admin.users.delete')
-                            <td>
-                                <a wire:click="delete({{ $user->id }})" class="btn btn-danger btn-sm">Eliminar</a>
-                            </td>
+                                <td>
+                                    <a wire:click="delete({{ $user->id }})" class="btn btn-danger btn-sm">Eliminar</a>
+                                </td>
                             @endcan
                         </tr>
                     @endforeach
