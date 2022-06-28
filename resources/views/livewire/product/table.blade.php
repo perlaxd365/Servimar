@@ -1,44 +1,41 @@
 <div class="card-header">
     <h3>
-        Listado de Usuarios
+        Listado de Productos
     </h3>
     <input wire:model='search' type="text" class="form-control" placeholder="Buscar">
 </div>
 
-@if ($users->count())
+@if ($productos->count())
     <div class="card-body">
         <div class="card-body">
             <table class="table table-striped table-sm table-responsive-sm">
                 <thead>
                     <th>ID</th>
                     <th>Sede</th>
-                    <th>Nombre</th>
-                    <th>DNI</th>
-                    <th>Email</th>
-                    <th></th>
+                    <th>Producto</th>
+                    <th>Stock</th>
+                    <th>Unidad</th>
+                    <th>Acción</th>
                 </thead>
                 <tbody>
-                    @foreach ($users as $user)
+                    @foreach ($productos as $producto)
                         <tr>
-                            <td>{{ $user->id }}</td>
-                            <td>{{ $user->descripcion }}</td>
-                            <td>{{ $user->name }}</td>
-                            <td>{{ $user->dni }}</td>
-                            <td>{{ $user->email }}</td>
-                            @can('admin.users.update')
-                                <td>
-                                    <a href="{{ route('admin.users.edit', $user) }}"
-                                        class="btn btn-primary btn-sm">Permisos</a>
-                                </td>
-                                <td>
-                                    <a wire:click="editar({{ $user->id }})" class="btn btn-secondary btn-sm">Editar</a>
-                                </td>
-                            @endcan
-                            @can('admin.users.delete')
-                                <td>
-                                    <a wire:click="delete({{ $user->id }})" class="btn btn-danger btn-sm">Eliminar</a>
-                                </td>
-                            @endcan
+                            <td>{{ $producto->id_producto }}</td>
+                            <td>{{ $producto->descripcion }}</td>
+                            <td>{{ $producto->nombre_pro }}</td>
+                            <td>{{ $producto->stock_pro }}</td>
+                            <td>{{ $producto->unidad_pro }}</td>
+                            <td colspan="1">
+                                <div class="btn-group" role="group" aria-label="Basic example">
+                                    <button wire:click="modalAdd({{ $producto->id_producto }})" type="button"
+                                        class="btn btn-secondary">
+                                        <i class='fa fa-plus-square'></i>
+                                    </button>
+                                    <button type="button" class="btn btn-secondary">
+                                        <i class='fa fa-minus-square'></i>
+                                    </button>
+                                </div>
+                            </td>
                         </tr>
                     @endforeach
 
@@ -47,11 +44,56 @@
         </div>
     </div>
 
+
+    <div wire:ignore.self class="modal fade" id="modalStock" tabindex="-1" role="dialog"
+        aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="exampleModalLongTitle">Agregar a  <strong
+                            id="producto"></strong></h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    <div class="container">
+                        <div class="form-group">
+                            <label></label>
+                            <input wire:model='stock_pro' type="text" class="form-control" id="exampleInputEmail1"
+                                placeholder="Ingresar stock"></small>
+                        </div>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Cancelar</button>
+                    <button type="button" wire:click='storeEmbarcacion' class="btn btn-primary">Agregar
+                        </button>
+                </div>
+            </div>
+        </div>
+    </div>
+
     <div class="card-footer mx-auto">
-        {{ $users->links() }}
+        {{ $productos->links() }}
     </div>
 @else
     <div class="card-body">
         <strong>No se encontraron resultados</strong>
     </div>
 @endif
+
+<script>
+    
+    window.addEventListener('modal', event => {
+        var producto = event.detail.producto;
+        document.getElementById("producto").innerHTML = producto;
+        $('#modalStock').modal('show');
+
+    });
+    window.addEventListener('close-modal', event => {
+
+        $('#modalStock').modal('hide');
+
+    });
+</script>

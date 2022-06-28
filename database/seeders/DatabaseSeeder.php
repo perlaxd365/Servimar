@@ -3,7 +3,9 @@
 namespace Database\Seeders;
 
 use App\Models\Persona;
+use App\Models\Product;
 use App\Models\TipoCliente;
+use App\Models\TipoMovimiento;
 use App\Models\User;
 use Illuminate\Database\Console\Seeds\WithoutModelEvents;
 use Illuminate\Database\Seeder;
@@ -31,5 +33,7 @@ class DatabaseSeeder extends Seeder
         $this->call(TipoClienteSeeder::class);
         $this->call(ClienteSeeder::class);
         $this->call(EmbarcacionSeeder::class);
+        $this->call(ProductSeeder::class);
+        $this->call(TipoMovimientoSeeder::class);
     }
 }

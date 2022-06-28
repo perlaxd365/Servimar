@@ -2,6 +2,8 @@
 
 namespace App\Providers;
 
+use App\Models\Cliente;
+use App\Models\Product;
 use App\Models\Sede;
 use App\Models\User;
 use Illuminate\Auth\Events\Registered;
@@ -33,6 +35,8 @@ class EventServiceProvider extends ServiceProvider
     {
         Event::listen(BuildingMenu::class, function (BuildingMenu $event) {
             $users = User::all()->count();
+            $products = Product::all()->count();
+            $clientes = Cliente::all()->count();
             $sedes = Sede::where('id_sede', auth()->user()->id_sede)->get();
             foreach ($sedes as $sede) {
                 $nombresede = $sede->descripcion;
@@ -58,17 +62,17 @@ class EventServiceProvider extends ServiceProvider
                 'text' => 'Clientes',
                 'route' => 'admin.clientes.index',
                 'icon' => 'far fa-address-card',
-                'label' =>  $users,
+                'label' =>  $clientes,
                 'label_color' => 'primary',
                 'can'           => 'admin.clientes.index'
             ]);
             $event->menu->add([
-                'text' => 'Producto',
-                'route' => 'admin.clientes.index',
+                'text' => 'Productos',
+                'route' => 'admin.products.index',
                 'icon' => 'fas fa-gas-pump',
-                'label' =>  $users,
-                'label_color' => 'primary',
-                'can'           => 'admin.clientes.index'
+                'label' =>  $products,
+                'label_color' => 'dark',
+                'can'           => 'admin.products.index'
             ]);
         });
     }

@@ -13,11 +13,17 @@ return new class extends Migration
      */
     public function up()
     {
-        Schema::create('product', function (Blueprint $table) {
-            $table->bigIncrements('id_producto');
+        Schema::create('products', function (Blueprint $table) {
+            $table->bigIncrements('id_producto')->comment('id');
             $table->unsignedBigInteger('id_sede')->nullable()->comment('id de la sede en donde se ubicara el producto');
-            $table->string('nombre')->nullable()->comment('dni del cliente');
+            $table->string('nombre_pro')->nullable()->comment('Nombre del producto');
+            $table->decimal('stock_pro',8,2)->nullable()->comment('Stock del producto');
+            $table->string('unidad_pro')->nullable()->comment('Unidad del producto');
+            $table->boolean('estado_pro')->nullable()->comment('Estado');
             $table->timestamps();
+
+            
+            $table->foreign('id_sede')->references('id_sede')->on('sedes');
         });
     }
 
@@ -28,6 +34,6 @@ return new class extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('product');
+        Schema::dropIfExists('products');
     }
 };

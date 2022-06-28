@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Controllers\ClienteController;
+use App\Http\Controllers\ProductController;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\UserController;
 /*
@@ -36,4 +37,7 @@ Route::resource('users', UserController::class)->names('admin.users');
 
 
 Route::resource('clientes', ClienteController::class)->names('admin.clientes');
+
+
+Route::resource('products', ProductController::class)->names('admin.products');
 
