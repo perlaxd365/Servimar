@@ -13,10 +13,9 @@ class Embarcacion extends Model
         'id_cliente',
         'nombre_emb',
         'duenio_emb',
-        'razon_emb',
-        'ruc_emb',  
         'matricula_emb',  
         'telefono_emb',  
+        'user_create_emb', 
         'estado_emb',  
     ];
 }

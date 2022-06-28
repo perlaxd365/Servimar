@@ -19,9 +19,8 @@ return new class extends Migration
             $table->string('nombre_emb')->nullable()->comment('nombre de embarcación');
             $table->string('matricula_emb')->nullable()->comment('matrícula de embarcación');
             $table->string('duenio_emb')->nullable()->comment('dueño de embarcación');
-            $table->string('razon_emb')->nullable()->comment('razon del dueño');
-            $table->string('ruc_emb')->nullable()->comment('ruc del dueño');
             $table->string('telefono_emb')->nullable()->comment('telefono del dueño');
+            $table->string('user_create_emb')->nullable()->comment('telefono del dueño');
             $table->boolean('estado_emb')->nullable()->comment('estado de la embarcación');
             $table->timestamps();
 

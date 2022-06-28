@@ -47,7 +47,7 @@ class EventServiceProvider extends ServiceProvider
                 'route' => 'admin.users.index',
                 'icon'  => 'fas fa-users fa-fw',
                 'label' =>  $users,
-                'label_color' => 'info',
+                'label_color' => 'success',
                 'can'           => 'admin.users.index'
             ]);
             $event->menu->add([
@@ -59,7 +59,15 @@ class EventServiceProvider extends ServiceProvider
                 'route' => 'admin.clientes.index',
                 'icon' => 'far fa-address-card',
                 'label' =>  $users,
-                'label_color' => 'warning',
+                'label_color' => 'primary',
+                'can'           => 'admin.clientes.index'
+            ]);
+            $event->menu->add([
+                'text' => 'Producto',
+                'route' => 'admin.clientes.index',
+                'icon' => 'fas fa-gas-pump',
+                'label' =>  $users,
+                'label_color' => 'primary',
                 'can'           => 'admin.clientes.index'
             ]);
         });

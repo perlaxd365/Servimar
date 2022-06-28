@@ -23,10 +23,9 @@ class EmbarcacionFactory extends Factory
             'id_cliente' =>  $this->faker->randomElement(['1', '2', '3','4','5','6','7','8','9','10']),
             'nombre_emb' => $this->faker->name(),
             'duenio_emb' => $this->faker->name(),
-            'razon_emb' => $this->faker->company(),
-            'ruc_emb' => $this->faker->randomNumber(8),
             'matricula_emb' => $this->faker->randomNumber(6),
             'telefono_emb' => $this->faker->phoneNumber(),
+            'user_create_emb' => 'Servimar',
             'estado_emb' => true,
         ];
     }

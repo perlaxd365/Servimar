@@ -4,9 +4,10 @@
 
 @section('content_header')
 
-    <div class="container">
-        <div class="card text-white bg-@yield('color') mb-12" >
-            <div class="card-header">@yield('title')</div>
+    <div  class="container">
+        <div class=" card text-white border bg-@yield('color') mb-12 " >
+            
+            <div class="card-header">@yield('title') <i class="@yield('icon')"></i></div>
             <div class="card-body">
                 <h5 class="card-title">@yield('subtitulo')</h5>
                 <p class="card-text">@yield('descripcion')</p>

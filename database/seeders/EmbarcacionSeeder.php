@@ -21,10 +21,9 @@ class EmbarcacionSeeder extends Seeder
             'id_cliente'=>'1',
             'nombre_emb'=>'LA PERLI',
             'duenio_emb'=>'Cesar Antinio Baca',
-            'razon_emb'=>'LUKAREL',
-            'ruc_emb'=>'10323203203',
             'matricula_emb'=>'345-AKA',
             'telefono_emb'=>'947228623',
+            'user_create_emb'=>'Servimar',
             'estado_emb'=>true,
         ]);
 

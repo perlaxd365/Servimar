@@ -3,7 +3,7 @@
 @section('title', 'Editar Privilegios')
 @section('subtitulo', 'Usuario:  '.$user->name)
 @section('descripcion', 'En este apartado podras editar los privilegios de cada usuario del sistema')
-@section('color', 'primary')
+@section('color', 'warning')
 
 @section('content')
 
@@ -13,6 +13,7 @@
     </div>
 @endif
 
+<div class="container">
     <div class="card">
         <div class="card-body">
             <p class="h5">Nombre:</p>
@@ -58,5 +59,6 @@
             
         </div>
     </div>
+</div>
 
 @endsection

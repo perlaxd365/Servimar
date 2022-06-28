@@ -22,12 +22,14 @@ class ClienteFactory extends Factory
         return [
             'id_tipo_cliente' =>  $this->faker->randomElement(['1', '2', '3', '4']),
             'id_persona' =>  $this->faker->randomElement(['1', '2']),
+            'duenio_cli' => $this->faker->name(),
             'ruc_cli' => $this->faker->randomNumber(8),
             'dni_cli' => $this->faker->randomNumber(8),
             'razon_cli' => $this->faker->company(),
             'nombre_cli' => $this->faker->name(),
             'telefono_cli' => $this->faker->phoneNumber(),
             'email_cli' => $this->faker->email(),
+            'user_create_cli' =>'Servimar',
             'estado_cli' => true,
         ];
     }

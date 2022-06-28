@@ -1,9 +1,10 @@
 @extends('layout.app')
 
 @section('title', 'Usuarios')
+@section('icon', 'fas fa-users fa-fw')
 @section('subtitulo', 'Mantenimiento de Usuarios')
 @section('descripcion', 'En este apartado podras agregar usuarios que accederán al sistema')
-@section('color', 'info')
+@section('color', 'success')
 
 @section('content')
 
