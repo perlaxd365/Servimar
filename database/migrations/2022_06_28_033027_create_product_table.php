@@ -17,7 +17,7 @@ return new class extends Migration
             $table->bigIncrements('id_producto')->comment('id');
             $table->unsignedBigInteger('id_sede')->nullable()->comment('id de la sede en donde se ubicara el producto');
             $table->string('nombre_pro')->nullable()->comment('Nombre del producto');
-            $table->decimal('stock_pro',8,2)->nullable()->comment('Stock del producto');
+            $table->decimal('stock_pro',10,2)->nullable()->comment('Stock del producto');
             $table->string('unidad_pro')->nullable()->comment('Unidad del producto');
             $table->boolean('estado_pro')->nullable()->comment('Estado');
             $table->timestamps();

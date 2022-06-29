@@ -4,7 +4,7 @@
 @section('icon', 'fas fa-gas-pump')
 @section('subtitulo', 'Mantenimiento de Productos')
 @section('descripcion', 'En este apartado podras agregar productos para realizar una venta')
-@section('color', 'dark')
+@section('color', 'warning')
 
 @section('content')
 

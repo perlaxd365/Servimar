@@ -6,6 +6,11 @@
         @include('livewire.product.table')
 
     </div>
+    <div class="card">
+        
+        @include('livewire.product.tableKardex')
+
+    </div>
 
 
 </div>

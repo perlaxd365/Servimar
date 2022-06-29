@@ -22,5 +22,8 @@ class TipoMovimientoSeeder extends Seeder
         TipoMovimiento::create([
             "nombre_tipo"=>'Salida',
         ]);
+        TipoMovimiento::create([
+            "nombre_tipo"=>'Venta',
+        ]);
     }
 }

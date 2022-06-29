@@ -71,7 +71,7 @@ class EventServiceProvider extends ServiceProvider
                 'route' => 'admin.products.index',
                 'icon' => 'fas fa-gas-pump',
                 'label' =>  $products,
-                'label_color' => 'dark',
+                'label_color' => 'warning',
                 'can'           => 'admin.products.index'
             ]);
         });
