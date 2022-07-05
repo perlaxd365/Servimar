@@ -35,5 +35,6 @@ class DatabaseSeeder extends Seeder
         $this->call(EmbarcacionSeeder::class);
         $this->call(ProductSeeder::class);
         $this->call(TipoMovimientoSeeder::class);
+        $this->call(TipoPagoSeeder::class);
     }
 }

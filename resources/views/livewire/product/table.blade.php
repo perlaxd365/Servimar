@@ -13,9 +13,11 @@
                     <th>ID</th>
                     <th>Sede</th>
                     <th>Producto</th>
+                    <th>Precio</th>
                     <th>Stock</th>
                     <th>Unidad</th>
                     <th>Acción</th>
+                    <th>Editar</th>
                 </thead>
                 <tbody>
                     @foreach ($productos as $producto)
@@ -23,9 +25,10 @@
                             <td>{{ $producto->id_producto }}</td>
                             <td>{{ $producto->descripcion }}</td>
                             <td>{{ $producto->nombre_pro }}</td>
+                            <td>{{ $producto->precio_pro }}</td>
                             <td>{{ $producto->stock_pro }}</td>
                             <td>{{ $producto->unidad_pro }}</td>
-                            <td colspan="1">
+                            <td class="center-text">
                                 <div class="btn-group" role="group" aria-label="Basic example">
                                     <button wire:click="modalAdd({{ $producto->id_producto }})" type="button"
                                         class="btn btn-secondary">
@@ -36,6 +39,12 @@
                                     </button>
                                 </div>
                             </td>
+                            <td>
+                                <button wire:click="modalEdit({{ $producto->id_producto }})" type="button" class="btn btn-secondary">
+                                    <i class='fas fa-edit'></i>
+                                </button>
+
+                            </td>
                         </tr>
                     @endforeach
 
@@ -45,12 +54,12 @@
     </div>
 
 
-    <div wire:ignore.self class="modal fade" id="modalStock" tabindex="-1" role="dialog"
+    <div wire:ignore.self class="modal fade" id="modalUpdateProducto" tabindex="-1" role="dialog"
         aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
         <div class="modal-dialog modal-dialog-centered" role="document">
             <div class="modal-content">
                 <div class="modal-header">
-                    <h5 class="modal-title" id="exampleModalLongTitle">{{$motivo}} stock a <strong >{{$nombre_pro}}</strong></h5>
+                    <h5 class="modal-title" id="exampleModalLongTitle">Actualizar <strong>{{$nombre_pro}}</strong></h5>
                     <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                         <span aria-hidden="true">&times;</span>
                     </button>
@@ -68,15 +77,20 @@
                     @endif
                     <div class="container">
                         <div class="form-group">
-                            <label>Cantidad</label>
-                            <input wire:model='stock_pro' type="number" Step=".01"  class="form-control solo-numero" id="exampleInputEmail1"
-                                placeholder="Ingresar Cantidad">
+                            <label>Nombre</label>
+                            <input wire:model='nombre_pro' type="text"   class="form-control" id="exampleInputEmail1"
+                                Nombre de abastecimiento>
+                        </div>
+                        <div class="form-group">
+                            <label>Precio</label>
+                            <input wire:model='precio_pro' type="number" step="0.1"   class="form-control" id="exampleInputEmail1"
+                                Nombre de abastecimiento>
                         </div>
                     </div>
                 </div>
                 <div class="modal-footer">
                     <button type="button" class="btn btn-secondary" data-dismiss="modal">Cancelar</button>
-                    <button type="button" wire:click={{$motivo}} class="btn btn-primary">{{$motivo}} 
+                    <button type="button" wire:click='update_producto' class="btn btn-primary">Actualizar 
                     </button>
                 </div>
             </div>
@@ -90,11 +104,23 @@
 @endif
 
 <script>
+    window.addEventListener('modal-edit', event => {
+        var producto = event.detail.producto;
+        $('#modalUpdateProducto').modal('show');
+
+    });
+    window.addEventListener('close-modal-update', event => {
+
+        $('#modalUpdateProducto').modal('hide');
+
+    });
+
     window.addEventListener('modal', event => {
         var producto = event.detail.producto;
         $('#modalStock').modal('show');
 
     });
+
     window.addEventListener('close-modal', event => {
 
         $('#modalStock').modal('hide');

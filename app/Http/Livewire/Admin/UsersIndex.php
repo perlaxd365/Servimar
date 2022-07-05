@@ -30,7 +30,8 @@ class UsersIndex extends Component
             ->join('sedes', 'sedes.id_sede', '=', 'users.id_sede')
             ->where(function ($query) {
                 return $query
-                    ->orwhere('name', 'LIKE', '%' . $this->search . '%')
+                ->orwhere('descripcion', 'LIKE', '%' . $this->search . '%')
+                ->orwhere('name', 'LIKE', '%' . $this->search . '%')
                     ->orWhere('dni', 'LIKE', '%' . $this->search . '%')
                     ->orWhere('email', 'LIKE', '%' . $this->search . '%');
             })

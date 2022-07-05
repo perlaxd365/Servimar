@@ -211,7 +211,12 @@ return [
     */
 
     'aliases' => Facade::defaultAliases()->merge([
-        // 'ExampleClass' => App\Example\ExampleClass::class,
+        // 'ExampleClass' => App\Example\ExampleClass::class,'aliases' => [
+// ...
+  'Form' => 'Collective\Html\FormFacade',
+  'Html' => 'Collective\Html\HtmlFacade',
+// ...
+
     ])->toArray(),
 
 ];

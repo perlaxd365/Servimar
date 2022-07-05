@@ -14,7 +14,7 @@ class ProductIndex extends Component
     public $show;
     protected $paginationTheme = "bootstrap";
     public $search,$searchKardex;
-    public $id_producto, $nombre_pro;
+    public $id_producto, $nombre_pro,$precio_pro;
     //stock
     public $stock_pro, $motivo;
     public function mount()
@@ -33,7 +33,7 @@ class ProductIndex extends Component
         ->join('tipo_movimientos', 'tipo_movimientos.id_tipo_movimiento', '=', 'kardexes.id_tipo_movimiento')
         ->join('products', 'products.id_producto', '=', 'kardexes.id_producto')
         ->join('sedes', 'sedes.id_sede', '=', 'products.id_sede')
-            ->where('nombre_pro', 'LIKE', '%' . $this->searchKardex . '%')
+            ->where('descripcion', 'LIKE', '%' . $this->searchKardex . '%')
             ->orderby('id_kardex','desc')
             ->paginate($this->show);
         $sedes = Sede::all();
@@ -96,6 +96,27 @@ class ProductIndex extends Component
         $this->id_producto = $id;
         $this->nombre_pro = $producto->nombre_pro;
         $this->dispatchBrowserEvent('modal', ['producto' =>  $producto->nombre_pro]);
+    }
+    public function modalEdit($id)
+    {
+        $this->motivo = 'Editar';
+        $producto = Product::find($id);
+        $this->id_producto = $id;
+        $this->nombre_pro = $producto->nombre_pro;
+        $this->precio_pro = $producto->precio_pro;
+        $this->dispatchBrowserEvent('modal-edit', ['producto' =>  $producto->nombre_pro]);
+    }
+
+    public function update_producto(){
+        
+        $producto = Product::find($this->id_producto);
+        $producto->update([
+            'nombre_pro'=>$this->nombre_pro,
+            'precio_pro'=>$this->precio_pro,
+        ]);
+        $this->dispatchBrowserEvent('close-modal-update');
+        $this->dispatchBrowserEvent('respuesta', ['res' => 'Se actualizó ' . $this->nombre_pro]);
+
     }
 
     public function Disminuir()

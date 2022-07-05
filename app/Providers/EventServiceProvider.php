@@ -71,8 +71,16 @@ class EventServiceProvider extends ServiceProvider
                 'route' => 'admin.products.index',
                 'icon' => 'fas fa-gas-pump',
                 'label' =>  $products,
-                'label_color' => 'warning',
+                'label_color' => 'secondary',
                 'can'           => 'admin.products.index'
+            ]);
+            $event->menu->add([
+                'text' => 'Ventas',
+                'route' => 'admin.ventas.index',
+                'icon' => 'fas fa-dollar-sign',
+                'label' =>  $products,
+                'label_color' => 'warning',
+                'can'           => 'admin.ventas.index'
             ]);
         });
     }

@@ -14,6 +14,7 @@ class Product extends Model
         'id_sede' ,
         'nombre_pro', 
         'stock_pro',
+        'precio_pro',
         'unidad_pro',
         'estado_pro'
     ];

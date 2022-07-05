@@ -77,6 +77,20 @@ class ClientesIndex extends Component
 
     public function store()
     {
+        
+        $messages = [
+            'id_tipo_cliente.required' => 'Por favor Seleccionar el Tipo de Cliente',
+            'id_persona.required' => 'Por favor Seleccionar el tipo de Persona',
+        ];
+
+        $rules = [
+
+
+            'id_tipo_cliente' => 'required',
+            'id_persona' => 'required',
+
+        ];
+        $this->validate($rules, $messages);
         Cliente::create([
             'id_tipo_cliente' => $this->id_tipo_cliente,
             'id_persona' => $this->id_persona,
