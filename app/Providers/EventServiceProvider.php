@@ -3,9 +3,11 @@
 namespace App\Providers;
 
 use App\Models\Cliente;
+use App\Models\Credito;
 use App\Models\Product;
 use App\Models\Sede;
 use App\Models\User;
+use App\Models\Venta;
 use Illuminate\Auth\Events\Registered;
 use Illuminate\Auth\Listeners\SendEmailVerificationNotification;
 use Illuminate\Foundation\Support\Providers\EventServiceProvider as ServiceProvider;
@@ -37,6 +39,8 @@ class EventServiceProvider extends ServiceProvider
             $users = User::all()->count();
             $products = Product::all()->count();
             $clientes = Cliente::all()->count();
+            $ventas = Venta::all()->count();
+            $creditos = Credito::all()->count();
             $sedes = Sede::where('id_sede', auth()->user()->id_sede)->get();
             foreach ($sedes as $sede) {
                 $nombresede = $sede->descripcion;
@@ -78,9 +82,17 @@ class EventServiceProvider extends ServiceProvider
                 'text' => 'Ventas',
                 'route' => 'admin.ventas.index',
                 'icon' => 'fas fa-dollar-sign',
-                'label' =>  $products,
+                'label' =>  $ventas,
                 'label_color' => 'warning',
                 'can'           => 'admin.ventas.index'
+            ]);
+            $event->menu->add([
+                'text' => 'Créditos',
+                'route' => 'admin.creditos.index',
+                'icon' => 'fa fa-credit-card',
+                'label' =>  $creditos,
+                'label_color' => 'info',
+                'can'           => 'admin.creditos.index'
             ]);
         });
     }

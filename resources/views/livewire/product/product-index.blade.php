@@ -25,4 +25,16 @@
             timer: 2000
         })
     });
+    
+    window.addEventListener('modal-edit', event => {
+        var producto = event.detail.producto;
+        $('#modalUpdateProducto').modal('show');
+
+    });
+    window.addEventListener('close-modal-update', event => {
+
+        $('#modalUpdateProducto').modal('hide');
+
+    });
+
 </script>

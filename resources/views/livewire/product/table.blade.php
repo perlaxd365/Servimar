@@ -103,32 +103,3 @@
     </div>
 @endif
 
-<script>
-    window.addEventListener('modal-edit', event => {
-        var producto = event.detail.producto;
-        $('#modalUpdateProducto').modal('show');
-
-    });
-    window.addEventListener('close-modal-update', event => {
-
-        $('#modalUpdateProducto').modal('hide');
-
-    });
-
-    window.addEventListener('modal', event => {
-        var producto = event.detail.producto;
-        $('#modalStock').modal('show');
-
-    });
-
-    window.addEventListener('close-modal', event => {
-
-        $('#modalStock').modal('hide');
-
-    });
-     $('.solo-numero').keyup(function () {
-         this.value = (this.value + '').replace(/[^0-9]/g, '');
-       
-
-     });
-</script>

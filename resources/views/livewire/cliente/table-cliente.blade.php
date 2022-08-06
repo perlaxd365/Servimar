@@ -13,9 +13,9 @@
         <table class="table table-striped table-sm table-responsive table-hover">
             <thead>
                 <th>ID</th>
-                <th>Dueño de Empresa</th>
-                <th>Nombre</th>
                 <th>Razon</th>
+                <th>Nombre</th>
+                <th>Dueño de Empresa</th>
                 <th>DNI</th>
                 <th>RUC</th>
                 <th>Tipo Cliente</th>
@@ -28,9 +28,9 @@
                 @foreach ($clientes as $cliente)
                     <tr style="cursor: pointer;">
                         <td>{{ $cliente->id_cliente }}</td>
-                        <td>{{ $cliente->duenio_cli }}</td>
-                        <td>{{ $cliente->nombre_cli }}</td>
                         <td>{{ $cliente->razon_cli }}</td>
+                        <td>{{ $cliente->nombre_cli }}</td>
+                        <td>{{ $cliente->duenio_cli }}</td>
                         <td>{{ $cliente->dni_cli }}</td>
                         <td>{{ $cliente->ruc_cli }}</td>
                         <td>{{ $cliente->nombre_tipo }}</td>

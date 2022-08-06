@@ -1,27 +1,90 @@
+<style>
+    .switch {
+        position: relative;
+        display: inline-block;
+        width: 50px;
+        height: 28px;
+    }
+
+    .switch input {
+        opacity: 0;
+        width: 0;
+        height: 0;
+    }
+
+    .slider {
+        position: absolute;
+        cursor: pointer;
+        top: 0;
+        left: 0;
+        right: 0;
+        bottom: 0;
+        background-color: #ccc;
+        -webkit-transition: .4s;
+        transition: .4s;
+    }
+
+    .slider:before {
+        position: absolute;
+        content: "";
+        height: 20px;
+        width: 20px;
+        left: 4px;
+        bottom: 4px;
+        background-color: white;
+        -webkit-transition: .4s;
+        transition: .4s;
+    }
+
+    input:checked+.slider {
+        background-color: #2196F3;
+    }
+
+    input:focus+.slider {
+        box-shadow: 0 0 1px #2196F3;
+    }
+
+    input:checked+.slider:before {
+        -webkit-transform: translateX(26px);
+        -ms-transform: translateX(26px);
+        transform: translateX(26px);
+    }
+
+    /* Rounded sliders */
+    .slider.round {
+        border-radius: 34px;
+    }
+
+    .slider.round:before {
+        border-radius: 50%;
+    }
+</style>
+
 <div class="card-header">
-    <h5>
-        <strong>
-            <div class="form-group col-md-12">
-                <div class="card">
-                    <div class="card-header bg-secondary">
-                        Punto de abastecimiento
+    <div class="form-group col-md-12">
+        <div class="card-body">
+            <div class="card" style="width: 100%">
+
+                @foreach ($productos as $producto)
+                    <div class="card-header bg-dark">
+                        <strong>{{ $producto->nombre_pro }}</strong>
                     </div>
-                    <div class="card-body">
-                        @foreach ($productos as $producto)
-                            <textarea class="form-control" id="exampleFormControlTextarea1" readonly rows="3">
-                                Nombre : {{ $producto->nombre_pro }}
-                                Stock : {{ $producto->stock_pro }}
-                                Precio : {{ $producto->precio_pro }}
-                            </textarea>
-                            <input wire:model='id_producto' class="form-control" value="{{ $producto->id_producto }}"
-                                type="hidden" placeholder="Readonly input here…" readonly>
-                        @endforeach
-                    </div>
-                </div>
+                    <ul class="list-group list-group-flush">
+                        <li class="list-group-item"><strong>Stock</strong> : {{ $producto->stock_pro }}</li>
+                        <li class="list-group-item"><strong>Precio por Galón</strong> : {{ $producto->precio_pro }}</li>
+                    </ul>
+
+                    <input wire:model='id_producto' wire:ignore.self class="form-control" type="hidden"
+                        placeholder="Readonly input here…">
+                @endforeach
             </div>
-        </strong>
-    </h5>
+        </div>
+    </div>
 </div>
+
+
+
+
 
 <div class="card-body form-row">
 
@@ -61,7 +124,8 @@
     </div>
     <div class="form-group col-md-6">
         <label for="inputEmail4">Galones</label>
-        <input wire:model='galonaje_venta' wire:keyup='calcularTotal' wire:keypress='calcularTotal' wire:keydown='calcularTotal' autocomplete="off" type="number" Step="0"
+        <input wire:model='galonaje_venta' wire:keyup='calcularTotal' wire:keypress='calcularTotal'
+            wire:keydown='calcularTotal' autocomplete="off" type="number" Step="0"
             class="form-control solo-numero" id="exampleInputEmail1" placeholder="Ingresar Cantidad de Galones">
     </div>
     <div class="form-group col-md-6">
@@ -77,6 +141,22 @@
         <label for="inputEmail4">Precio</label>
         <input wire:model='precio_venta' type="number" autocomplete="off" Step="0"
             class="form-control solo-numero" id="exampleInputEmail1" placeholder="Ingresar Precio">
+    </div>
+    <div class="form-group col-md-6">
+        <label for="inputEmail4">Moneda</label>
+        <select wire:model="moneda_venta" class="form-control" name="" id="">
+            <option value="">Seleccionar Moneda</option>
+            <option value="Soles">Soles</option>
+            <option value="Dolares">Dolares ({{ $dolares }})</option>
+        </select>
+    </div>
+    <div class="form-group col-md-6">
+        <label for="inputEmail4">Mostrar Precio</label>
+        
+        <label class="switch" style="size: 4cm">
+            <input wire:model="mostrarPrecio" type="checkbox" checked>
+            <span class="slider round"></span>
+        </label>
     </div>
     <br>
     <div class="divider py-1 bg-dark"></div>
@@ -103,7 +183,7 @@
         <div class="card-body form-row">
             <button wire:click="store" wire:loading.attr="disabled" class="btn btn-primary" type="button"> <i
                     class="fa fa-plus-circle"></i> <i wire:target="store" wire:loading.class="fa fa-spinner fa-spin"
-                    aria-hidden="true"></i> Agregar</button>
+                    aria-hidden="true"></i> Registrar Venta</button>
             <br>
         </div>
     </div>
@@ -148,7 +228,7 @@
                                     }
                                 </style>
                                 @foreach ($embarcaciones as $embarcacion)
-                                    <tr wire:click="seleccionEmbarcacion('{{ $embarcacion->id }}','{{ $embarcacion->nombre_emb }}')"
+                                    <tr wire:click="seleccionEmbarcacion('{{ $embarcacion->id }}','{{ $embarcacion->nombre_emb }}','{{ $embarcacion->matricula_emb }}')"
                                         style="cursor: pointer; tr:hover{ background-color: yellow}">
                                         <td>
                                             {{ $embarcacion->nombre_emb }}

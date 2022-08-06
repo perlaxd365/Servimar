@@ -40,15 +40,6 @@ class ProductIndex extends Component
         return view('livewire.product.product-index', compact('sedes', 'productos', 'kardexs'));
     }
 
-    public function modalAdd($id)
-    {
-        $producto = Product::find($id);
-        $this->motivo = 'Aumentar';
-        $this->stock_pro = '';
-        $this->id_producto = $id;
-        $this->nombre_pro = $producto->nombre_pro;
-        $this->dispatchBrowserEvent('modal', ['producto' =>  $producto->nombre_pro]);
-    }
     public function Aumentar()
     {
 
@@ -88,6 +79,15 @@ class ProductIndex extends Component
         $this->stock_pro = '';
     }
 
+    public function modalAdd($id)
+    {
+        $producto = Product::find($id);
+        $this->motivo = 'Aumentar';
+        $this->stock_pro = '';
+        $this->id_producto = $id;
+        $this->nombre_pro = $producto->nombre_pro;
+        $this->dispatchBrowserEvent('modal', ['producto' =>  $producto->nombre_pro]);
+    }
     public function modalSub($id)
     {
         $this->motivo = 'Disminuir';

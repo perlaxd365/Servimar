@@ -27,6 +27,7 @@ class RoleSeeder extends Seeder
        Permission::create(['name'=>'admin.users.delete'])->syncRoles($role1);
 
        
+       // PERMISOS PARA PRODUCTOS
        Permission::create(['name'=>'admin.products.index'])->syncRoles($role1);
        Permission::create(['name'=>'admin.products.create'])->syncRoles($role1);
        Permission::create(['name'=>'admin.products.update'])->syncRoles($role1);
@@ -41,10 +42,17 @@ class RoleSeeder extends Seeder
        Permission::create(['name'=>'admin.clientes.delete'])->syncRoles($role1,$role2);
 
        
+       // PERMISOS PARA VENTAS
        Permission::create(['name'=>'admin.ventas.index'])->syncRoles($role1,$role2);
        Permission::create(['name'=>'admin.ventas.create'])->syncRoles($role1,$role2);
        Permission::create(['name'=>'admin.ventas.update'])->syncRoles($role1,$role2);
        Permission::create(['name'=>'admin.ventas.delete'])->syncRoles($role1,$role2);
+       
+       // PERMISOS PARA CREDITOS
+       Permission::create(['name'=>'admin.creditos.index'])->syncRoles($role1);
+       Permission::create(['name'=>'admin.creditos.create'])->syncRoles($role1);
+       Permission::create(['name'=>'admin.creditos.update'])->syncRoles($role1);
+       Permission::create(['name'=>'admin.creditos.delete'])->syncRoles($role1);
         
     }
 }
