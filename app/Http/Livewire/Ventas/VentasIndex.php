@@ -65,7 +65,17 @@ class VentasIndex extends Component
     {
         $productos = Product::where('id_sede', auth()->user()->id_sede)->get();
         $tipoPagos = TipoPago::All();
-        $embarcaciones = Embarcacion::where('nombre_emb', 'LIKE', '%' . $this->searchEmbarcacion . '%')->paginate($this->show);
+        $embarcaciones = Embarcacion::select('*')
+        ->join('clientes', 'embarcacions.id_cliente','=','clientes.id_cliente')
+                        ->where(function ($query) {
+                            return $query
+                                ->orwhere('razon_cli', 'LIKE', '%' . $this->searchEmbarcacion . '%')
+                                ->orwhere('nombre_emb', 'LIKE', '%' . $this->searchEmbarcacion . '%');
+                        })
+                        ->where('estado_cli', '=', true)
+                        ->where('estado_emb', '=', true)->paginate($this->show);
+        $creditos = Credito::select('monto_credito')
+                        ->where('id_embarcacion',)
         return view('livewire.ventas.ventas-index', compact('embarcaciones', 'productos', 'tipoPagos'));
     }
     public function seleccionEmbarcacion($id, $nombre, $matricula)
@@ -132,7 +142,7 @@ class VentasIndex extends Component
             'estado_venta' => 'Activo',
             'user_create_venta' => auth()->user()->name,
         ])->id_venta;
-
+            
         if ($this->id_tipo_pago == 2) {
             Credito::create([
                 'id_embarcacion' => $this->id_emb,
