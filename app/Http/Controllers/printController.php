@@ -15,7 +15,7 @@ class printController extends Controller
             ->join('embarcacions', 'embarcacions.id', 'ventas.id_embarcacion')
             ->join('tipo_pagos', 'tipo_pagos.id_tipo_pago', 'ventas.id_tipo_pago')
             ->where('ventas.id_venta',$id)
-            ->get();
+            ->get(); 
         print_r(json_encode($ventas));
     }
 }
