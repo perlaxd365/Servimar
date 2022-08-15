@@ -22,6 +22,8 @@ class Venta extends Model
         'telefono_ref_venta',
         'fecha_venta',
         'estado_venta',
+        'mostrar_venta',
         'user_create_venta',
+        'user_sede',
     ];
 }

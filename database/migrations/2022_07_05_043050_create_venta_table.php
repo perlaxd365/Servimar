@@ -27,7 +27,9 @@ return new class extends Migration
             $table->string('telefono_ref_venta')->nullable()->comment('telefono de referencia');
             $table->string('fecha_venta')->nullable()->comment('Fecha de la venta');
             $table->string('estado_venta')->nullable()->comment('Estado Venta : activo - anulado');
+            $table->string('mostrar_venta')->nullable()->comment('si se muestra la venta  o no');
             $table->string('user_create_venta')->nullable()->comment('Usuario quien registra');
+            $table->string('user_sede')->nullable()->comment('sede donde se registra');
             $table->timestamps();
 
             

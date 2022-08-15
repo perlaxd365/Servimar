@@ -19,8 +19,8 @@ class EmbarcacionSeeder extends Seeder
         Embarcacion::create([
 
             'id_cliente'=>'1',
-            'nombre_emb'=>'LA PERLI',
-            'duenio_emb'=>'Cesar Antinio Baca',
+            'nombre_emb'=>'ANDA LUCIA',
+            'duenio_emb'=>'Jose Carlos',
             'matricula_emb'=>'345-AKA',
             'telefono_emb'=>'947228623',
             'user_create_emb'=>'Servimar',

@@ -152,7 +152,7 @@
     </div>
     <div class="form-group col-md-6">
         <label for="inputEmail4">Mostrar Precio</label>
-        
+
         <label class="switch" style="size: 4cm">
             <input wire:model="mostrarPrecio" type="checkbox" checked>
             <span class="slider round"></span>
@@ -197,7 +197,7 @@
 <!-- Modal -->
 <div wire:ignore.self class="modal fade" id="buscarEmbarcacion" tabindex="-1" role="dialog"
     aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
-    <div class="modal-dialog modal-dialog-centered" role="document">
+    <div class="modal-dialog modal-dialog-centered  modal-lg" role="document">
         <div class="modal-content">
             <div class="modal-header">
                 <h5 class="modal-title" id="exampleModalLongTitle">Buscar</h5>
@@ -209,7 +209,7 @@
 
                 <div class="form-group col-md-12">
                     <input wire:model='searchEmbarcacion' type="text" class="form-control"
-                        placeholder="Buscar Cliente">
+                        placeholder="Buscar por cliente o embarcacion">
                 </div>
                 <div class="table-responsive">
                     @if ($embarcaciones->count())
@@ -219,11 +219,23 @@
                                     <th>
                                         Embarcaciones
                                     </th>
+                                    <th>
+                                        Matrícula
+                                    </th>
+                                    <th>
+                                        Dueño
+                                    </th>
+                                    <th>
+                                        Teléfono
+                                    </th>
+                                    <th>
+                                        Crédito
+                                    </th>
                                 </tr>
                             </thead>
                             <tbody>
                                 <style>
-                                    td:hover {
+                                    tr:hover {
                                         background-color: beige;
                                     }
                                 </style>
@@ -231,7 +243,24 @@
                                     <tr wire:click="seleccionEmbarcacion('{{ $embarcacion->id }}','{{ $embarcacion->nombre_emb }}','{{ $embarcacion->matricula_emb }}')"
                                         style="cursor: pointer; tr:hover{ background-color: yellow}">
                                         <td>
-                                            {{ $embarcacion->nombre_emb }}
+                                            {{ $embarcacion->nombre_emb }} <br> ({{ $embarcacion->razon_cli }})
+                                        </td>
+                                        <td>
+                                            {{ $embarcacion->matricula_emb }}
+                                        </td>
+                                        <td>
+                                            {{ $embarcacion->duenio_emb }}
+                                        </td>
+                                        <td>
+                                            {{ $embarcacion->telefono_emb }}
+                                        </td>
+                                        <td>
+                                            @if ($embarcacion->monto_credito)
+                                                <button type="button" class="btn btn-outline-danger">
+                                                    {{ $embarcacion->monto_credito }}
+                                                </button>
+                                            @endif
+
                                         </td>
                                     </tr>
                                 @endforeach
@@ -256,6 +285,12 @@
     window.addEventListener('close-modal', event => {
         var producto = event.detail.producto;
         $('#buscarEmbarcacion').modal('hide');
+
+    });
+    window.addEventListener('print', event => {
+        var id = event.detail.id;
+        
+        window.open('http://localhost/print/public/print/'+id, '_blank');
 
     });
 </script>

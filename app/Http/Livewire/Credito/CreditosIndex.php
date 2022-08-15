@@ -3,6 +3,7 @@
 namespace App\Http\Livewire\Credito;
 
 use App\Models\Cliente;
+use App\Models\Credito;
 use App\Models\Embarcacion;
 use Livewire\Component;
 use Livewire\WithPagination;
@@ -14,7 +15,7 @@ class CreditosIndex extends Component
     public $show;
     public $search;
     //cliente
-    public $id_cliente;
+    public $id_cliente, $razon_cliente;
 
     public function mount()
     {
@@ -23,7 +24,15 @@ class CreditosIndex extends Component
 
     public function render()
     {
-        $clientes = Cliente::select('*')
+        $clientes = Cliente::select(
+            'clientes.id_cliente',
+            'razon_cli',
+            'duenio_cli',
+            'ruc_cli',
+            'nombre_cli'
+        )
+            ->join('embarcacions', 'embarcacions.id_cliente', '=', 'clientes.id_cliente')
+            ->join('creditos', 'creditos.id_embarcacion', '=', 'embarcacions.id')
             ->where(function ($query) {
                 return $query
                     ->orwhere('duenio_cli', 'LIKE', '%' . $this->search . '%')
@@ -32,24 +41,35 @@ class CreditosIndex extends Component
                     ->orWhere('ruc_cli', 'LIKE', '%' . $this->search . '%');
             })
             ->where('estado_cli', '=', true)
-            ->orderby('id_cliente', 'asc')->paginate($this->show);
+            ->orderby('clientes.id_cliente', 'asc')
+            ->groupby('clientes.id_cliente')->paginate($this->show);
 
-        $embarcaciones = Embarcacion::select('*')
-            ->join('clientes', 'clientes.id_cliente', '=', 'embarcacions.id_cliente')
-            ->join('creditos', 'creditos.id_embarcacion', '=', 'embarcacions.id')
-            ->where('clientes.id_cliente', '=', $this->id_cliente)
+
+        $embarcaciones = Credito::select(
+            'nombre_emb',
+            'duenio_emb',
+            'matricula_emb',
+            'telefono_emb',
+            'fecha_credito',
+            'monto_credito',
+            )
+            ->join('embarcacions', 'embarcacions.id', '=', 'creditos.id_embarcacion')
+            ->rightjoin('ventas', 'embarcacions.id', '=', 'ventas.id_embarcacion')
+            ->where('embarcacions.id_cliente', '=', $this->id_cliente)
             ->where('creditos.estado_credito', '=', true)
-            ->where('clientes.id_cliente', '=', true)
-            ->orderby('clientes.id_cliente', 'asc')->paginate($this->show);
+            ->orderby('embarcacions.id_cliente', 'asc')
+            ->groupby('id_credito')
+            ->paginate($this->show);
 
 
         return view('livewire.credito.creditos-index', compact('clientes', 'embarcaciones'));
     }
 
-    public function modalDetalle($id_cliente)
+    public function modalDetalle($id_cliente, $razon_cliente)
     {
 
+        $this->razon_cliente = $razon_cliente;
         $this->id_cliente = $id_cliente;
-        $this->dispatchBrowserEvent('modal-detalle', ['producto' =>  'a']);
+        $this->dispatchBrowserEvent('modal-detalle', ['producto' =>  '']);
     }
 }

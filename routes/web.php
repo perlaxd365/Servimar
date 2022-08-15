@@ -2,6 +2,7 @@
 
 use App\Http\Controllers\ClienteController;
 use App\Http\Controllers\CreditoCotroller;
+use App\Http\Controllers\printController;
 use App\Http\Controllers\ProductController;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\UserController;
@@ -50,3 +51,6 @@ Route::resource('ventas', VentaController::class)->names('admin.ventas');
 
 Route::resource('creditos', CreditoCotroller::class)->names('admin.creditos');
 
+
+
+Route::resource('print/{id}/', printController::class)->names('print.index');

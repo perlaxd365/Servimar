@@ -40,19 +40,19 @@
                         <td colspan="1">
                             <div class="btn-group" role="group" aria-label="Basic example">
                                 <button wire:click="modalEmbarcacion({{ $cliente->id_cliente }})" type="button"
-                                    class="btn btn-secondary">
+                                    class="btn btn-primary">
                                     <i class='fa fa-plus'></i>
                                 </button>
                                 <button wire:click="listaDetalle({{ $cliente->id_cliente }})" type="button"
-                                    class="btn btn-secondary">
+                                    class="btn btn-primary">
                                     <i class='fa fa-eye'></i>
                                 </button>
                                 <button wire:click="editar({{ $cliente->id_cliente }})" type="button"
-                                    class="btn btn-secondary">
+                                    class="btn btn-primary">
                                     <i class='fas fa-edit'></i>
                                 </button>
                                 <button wire:click="delete({{ $cliente->id_cliente }})" type="button"
-                                    class="btn btn-secondary">
+                                    class="btn btn-primary">
                                     <i class='fa fa-trash'></i>
                                 </button>
                             </div>
@@ -148,14 +148,14 @@
             <div class="modal-body">
                 <div class="container">
                     <div class="form-group">
-                        <label>Nombre de Dueño</label>
-                        <input wire:model='duenio_emb' type="text" class="form-control" id="exampleInputEmail1"
-                            placeholder="Ingresar Nombre del Dueño"></small>
-                    </div>
-                    <div class="form-group">
                         <label>Nombre de Embarcación</label>
                         <input wire:model='nombre_emb' type="text" class="form-control" id="exampleInputEmail1"
                             placeholder="Ingresar Nombre de Embarcación"></small>
+                    </div>
+                    <div class="form-group">
+                        <label>Nombre de Dueño</label>
+                        <input wire:model='duenio_emb' type="text" class="form-control" id="exampleInputEmail1"
+                            placeholder="Ingresar Nombre del Dueño"></small>
                     </div>
                     <div class="form-group">
                         <label>Matrícula</label>
