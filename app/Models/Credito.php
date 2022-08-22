@@ -13,6 +13,8 @@ class Credito extends Model
     protected $fillable = [
         'id_embarcacion' ,
         'id_venta', 
+        'precio_galon_credito',
+        'galones_credito',
         'monto_credito',
         'fecha_credito',
         'estado_credito',

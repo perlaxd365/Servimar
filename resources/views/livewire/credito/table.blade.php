@@ -85,14 +85,15 @@
                                             <th scope="col">Matrícula</th>
                                             <th scope="col">Teléfono</th>
                                             <th scope="col">Fecha</th>
-                                            <th scope="col">Monto</th>
+                                            <th scope="col">Precio x Galón</th>
+                                            <th scope="col">Galones</th>
                                             <th scope="col">Acción</th>
                                         </tr>
                                     </thead>
                                     <tbody>
                                         <?php $total = 0; ?>
                                         @foreach ($embarcaciones as $key => $embarcacion)
-                                            <?php $total = $total + $embarcacion->monto_credito; ?>
+                                            <?php $total = $total + $embarcacion->galones_credito; ?>
                                             <tr>
                                                 <td>{{ $key + 1 }}</td>
                                                 <td>{{ $embarcacion->nombre_emb }}</td>
@@ -100,7 +101,8 @@
                                                 <td>{{ $embarcacion->matricula_emb }}</td>
                                                 <td>{{ $embarcacion->telefono_emb }}</td>
                                                 <td>{{ $embarcacion->fecha_credito }}</td>
-                                                <td>{{ $embarcacion->monto_credito }}</td>
+                                                <td>{{ $embarcacion->precio_galon_credito }}</td>
+                                                <td>{{ $embarcacion->galones_credito }}</td>
                                                 <td class="center-text">
                                                         <button
                                                             wire:click="modalDetalle({{ $cliente->id_cliente }},'{{ $cliente->razon_cli }}')"
@@ -117,6 +119,7 @@
                                             <td></td>
                                             <td></td>
                                             <td></td>
+                                            <td><strong>TOTAL:</strong></td>
                                             <td>{{ $total }}</td>
                                             <td></td>
                                         </tr>

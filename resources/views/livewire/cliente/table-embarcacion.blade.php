@@ -14,6 +14,7 @@
                     <thead>
                         <th>ID</th>
                         <th>Nombre Embarcación</th>
+                        <th>Giro de Embarcación</th>
                         <th>Cliente (Empresa)</th>
                         <th>Matrícula</th>
                         <th>Dueño</th>
@@ -24,6 +25,7 @@
                             <tr style="cursor: pointer;">
                                 <td>{{ $embarcaciones->id }}</td>
                                 <td>{{ $embarcaciones->nombre_emb }}</td>
+                                <td>{{ $embarcaciones->nombre_tipo }}</td>
                                 <td>{{ $embarcaciones->nombre_cli }}</td>
                                 <td>{{ $embarcaciones->matricula_emb }}</td>
                                 <td>{{ $embarcaciones->duenio_emb }}</td>

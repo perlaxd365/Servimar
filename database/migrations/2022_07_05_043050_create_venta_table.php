@@ -20,6 +20,7 @@ return new class extends Migration
             $table->unsignedBigInteger('id_tipo_pago')->comment('id del tipo de pago');
             
             $table->decimal('galonaje_venta',10,2)->nullable()->comment('monto de galonaje de venta');
+            $table->decimal('monto_inicial_venta',10,2)->nullable()->comment('Monto incial antes de la venta');
             $table->decimal('precio_venta',10,2)->nullable()->comment('precio de venta');
             $table->string('moneda_venta')->nullable()->comment('moneda de venta');
             $table->string('nombre_ref_venta')->nullable()->comment('nombre de referencia');

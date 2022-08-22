@@ -23,15 +23,6 @@
         <input wire:model='razon_cli' type="text" class="form-control" placeholder="Ingresar Razón Social">
     </div>
     <div class="form-group col-md-6">
-        <label for="inputEmail4">Tipo de Empresa</label>
-        <select wire:model="id_tipo_cliente" class="form-control" name="" id="">
-            <option value="">Seleccionar Tipo de Empresa</option>
-            @foreach ($tipoCliente as $tipo)
-                <option value="{{ $tipo->id_tipo_cliente }}">{{ $tipo->nombre_tipo }}</option>
-            @endforeach
-        </select>
-    </div>
-    <div class="form-group col-md-6">
         <label for="inputEmail4">Tipo de Persona</label>
         <select wire:model="id_persona" class="form-control" name="" id="">
             <option value="">Seleccionar Tipo de Persona</option>

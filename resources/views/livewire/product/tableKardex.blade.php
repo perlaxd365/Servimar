@@ -16,8 +16,9 @@
                     <th>Producto</th>
                     <th>Tipo Movimiento</th>
                     <th>Fecha</th>
+                    <th>Stock Inicial</th>
+                    <th>Movimiento</th>
                     <th>Stock Final</th>
-                    <th>Cantidad</th>
                 </thead>
                 <tbody>
                     @foreach ($kardexs as $kardex)
@@ -27,7 +28,7 @@
                             <td>{{ $kardex->nombre_pro }}</td>
                             <td>{{ $kardex->nombre_tipo }}</td>
                             <td>{{ $kardex->fecha_kardex }}</td>
-                            <td>{{ $kardex->total_kar }}</td>
+                            <td>{{ $kardex->cantidad_inicial_kar }}</td>
                             <td>
                                 <?php
                                 if ($kardex->id_tipo_movimiento == 1) {
@@ -40,6 +41,7 @@
                                 
                                 ?> {{ $kardex->cantidad_kar }}
                             </td>
+                            <td>{{ $kardex->total_kar }}</td>
                         </tr>
                     @endforeach
 
@@ -64,7 +66,7 @@
         <div class="modal-content">
             <div class="modal-header">
                 <h5 class="modal-title" id="exampleModalLongTitle">{{ $motivo }} stock a
-                    <strong>{{ $nombre_pro }}</strong>
+                    <strong>{{ $nombre_pro }} - {{$sede}}</strong>
                 </h5>
                 <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                     <span aria-hidden="true">&times;</span>

@@ -17,13 +17,13 @@ class TipoPagoSeeder extends Seeder
     {
         
         TipoPago::create([
-            "nombre_tipo_pago"=>'Efectivo',
+            "nombre_tipo_pago"=>'Contado Efectivo',
         ]);
         TipoPago::create([
             "nombre_tipo_pago"=>'Credito',
         ]);
         TipoPago::create([
-            "nombre_tipo_pago"=>'Deposito',
+            "nombre_tipo_pago"=>'Contado Deposito',
         ]);
     }
 }

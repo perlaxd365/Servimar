@@ -11,7 +11,6 @@ class Cliente extends Model
     protected $name="clientes";
     protected $primaryKey = 'id_cliente';
     protected $fillable = [
-        'id_tipo_cliente' ,
         'id_persona', 
         'id_cliente',
         'duenio_cli',

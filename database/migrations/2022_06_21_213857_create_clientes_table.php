@@ -16,7 +16,6 @@ return new class extends Migration
         Schema::create('clientes', function (Blueprint $table) {
             $table->bigIncrements('id_cliente')->comment('id del cliente');
             $table->unsignedBigInteger('id_persona')->nullable()->comment('id de persona: natural o juridica');
-            $table->unsignedBigInteger('id_tipo_cliente')->nullable()->comment('id tipo cliente');
             $table->string('duenio_cli')->nullable()->comment('ruc del cliente');
             $table->string('ruc_cli')->nullable()->comment('ruc del cliente');
             $table->string('dni_cli')->nullable()->comment('dni del cliente');
@@ -30,8 +29,6 @@ return new class extends Migration
 
             //relacion con tabla persona
             $table->foreign('id_persona')->references('id_persona')->on('personas');
-            //relacion con tabla tipocliente
-            $table->foreign('id_tipo_cliente')->references('id_tipo_cliente')->on('tipo_clientes');
         });
     }
 

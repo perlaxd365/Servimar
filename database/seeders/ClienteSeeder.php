@@ -18,7 +18,6 @@ class ClienteSeeder extends Seeder
         Cliente::create([
 
             'id_persona'=>'1',
-            'id_tipo_cliente'=>'1',
             'duenio_cli'=>'Chita',
             'ruc_cli'=>'10738883123',
             'dni_cli'=>'73888312',

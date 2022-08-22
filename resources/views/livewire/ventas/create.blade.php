@@ -67,10 +67,11 @@
 
                 @foreach ($productos as $producto)
                     <div class="card-header bg-dark">
-                        <strong>{{ $producto->nombre_pro }}</strong>
+                        <strong>{{ $sede }}</strong>
                     </div>
                     <ul class="list-group list-group-flush">
-                        <li class="list-group-item"><strong>Stock</strong> : {{ $producto->stock_pro }}</li>
+                        <li class="list-group-item"><strong>Producto</strong> : {{ $producto->nombre_pro }}</li>
+                        <li class="list-group-item"><strong>Venta</strong> : {{ $producto->stock_pro }}</li>
                         <li class="list-group-item"><strong>Precio por Galón</strong> : {{ $producto->precio_pro }}</li>
                     </ul>
 
@@ -124,23 +125,9 @@
     </div>
     <div class="form-group col-md-6">
         <label for="inputEmail4">Galones</label>
-        <input wire:model='galonaje_venta' wire:keyup='calcularTotal' wire:keypress='calcularTotal'
+        <input  wire:model='galonaje_venta' wire:keyup='calcularTotal' wire:keypress='calcularTotal'
             wire:keydown='calcularTotal' autocomplete="off" type="number" Step="0"
-            class="form-control solo-numero" id="exampleInputEmail1" placeholder="Ingresar Cantidad de Galones">
-    </div>
-    <div class="form-group col-md-6">
-        <label for="inputEmail4">Tipo de Pago</label>
-        <select wire:model="id_tipo_pago" class="form-control" name="" id="">
-            <option value="">Seleccionar Tipo de Pago</option>
-            @foreach ($tipoPagos as $tipo)
-                <option value="{{ $tipo->id_tipo_pago }}">{{ $tipo->nombre_tipo_pago }}</option>
-            @endforeach
-        </select>
-    </div>
-    <div class="form-group col-md-6">
-        <label for="inputEmail4">Precio</label>
-        <input wire:model='precio_venta' type="number" autocomplete="off" Step="0"
-            class="form-control solo-numero" id="exampleInputEmail1" placeholder="Ingresar Precio">
+            class="form-control solo-numero" placeholder="Ingresar Cantidad de Galones">
     </div>
     <div class="form-group col-md-6">
         <label for="inputEmail4">Moneda</label>
@@ -151,13 +138,25 @@
         </select>
     </div>
     <div class="form-group col-md-6">
-        <label for="inputEmail4">Mostrar Precio</label>
-
-        <label class="switch" style="size: 4cm">
-            <input wire:model="mostrarPrecio" type="checkbox" checked>
-            <span class="slider round"></span>
-        </label>
+        <label for="inputEmail4">Tipo de Pago</label>
+        <select wire:model="idtipopago" class="form-control" name="" id="">
+            <option value="">Seleccionar Tipo de Pago</option>
+            @foreach ($tipoPagos as $tipo)
+                <option value="{{ $tipo->id_tipo_pago }}">{{ $tipo->nombre_tipo_pago }}</option>
+            @endforeach
+        </select>
     </div>
+        <div class="form-group col-md-6" style="@if ($mostrarPrecioFront)display:block @else display:none  @endif">
+            <label for="inputEmail4">Precio</label>
+            <input wire:model='precio_venta' type="number" autocomplete="off" Step="0"
+                class="form-control solo-numero" id="exampleInputEmail1" placeholder="Ingresar Precio">
+            <label for="inputEmail4">Mostrar Precio</label>
+            <label class="switch" style="size: 4cm">
+                <input wire:model="mostrarPrecio" type="checkbox" checked>
+                <span class="slider round"></span>
+            </label>
+        </div>
+    
     <br>
     <div class="divider py-1 bg-dark"></div>
     <hr class="mt-5 mb-5">
@@ -255,10 +254,13 @@
                                             {{ $embarcacion->telefono_emb }}
                                         </td>
                                         <td>
-                                            @if ($embarcacion->monto_credito)
-                                                <button type="button" class="btn btn-outline-danger">
-                                                    {{ $embarcacion->monto_credito }}
-                                                </button>
+                                            @if ($embarcacion->galones_credito)
+                                            <span class="badge badge-warning">
+                                               Crédito - Galones
+                                            </span>
+                                            <span class="badge badge-danger">
+                                                {{ $embarcacion->galones_credito }}
+                                            </span>
                                             @endif
 
                                         </td>
@@ -289,8 +291,11 @@
     });
     window.addEventListener('print', event => {
         var id = event.detail.id;
-        
-        window.open('http://localhost/print/public/print/'+id, '_blank');
+        var URL = 'http://localhost/print/public/print/' + id
+        window.open(URL, 'Impresión',
+            'toolbar=0,scrollbars=0,location=0,statusbar=0,menubar=0,resizable=1,width=300,height=200,left = 390,top = 50'
+        );
+
 
     });
 </script>

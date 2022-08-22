@@ -15,7 +15,6 @@ class TipoMovimientoSeeder extends Seeder
      */
     public function run()
     {
-        
         TipoMovimiento::create([
             "nombre_tipo"=>'Entrada',
         ]);

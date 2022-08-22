@@ -13,10 +13,12 @@ class ProductIndex extends Component
     use WithPagination;
     public $show;
     protected $paginationTheme = "bootstrap";
-    public $search,$searchKardex;
-    public $id_producto, $nombre_pro,$precio_pro;
+    public $search, $searchKardex;
+    public $id_producto, $nombre_pro, $precio_pro;
+    public $sede;
     //stock
     public $stock_pro, $motivo;
+
     public function mount()
     {
         $this->show = 10;
@@ -29,15 +31,14 @@ class ProductIndex extends Component
             ->where('nombre_pro', 'LIKE', '%' . $this->search . '%')
             ->get();
 
-        $kardexs = Kardex::select('*','kardexes.created_at as fecha_kardex')
-        ->join('tipo_movimientos', 'tipo_movimientos.id_tipo_movimiento', '=', 'kardexes.id_tipo_movimiento')
-        ->join('products', 'products.id_producto', '=', 'kardexes.id_producto')
-        ->join('sedes', 'sedes.id_sede', '=', 'products.id_sede')
+        $kardexs = Kardex::select('*', 'kardexes.created_at as fecha_kardex')
+            ->join('tipo_movimientos', 'tipo_movimientos.id_tipo_movimiento', '=', 'kardexes.id_tipo_movimiento')
+            ->join('products', 'products.id_producto', '=', 'kardexes.id_producto')
+            ->join('sedes', 'sedes.id_sede', '=', 'products.id_sede')
             ->where('descripcion', 'LIKE', '%' . $this->searchKardex . '%')
-            ->orderby('id_kardex','desc')
+            ->orderby('id_kardex', 'desc')
             ->paginate($this->show);
-        $sedes = Sede::all();
-        return view('livewire.product.product-index', compact('sedes', 'productos', 'kardexs'));
+        return view('livewire.product.product-index', compact('productos', 'kardexs'));
     }
 
     public function Aumentar()
@@ -67,6 +68,7 @@ class ProductIndex extends Component
         Kardex::create([
             'id_producto' => $this->id_producto,
             'id_tipo_movimiento' => 1,
+            'cantidad_inicial_kar' => $this->stock_pro-$monto,
             'cantidad_kar' => $monto,
             'total_kar' => $this->stock_pro,
             'user_create_kar' => auth()->user()->name,
@@ -81,6 +83,7 @@ class ProductIndex extends Component
 
     public function modalAdd($id)
     {
+        $this->nombreSede($id);
         $producto = Product::find($id);
         $this->motivo = 'Aumentar';
         $this->stock_pro = '';
@@ -90,6 +93,7 @@ class ProductIndex extends Component
     }
     public function modalSub($id)
     {
+        $this->nombreSede($id);
         $this->motivo = 'Disminuir';
         $this->stock_pro = '';
         $producto = Product::find($id);
@@ -99,6 +103,7 @@ class ProductIndex extends Component
     }
     public function modalEdit($id)
     {
+        $this->nombreSede($id);
         $this->motivo = 'Editar';
         $producto = Product::find($id);
         $this->id_producto = $id;
@@ -107,16 +112,16 @@ class ProductIndex extends Component
         $this->dispatchBrowserEvent('modal-edit', ['producto' =>  $producto->nombre_pro]);
     }
 
-    public function update_producto(){
-        
+    public function update_producto()
+    {
+
         $producto = Product::find($this->id_producto);
         $producto->update([
-            'nombre_pro'=>$this->nombre_pro,
-            'precio_pro'=>$this->precio_pro,
+            'nombre_pro' => $this->nombre_pro,
+            'precio_pro' => $this->precio_pro,
         ]);
         $this->dispatchBrowserEvent('close-modal-update');
         $this->dispatchBrowserEvent('respuesta', ['res' => 'Se actualizó ' . $this->nombre_pro]);
-
     }
 
     public function Disminuir()
@@ -148,6 +153,7 @@ class ProductIndex extends Component
         Kardex::create([
             'id_producto' => $this->id_producto,
             'id_tipo_movimiento' => 2,
+            'cantidad_inicial_kar' => $this->stock_pro+$monto,
             'cantidad_kar' => $monto,
             'total_kar' => $this->stock_pro,
             'user_create_kar' => auth()->user()->name,
@@ -156,5 +162,16 @@ class ProductIndex extends Component
         $this->dispatchBrowserEvent('respuesta', ['res' => 'Se quitó  ' . $monto . ' ' . $producto->unidad_pro . ' a  ' . $producto->nombre_pro]);
 
         $this->stock_pro = '';
+    }
+    
+    public function nombreSede($id){
+        
+        $sedes = Product::select('descripcion')
+            ->join('sedes', 'sedes.id_sede', 'products.id_sede')
+            ->where('id_producto', $id)
+            ->get();
+        foreach ($sedes as  $value) {
+            $this->sede = $value->descripcion;
+        }
     }
 }

@@ -15,6 +15,7 @@ class Venta extends Model
         'id_producto',
         'id_tipo_pago',
         'galonaje_venta',
+        'monto_inicial_venta',
         'precio_venta',
         'moneda_venta',
         'nombre_ref_venta',

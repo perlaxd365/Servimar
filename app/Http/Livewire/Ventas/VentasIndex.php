@@ -26,7 +26,7 @@ class VentasIndex extends Component
     //buscar embarcacion
     public $id_emb, $nombre_emb, $matricula_emb, $searchEmbarcacion;
     //tipo de pago
-    public $id_tipo_pago;
+    public $idtipopago;
     //id_producto
     public $id_producto, $abastecimiento;
     //datos de venta
@@ -37,8 +37,10 @@ class VentasIndex extends Component
     public $dolares;
     //sede
     public $sede;
-    //Mostrar precio
+    //Mostrar precio comprobante
     public $mostrarPrecio;
+    //Mostrar precio front
+    public $mostrarPrecioFront;
 
     public function mount()
     {
@@ -54,9 +56,10 @@ class VentasIndex extends Component
             $this->sede = $sede->descripcion;
         }
         $this->show = 5;
-        $this->id_tipo_pago = 1;
+        $this->idtipopago = 1;
         $this->moneda_venta = 'Soles';
         $this->mostrarPrecio = true;
+        $this->mostrarPrecioFront = true;
 
 
         $data = json_decode(file_get_contents('https://api.apis.net.pe/v1/tipo-cambio-sunat'), true);
@@ -67,13 +70,14 @@ class VentasIndex extends Component
         $productos = Product::where('id_sede', auth()->user()->id_sede)->get();
         $tipoPagos = TipoPago::All();
         $embarcaciones = Embarcacion::select(
-            DB::raw('SUM(monto_credito) AS monto_credito'),
+            DB::raw('SUM(galones_credito) AS galones_credito'),
             'embarcacions.id',
             'nombre_emb',
             'razon_cli',
             'matricula_emb',
             'duenio_emb',
-            'telefono_emb',)
+            'telefono_emb',
+        )
             ->join('clientes', 'embarcacions.id_cliente', '=', 'clientes.id_cliente')
             ->leftjoin('creditos', 'embarcacions.id', '=', 'creditos.id_embarcacion')
             ->where(function ($query) {
@@ -105,11 +109,11 @@ class VentasIndex extends Component
     }
     public function store()
     {
-
+        
         $messages = [
             'nombre_emb.required' => 'Por favor selecciona una embarcación.',
             'galonaje_venta.gt' => 'El valor mínimo para agregar es 1.',
-            'id_tipo_pago.required' => 'Por favor seleccionar un tipo de pago.',
+            'idtipopago.required' => 'Por favor seleccionar un tipo de pago.',
             'galonaje_venta.lt' => 'La venta no puede exeder los ' . $this->stock_actual . ' Galones.',
             'precio_venta.gt' => 'El valor mínimo para agregar es 1.',
             'nombre_ref_venta.required' => 'El campo Nombres y Apellidos de referencia es obligatorio',
@@ -121,7 +125,7 @@ class VentasIndex extends Component
 
             'nombre_emb' => 'required',
             'galonaje_venta' => 'gt:0|lt:' . $this->stock_actual + 1,
-            'id_tipo_pago' => 'required',
+            'idtipopago' => 'required',
             'precio_venta' => 'gt:0',
             'nombre_ref_venta' => 'required',
             'moneda_venta' => 'required',
@@ -135,14 +139,14 @@ class VentasIndex extends Component
             'stock_pro' => $this->stock_actual - $this->galonaje_venta,
 
         ]);
-
         date_default_timezone_set('America/Lima');
         $id_venta = Venta::create([
             'id_embarcacion' => $this->id_emb,
             'id_producto' => $this->id_producto,
-            'id_tipo_pago' => $this->id_tipo_pago,
+            'id_tipo_pago' => $this->idtipopago,
             'galonaje_venta' => $this->galonaje_venta,
-            'precio_venta' => $this->precio_venta,
+            'precio_venta' => $this->mostrarPrecioFront==false?0:$this->precio_venta,
+            'monto_inicial_venta' => $this->stock_actual,
             'moneda_venta' => $this->moneda_venta,
             'nombre_ref_venta' => $this->nombre_ref_venta,
             'dni_ref_venta' => $this->dni_ref_venta,
@@ -154,11 +158,13 @@ class VentasIndex extends Component
             'user_sede' => $this->sede,
         ])->id_venta;
 
-        if ($this->id_tipo_pago == 2) {
+        if ($this->idtipopago == 2) {
             Credito::create([
                 'id_embarcacion' => $this->id_emb,
                 'id_venta' => $id_venta,
-                'monto_credito' => $this->precio_venta,
+                'precio_galon_credito' => $this->precio_general,
+                'galones_credito' => $this->galonaje_venta,
+                'monto_credito' => $this->mostrarPrecioFront==false?0:$this->precio_venta,
                 'fecha_credito' => now(),
                 'estado_credito' => true,
                 'user_create_credito' => auth()->user()->name,
@@ -170,11 +176,13 @@ class VentasIndex extends Component
         Kardex::create([
             'id_producto' => $this->id_producto,
             'id_tipo_movimiento' => 3,
+            'cantidad_inicial_kar' => $this->stock_actual,
             'cantidad_kar' => $this->galonaje_venta,
             'total_kar' => $this->stock_actual - $this->galonaje_venta,
             'user_create_kar' => auth()->user()->name,
 
         ]);
+        $this->stock_actual=$this->stock_actual-$this->galonaje_venta;
         $this->print();
         $this->default();
 
@@ -184,9 +192,9 @@ class VentasIndex extends Component
 
     public function print()
     {
-        
 
-        // $formaPago = TipoPago::where('id_tipo_pago', $this->id_tipo_pago)->get();
+
+        // $formaPago = TipoPago::where('idtipopago', $this->idtipopago)->get();
         // foreach ($formaPago as  $value) {
         //     $formapago = $value->nombre_tipo_pago;
         // }
@@ -249,7 +257,7 @@ class VentasIndex extends Component
 
     public function default()
     {
-        $this->id_tipo_pago = 1;
+        $this->idtipopago = 1;
         $this->galonaje_venta = '';
         $this->precio_venta = '';
         $this->nombre_ref_venta = '';
@@ -258,5 +266,16 @@ class VentasIndex extends Component
         $this->moneda_venta = 'Soles';
         $this->id_emb = '';
         $this->nombre_emb = '';
+    }
+
+    public function updatedidtipopago()
+    {
+        if ($this->idtipopago == 2) {
+
+            $this->mostrarPrecioFront = false;
+            $this->mostrarPrecio = false;
+        } else {
+            $this->mostrarPrecioFront = true;
+        }
     }
 }

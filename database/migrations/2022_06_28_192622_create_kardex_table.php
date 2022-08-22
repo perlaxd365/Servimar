@@ -17,6 +17,7 @@ return new class extends Migration
             $table->bigIncrements('id_kardex')->comment('id');
             $table->unsignedBigInteger('id_producto')->nullable()->comment('id del producto');
             $table->unsignedBigInteger('id_tipo_movimiento')->nullable()->comment('id del tipo de movimiento');
+            $table->decimal('cantidad_inicial_kar',10,2)->nullable()->comment('Cantidad inicial antes de la venta');
             $table->decimal('cantidad_kar',10,2)->nullable()->comment('Cantidad de movimiento');
             $table->decimal('total_kar',10,2)->nullable()->comment('Cantidad de movimiento');
             $table->string('user_create_kar')->nullable()->comment('Usuario quien registra');

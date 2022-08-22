@@ -20,6 +20,7 @@ class EmbarcacionFactory extends Factory
     {
         return [
             
+            'id_tipo_embarcacion' =>  $this->faker->randomElement(['1', '2', '3', '4']),
             'id_cliente' =>  $this->faker->randomElement(['1', '2', '3','4','5','6','7','8','9','10']),
             'nombre_emb' => $this->faker->name(),
             'duenio_emb' => $this->faker->name(),

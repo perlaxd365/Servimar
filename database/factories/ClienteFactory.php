@@ -20,7 +20,6 @@ class ClienteFactory extends Factory
     public function definition()
     {
         return [
-            'id_tipo_cliente' =>  $this->faker->randomElement(['1', '2', '3', '4']),
             'id_persona' =>  $this->faker->randomElement(['1', '2']),
             'duenio_cli' => $this->faker->name(),
             'ruc_cli' => $this->faker->randomNumber(8),

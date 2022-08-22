@@ -17,19 +17,19 @@ class SedeSeeder extends Seeder
     {
         
         Sede::create([
-            "descripcion"=>'Sede 1',
+            "descripcion"=>'Gildemeister',
             "estado"=>'1'
         ]);
         Sede::create([
-            "descripcion"=>'Sede 2',
+            "descripcion"=>'Chata Chimbote',
             "estado"=>'1'
         ]);
         Sede::create([
-            "descripcion"=>'Sede 3',
+            "descripcion"=>'Cridany',
             "estado"=>'1'
         ]);
         Sede::create([
-            "descripcion"=>'Sede 4',
+            "descripcion"=>'Chata Paita',
             "estado"=>'1'
         ]);
         

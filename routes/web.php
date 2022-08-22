@@ -19,10 +19,6 @@ use App\Http\Controllers\VentaController;
 |
 */
 
-Route::get('/', function () {
-    return view('auth.login');
-});
-
 Route::get('logout', function () {
     return view('auth.login');
 });
@@ -31,6 +27,9 @@ Route::middleware([
     config('jetstream.auth_session'),
     'verified'
 ])->group(function () {
+    Route::get('dash', function () {
+        return view('dash.index');
+    })->name('dashboard');
     Route::get('/', function () {
         return view('dash.index');
     })->name('dash');

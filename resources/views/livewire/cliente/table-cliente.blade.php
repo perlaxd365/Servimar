@@ -140,13 +140,22 @@
         <div class="modal-content">
             <div class="modal-header">
                 <h5 class="modal-title" id="exampleModalLongTitle">Agregar Embarcación a <strong
-                        id="cliente"></strong></h5>
+                        id="cliente">{{$nombre_emb_modal}}</strong></h5>
                 <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                     <span aria-hidden="true">&times;</span>
                 </button>
             </div>
             <div class="modal-body">
                 <div class="container">
+                    <div class="form-group">
+                        <label for="inputEmail4">Tipo de Embarcación</label>
+                        <select wire:model="id_tipo_embarcacion" class="form-control" name="" id="">
+                            <option value="">Seleccionar Tipo de Embarcación</option>
+                            @foreach ($tipoEmbarcaciones as $tipoEmbarcacion)
+                                <option value="{{ $tipoEmbarcacion->id_tipo_embarcacion }}">{{ $tipoEmbarcacion->nombre_tipo }}</option>
+                            @endforeach
+                        </select>
+                    </div>
                     <div class="form-group">
                         <label>Nombre de Embarcación</label>
                         <input wire:model='nombre_emb' type="text" class="form-control" id="exampleInputEmail1"
@@ -198,7 +207,6 @@
     });
     window.addEventListener('modal', event => {
         var cliente = event.detail.cliente;
-        document.getElementById("cliente").innerHTML = cliente;
         $('#modalAddEmbarcacion').modal('show');
 
     });

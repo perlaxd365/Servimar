@@ -6,8 +6,9 @@ use App\Models\Cliente;
 use App\Models\Embarcacion;
 use App\Models\Persona;
 use App\Models\TipoCliente;
+use App\Models\TipoEmbarcacion;
 use GuzzleHttp\Client;
-use Livewire\Component;
+use Livewire\Component;   
 use Livewire\WithPagination;
 
 class ClientesIndex extends Component
@@ -21,9 +22,10 @@ class ClientesIndex extends Component
     public $show;
     //Datos de cliente
     public $id_cliente, $duenio_cli, $razon_cli, $dni_cli, $ruc_cli, $nombre_cli, $telefono_cli, $email_cli, $id_tipo_cliente, $id_persona;
-    
+
     //Datos de embarcacion
-    public $nombre_emb,$matricula_emb,$duenio_emb,$telefono_emb;
+    public $nombre_emb_modal, $nombre_emb, $matricula_emb, $duenio_emb, $telefono_emb;
+    public $id_tipo_embarcacion;
     public function mount()
     {
         $this->embarcaciones = [];
@@ -36,7 +38,6 @@ class ClientesIndex extends Component
     {
         $clientes = Cliente::select('*')
             ->join('personas', 'personas.id_persona', '=', 'clientes.id_persona')
-            ->join('tipo_clientes', 'tipo_clientes.id_tipo_cliente', '=', 'clientes.id_tipo_cliente')
             ->where(function ($query) {
                 return $query
                     ->orwhere('duenio_cli', 'LIKE', '%' . $this->search . '%')
@@ -50,12 +51,14 @@ class ClientesIndex extends Component
             ->orderby('id_cliente', 'asc')->paginate($this->show);
 
 
-            
+
         $embarcaciones = $this->embarcaciones;
         $embarcacionesList = Embarcacion::select('*')
             ->join('clientes', 'clientes.id_cliente', '=', 'embarcacions.id_cliente')
+            ->join('tipo_embarcacions', 'tipo_embarcacions.id_tipo_embarcacion', '=', 'embarcacions.id_tipo_embarcacion')
             ->where(function ($query) {
                 return $query
+                    ->orwhere('nombre_tipo', 'LIKE', '%' . $this->searchEmb . '%')
                     ->orwhere('nombre_cli', 'LIKE', '%' . $this->searchEmb . '%')
                     ->orwhere('nombre_emb', 'LIKE', '%' . $this->searchEmb . '%')
                     ->orWhere('matricula_emb', 'LIKE', '%' . $this->searchEmb . '%')
@@ -64,35 +67,32 @@ class ClientesIndex extends Component
             ->where('estado_emb', '=', true)
             ->orderby('id', 'asc')->paginate($this->show);
 
-
+ 
 
 
         $tipoPersona = Persona::all();
-        $tipoCliente = TipoCliente::all();
+        $tipoEmbarcaciones = TipoEmbarcacion::all();
         return view(
             'livewire.cliente.clientes-index',
-            compact('clientes', 'embarcaciones', 'embarcacionesList', 'tipoPersona', 'tipoCliente')
+            compact('clientes', 'embarcaciones', 'embarcacionesList', 'tipoPersona', 'tipoEmbarcaciones')
         );
     }
 
     public function store()
     {
-        
+
         $messages = [
-            'id_tipo_cliente.required' => 'Por favor Seleccionar el Tipo de Cliente',
             'id_persona.required' => 'Por favor Seleccionar el tipo de Persona',
         ];
 
         $rules = [
 
 
-            'id_tipo_cliente' => 'required',
             'id_persona' => 'required',
 
         ];
         $this->validate($rules, $messages);
         Cliente::create([
-            'id_tipo_cliente' => $this->id_tipo_cliente,
             'id_persona' => $this->id_persona,
             'duenio_cli' => $this->duenio_cli,
             'ruc_cli' => $this->ruc_cli,
@@ -122,8 +122,8 @@ class ClientesIndex extends Component
     public function listaDetalle($id)
     {
         $this->embarcaciones = Embarcacion::where('id_cliente', $id)
-                                            ->where('estado_emb', true)
-                                            ->get();
+            ->where('estado_emb', true)
+            ->get();
         $filas = count($this->embarcaciones);
         $this->dispatchBrowserEvent('slider', ['id' => $id, 'filas' => $filas]);
     }
@@ -203,30 +203,34 @@ class ClientesIndex extends Component
         $this->default();
     }
 
-    public function modalEmbarcacion($id){
-        $this->id_cliente='';
-        $this->duenio_emb='';
-        $this->nombre_emb='';
-        $this->matricula_emb='';
-        $this->telefono_emb='';
-        $cliente=Cliente::find($id);
+    public function modalEmbarcacion($id)
+    {
+        $this->id_cliente = '';
+        $this->duenio_emb = '';
+        $this->nombre_emb = '';
+        $this->matricula_emb = '';
+        $this->telefono_emb = '';
+        $cliente = Cliente::find($id);
         $this->id_cliente = $cliente->id_cliente;
         $this->duenio_cli = $cliente->duenio_cli;
-        $this->dispatchBrowserEvent('modal', ['cliente' =>  $cliente->duenio_cli]);
+        $this->nombre_emb_modal = $cliente->razon_cli;
+        $this->dispatchBrowserEvent('modal');
     }
-    
-    public function storeEmbarcacion(){
+
+    public function storeEmbarcacion()
+    {
         Embarcacion::create([
-            'id_cliente'=>$this->id_cliente,
-            'duenio_emb'=>$this->duenio_emb,
-            'nombre_emb'=>$this->nombre_emb,
-            'matricula_emb'=>$this->matricula_emb,
-            'telefono_emb'=>$this->telefono_emb,
-            'user_create_emb'=>auth()->user()->name,
-            'estado_emb'=>true,
+            'id_tipo_embarcacion' => $this->id_tipo_embarcacion,
+            'id_cliente' => $this->id_cliente,
+            'duenio_emb' => $this->duenio_emb,
+            'nombre_emb' => $this->nombre_emb,
+            'matricula_emb' => $this->matricula_emb,
+            'telefono_emb' => $this->telefono_emb,
+            'user_create_emb' => auth()->user()->name,
+            'estado_emb' => true,
 
         ]);
-        $this->dispatchBrowserEvent('respuesta', ['res' => 'Agregó  ' . $this->duenio_emb . ' a la empresa  ' . $this->duenio_cli ]);
+        $this->dispatchBrowserEvent('respuesta', ['res' => 'Agregó  ' . $this->duenio_emb . ' a la empresa  ' . $this->duenio_cli]);
         $this->dispatchBrowserEvent('close-modal');
         $this->default();
     }
@@ -239,6 +243,4 @@ class ClientesIndex extends Component
         $this->dispatchBrowserEvent('respuesta', ['res' => 'Se eliminó a  ' . $embarcacion->duenio_emb . ' con éxito.']);
         $this->default();
     }
-
-
 }

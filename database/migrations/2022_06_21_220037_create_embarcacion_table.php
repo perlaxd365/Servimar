@@ -16,6 +16,7 @@ return new class extends Migration
         Schema::create('embarcacions', function (Blueprint $table) {
             $table->id();
             $table->unsignedBigInteger('id_cliente')->nullable()->comment('id de cliente');
+            $table->unsignedBigInteger('id_tipo_embarcacion')->nullable()->comment('id tipo de embarcacion anchovetera,etc');
             $table->string('nombre_emb')->nullable()->comment('nombre de embarcación');
             $table->string('matricula_emb')->nullable()->comment('matrícula de embarcación');
             $table->string('duenio_emb')->nullable()->comment('dueño de embarcación');
@@ -26,6 +27,8 @@ return new class extends Migration
 
             
             $table->foreign('id_cliente')->references('id_cliente')->on('clientes');
+            //relacion con tabla tipocliente
+            $table->foreign('id_tipo_embarcacion')->references('id_tipo_embarcacion')->on('tipo_embarcacions');
         });
     }
 

@@ -13,6 +13,7 @@ class Kardex extends Model
     protected $fillable = [
         'id_producto',
         'id_tipo_movimiento', 
+        'cantidad_inicial_kar', 
         'cantidad_kar', 
         'total_kar', 
         'user_create_kar', 

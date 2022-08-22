@@ -52,6 +52,8 @@ class CreditosIndex extends Component
             'telefono_emb',
             'fecha_credito',
             'monto_credito',
+            'galones_credito',
+            'precio_galon_credito'
             )
             ->join('embarcacions', 'embarcacions.id', '=', 'creditos.id_embarcacion')
             ->rightjoin('ventas', 'embarcacions.id', '=', 'ventas.id_embarcacion')
