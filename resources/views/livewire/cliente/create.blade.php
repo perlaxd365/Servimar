@@ -33,11 +33,11 @@
     </div>
     <div class="form-group col-md-6">
         <label for="">RUC</label>
-        <input wire:model='ruc_cli' type="text" class="form-control" placeholder="Ingresar RUC">
+        <input wire:model='ruc_cli' maxlength="11" type="text" class="form-control" placeholder="Ingresar RUC">
     </div>
     <div class="form-group col-md-6">
         <label for="">DNI</label>
-        <input wire:model='dni_cli' type="text" class="form-control" placeholder="Ingresar DNI">
+        <input wire:model='dni_cli' maxlength="8" type="text" class="form-control" placeholder="Ingresar DNI">
     </div>
     <div class="form-group col-md-6">
         <label for="">Nombres y Apellidos</label>
@@ -45,7 +45,7 @@
     </div>
     <div class="form-group col-md-6">
         <label for="">Teléfono</label>
-        <input wire:model='telefono_cli' type="text" class="form-control" placeholder="Ingresar Teléfono">
+        <input wire:model='telefono_cli' maxlength="12" type="text" class="form-control" placeholder="Ingresar Teléfono">
     </div>
     <div class="form-group col-md-6">
         <label for="">Correo</label>

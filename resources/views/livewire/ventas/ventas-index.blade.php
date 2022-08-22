@@ -1,11 +1,9 @@
 <div>
 
 
-    <div class="card">
         
         @include('livewire.ventas.create')
 
-    </div>
     <div class="card">
         
         @include('livewire.ventas.table')

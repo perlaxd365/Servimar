@@ -23,6 +23,7 @@ class VentasIndex extends Component
     use WithPagination;
     protected $paginationTheme = "bootstrap";
     public $show;
+    public $paginasVentas;
     //buscar embarcacion
     public $id_emb, $nombre_emb, $matricula_emb, $searchEmbarcacion;
     //tipo de pago
@@ -30,7 +31,8 @@ class VentasIndex extends Component
     //id_producto
     public $id_producto, $abastecimiento;
     //datos de venta
-    public $galonaje_venta, $precio_venta, $nombre_ref_venta, $dni_ref_venta, $telefono_ref_venta, $moneda_venta;
+    public $galonaje_venta, $precio_venta, $nombre_ref_venta,
+        $dni_ref_venta, $telefono_ref_venta, $moneda_venta, $observacion_venta;
     //Producto actual de abastecimiento
     public $precio_general, $stock_actual;
     //dolares
@@ -41,6 +43,10 @@ class VentasIndex extends Component
     public $mostrarPrecio;
     //Mostrar precio front
     public $mostrarPrecioFront;
+    //buscar Venta
+    public $searchVenta;
+    //vista
+    public $view;
 
     public function mount()
     {
@@ -56,6 +62,7 @@ class VentasIndex extends Component
             $this->sede = $sede->descripcion;
         }
         $this->show = 5;
+        $this->paginasVentas = 10;
         $this->idtipopago = 1;
         $this->moneda_venta = 'Soles';
         $this->mostrarPrecio = true;
@@ -64,6 +71,7 @@ class VentasIndex extends Component
 
         $data = json_decode(file_get_contents('https://api.apis.net.pe/v1/tipo-cambio-sunat'), true);
         $this->dolares = $data['venta'];
+        $this->view='create';
     }
     public function render()
     {
@@ -89,7 +97,20 @@ class VentasIndex extends Component
             ->where('estado_emb', '=', true)
             ->groupby('embarcacions.id')
             ->paginate($this->show);
-        return view('livewire.ventas.ventas-index', compact('embarcaciones', 'productos', 'tipoPagos'));
+
+        $ventas= Venta::select('*')
+        ->join('embarcacions','embarcacions.id', '=', 'ventas.id_embarcacion')
+        ->join('tipo_pagos','tipo_pagos.id_tipo_pago', '=', 'ventas.id_tipo_pago')
+        ->where(function ($query) {
+            return $query
+            ->orwhere('nombre_emb', 'LIKE', '%' . $this->searchVenta . '%')
+                ->orwhere('nombre_tipo_pago', 'LIKE', '%' . $this->searchVenta . '%');
+        })
+        ->where('fecha_venta', 'LIKE', '%' . now()->format('d/m/Y') . '%')
+        ->where('ventas.estado_venta', '=', 'Activo')
+        ->paginate($this->paginasVentas);
+
+        return view('livewire.ventas.ventas-index', compact('embarcaciones', 'productos', 'tipoPagos','ventas'));
     }
     public function seleccionEmbarcacion($id, $nombre, $matricula)
     {
@@ -109,7 +130,7 @@ class VentasIndex extends Component
     }
     public function store()
     {
-        
+
         $messages = [
             'nombre_emb.required' => 'Por favor selecciona una embarcación.',
             'galonaje_venta.gt' => 'El valor mínimo para agregar es 1.',
@@ -145,7 +166,9 @@ class VentasIndex extends Component
             'id_producto' => $this->id_producto,
             'id_tipo_pago' => $this->idtipopago,
             'galonaje_venta' => $this->galonaje_venta,
-            'precio_venta' => $this->mostrarPrecioFront==false?0:$this->precio_venta,
+            'precio_venta' => $this->mostrarPrecioFront == false ? 0 : $this->precio_venta,
+            'nombre_producto' => $this->abastecimiento,
+            'precio_x_galon_venta' => $this->precio_general,
             'monto_inicial_venta' => $this->stock_actual,
             'moneda_venta' => $this->moneda_venta,
             'nombre_ref_venta' => $this->nombre_ref_venta,
@@ -154,6 +177,7 @@ class VentasIndex extends Component
             'fecha_venta' => now()->format('d/m/Y H:i:s A'),
             'estado_venta' => 'Activo',
             'mostrar_venta' => $this->mostrarPrecio,
+            'observacion_venta' => $this->observacion_venta,
             'user_create_venta' => auth()->user()->name,
             'user_sede' => $this->sede,
         ])->id_venta;
@@ -164,7 +188,7 @@ class VentasIndex extends Component
                 'id_venta' => $id_venta,
                 'precio_galon_credito' => $this->precio_general,
                 'galones_credito' => $this->galonaje_venta,
-                'monto_credito' => $this->mostrarPrecioFront==false?0:$this->precio_venta,
+                'monto_credito' => $this->mostrarPrecioFront == false ? 0 : $this->precio_venta,
                 'fecha_credito' => now(),
                 'estado_credito' => true,
                 'user_create_credito' => auth()->user()->name,
@@ -182,7 +206,7 @@ class VentasIndex extends Component
             'user_create_kar' => auth()->user()->name,
 
         ]);
-        $this->stock_actual=$this->stock_actual-$this->galonaje_venta;
+        $this->stock_actual = $this->stock_actual - $this->galonaje_venta;
         $this->print();
         $this->default();
 
@@ -257,6 +281,8 @@ class VentasIndex extends Component
 
     public function default()
     {
+        $this->mostrarPrecio = true;
+        $this->mostrarPrecioFront = true;
         $this->idtipopago = 1;
         $this->galonaje_venta = '';
         $this->precio_venta = '';
@@ -266,6 +292,7 @@ class VentasIndex extends Component
         $this->moneda_venta = 'Soles';
         $this->id_emb = '';
         $this->nombre_emb = '';
+        $this->observacion_venta = '';
     }
 
     public function updatedidtipopago()
@@ -277,5 +304,17 @@ class VentasIndex extends Component
         } else {
             $this->mostrarPrecioFront = true;
         }
+    }
+    public function modalDetalle()
+    {
+        
+    }
+    public function crearVentaView()
+    {
+        $this->view='create';
+    }
+    public function listarVentaView()
+    {
+        $this->view='list';
     }
 }

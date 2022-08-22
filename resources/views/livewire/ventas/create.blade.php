@@ -60,7 +60,7 @@
     }
 </style>
 
-<div class="card-header">
+<div  class="card-header">
     <div class="form-group col-md-12">
         <div class="card-body">
             <div class="card" style="width: 100%">
@@ -71,7 +71,7 @@
                     </div>
                     <ul class="list-group list-group-flush">
                         <li class="list-group-item"><strong>Producto</strong> : {{ $producto->nombre_pro }}</li>
-                        <li class="list-group-item"><strong>Venta</strong> : {{ $producto->stock_pro }}</li>
+                        <li class="list-group-item"><strong>Stock</strong> : {{ $producto->stock_pro }}</li>
                         <li class="list-group-item"><strong>Precio por Galón</strong> : {{ $producto->precio_pro }}</li>
                     </ul>
 
@@ -82,114 +82,203 @@
         </div>
     </div>
 </div>
-
-
-
-
-
-<div class="card-body form-row">
-
-    <div class="form-group col-md-12">
-        @if (count($errors) > 0)
-            <div class="alert border-danger">
-                <p>Se encontraron los siguientes errores:</p>
-                <ul>
-                    @foreach ($errors->all() as $message)
-                        <li>{{ $message }}</li>
-                    @endforeach
-                </ul>
+<ul  class="nav nav-pills mb-3 card-body" id="pills-tab" role="tablist">
+    <li class="nav-item">
+        <a class="nav-link <?php if($view=='create'){echo 'active';} ?>" id="crear-venta" wire:click="crearVentaView" data-toggle="pill" href="#pills-home"
+            role="tab"aria-controls="pills-home" aria-selected="true">Crear Venta</a>
+    </li>
+    <li class="nav-item">
+        <a class="nav-link <?php if($view=='list'){echo 'active';} ?>" id="ver-ventas" wire:click="listarVentaView"  data-toggle="pill" href="#pills-profile"
+            role="tab"aria-controls="pills-profile" aria-selected="false">Ver Ventas</a>
+    </li>
+</ul>
+<div  class="tab-content" id="pills-tabContent">
+    <div class="tab-pane fade <?php if($view=='create'){echo 'show active';} ?>" id="pills-home" role="tabpanel" aria-labelledby="crear-venta">
+        <div>
+            <div class="card">
+                <div class="card-header">
+                    <h5>Datos de Embarcación</h5>
+                </div>
+                @if (count($errors) > 0)
+                    <div class="alert border-danger">
+                        <p>Se encontraron los siguientes errores:</p>
+                        <ul>
+                            @foreach ($errors->all() as $message)
+                                <li>{{ $message }}</li>
+                            @endforeach
+                        </ul>
+                    </div>
+                @endif
+                <div class="card-body">
+                    <label for="">Embarcacion</label>
+                    <div class="row">
+                        <div class="col-8">
+                            <input wire:model='nombre_emb' readonly type="text" class="form-control"
+                                placeholder="Seleccionar Embarcación">
+                            <input wire:model='id_emb' type="hidden" class="form-control">
+                        </div>
+                        <div class="col-4">
+                            <button class="btn btn-primary" data-toggle="modal" data-target="#buscarEmbarcacion">Buscar
+                                Embarcación</button>
+                        </div>
+                    </div>
+                </div>
             </div>
-        @endif
-        <h4>Datos de Embarcación</h4>
-    </div>
-    <div class="form-group col-md-12">
-        <label for="">Embarcacion</label>
-        <div class="row">
-            <div class="col-8">
-                <input wire:model='nombre_emb' readonly type="text" class="form-control"
-                    placeholder="Seleccionar Embarcación">
-                <input wire:model='id_emb' type="hidden" class="form-control">
+
+            <div class="card">
+                <div class="card-header">
+                    <h5>Datos de Venta</h5>
+                </div>
+                <div class="card-body  form-row">
+                    <div class="form-group col-md-6">
+                        <label for="inputEmail4">Galones</label>
+                        <input wire:model='galonaje_venta' wire:keyup='calcularTotal' wire:keypress='calcularTotal'
+                            wire:keydown='calcularTotal' autocomplete="off" type="number" Step="0"
+                            class="form-control solo-numero" placeholder="Ingresar Cantidad de Galones">
+                    </div>
+                    <div class="form-group col-md-6">
+                        <label for="inputEmail4">Moneda</label>
+                        <select wire:model="moneda_venta" class="form-control" name="" id="">
+                            <option value="">Seleccionar Moneda</option>
+                            <option value="Soles">Soles</option>
+                            <option value="Dolares">Dolares ({{ $dolares }})</option>
+                        </select>
+                    </div>
+                    <div class="form-group col-md-6">
+                        <label for="inputEmail4">Tipo de Pago</label>
+                        <select wire:model="idtipopago" class="form-control" name="" id="">
+                            <option value="">Seleccionar Tipo de Pago</option>
+                            @foreach ($tipoPagos as $tipo)
+                                <option value="{{ $tipo->id_tipo_pago }}">{{ $tipo->nombre_tipo_pago }}</option>
+                            @endforeach
+                        </select>
+                    </div>
+                    <div class="form-group col-md-6"
+                        style="@if ($mostrarPrecioFront) display:block @else display:none @endif">
+                        <label for="inputEmail4">Precio</label>
+                        <input wire:model='precio_venta' type="number" autocomplete="off" Step="0"
+                            class="form-control solo-numero" id="exampleInputEmail1" placeholder="Ingresar Precio">
+                        <label for="inputEmail4">Mostrar Precio</label>
+                        <label class="switch" style="size: 4cm">
+                            <input wire:model="mostrarPrecio" type="checkbox" checked>
+                            <span class="slider round"></span>
+                        </label>
+                    </div>
+                </div>
             </div>
-            <div class="col-4">
-                <button class="btn btn-primary" data-toggle="modal" data-target="#buscarEmbarcacion">Buscar
-                    Embarcación</button>
+
+            <div class="card">
+                <div class="card-header">
+                    <h5>Datos de Referencia</h5>
+                </div>
+                <div class="card-body  form-row">
+                    <div class="form-group col-md-6">
+                        <label for="">Nombres y Apellidos</label>
+                        <input wire:model='nombre_ref_venta' type="text" class="form-control"
+                            placeholder="Ingresar Nombres de Referencia">
+                    </div>
+                    <div class="form-group col-md-6">
+                        <label for="">DNI</label>
+                        <input wire:model='dni_ref_venta' type="text" class="form-control"
+                            placeholder="Ingresar DNI de Referencia">
+                    </div>
+                    <div class="form-group col-md-6">
+                        <label for="">Teléfono</label>
+                        <input wire:model='telefono_ref_venta' type="text" class="form-control"
+                            placeholder="Ingresar teléfono de Referencia">
+                    </div>
+                </div>
             </div>
+
+
+            <div class="card">
+                <div class="card-header">
+                    <h4>Observaciones</h4>
+                </div>
+                <div class="card-body  form-row">
+                    <div class="form-group col-md-12">
+                        <label for="">Especificar Observación</label>
+                        <textarea wire:model='observacion_venta' class="form-control" id="" cols="5" rows="5"
+                            placeholder="Ingresar Observación">
+        
+                        </textarea>
+                    </div>
+                    <div class="container">
+                        <div class="card-body form-row">
+                            <button wire:click="store" wire:loading.attr="disabled" class="btn btn-primary"
+                                type="button">
+                                <i class="fa fa-plus-circle"></i> <i wire:target="store"
+                                    wire:loading.class="fa fa-spinner fa-spin" aria-hidden="true"></i> Registrar
+                                Venta</button>
+                            <br>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
         </div>
     </div>
-    <br>
-    <br>
-    <div class="divider py-1 bg-dark"></div>
-    <hr class="mt-5 mb-5">
-    <div class="form-group col-md-12">
-        <h4>Datos de Venta</h4>
-    </div>
-    <div class="form-group col-md-6">
-        <label for="inputEmail4">Galones</label>
-        <input  wire:model='galonaje_venta' wire:keyup='calcularTotal' wire:keypress='calcularTotal'
-            wire:keydown='calcularTotal' autocomplete="off" type="number" Step="0"
-            class="form-control solo-numero" placeholder="Ingresar Cantidad de Galones">
-    </div>
-    <div class="form-group col-md-6">
-        <label for="inputEmail4">Moneda</label>
-        <select wire:model="moneda_venta" class="form-control" name="" id="">
-            <option value="">Seleccionar Moneda</option>
-            <option value="Soles">Soles</option>
-            <option value="Dolares">Dolares ({{ $dolares }})</option>
-        </select>
-    </div>
-    <div class="form-group col-md-6">
-        <label for="inputEmail4">Tipo de Pago</label>
-        <select wire:model="idtipopago" class="form-control" name="" id="">
-            <option value="">Seleccionar Tipo de Pago</option>
-            @foreach ($tipoPagos as $tipo)
-                <option value="{{ $tipo->id_tipo_pago }}">{{ $tipo->nombre_tipo_pago }}</option>
-            @endforeach
-        </select>
-    </div>
-        <div class="form-group col-md-6" style="@if ($mostrarPrecioFront)display:block @else display:none  @endif">
-            <label for="inputEmail4">Precio</label>
-            <input wire:model='precio_venta' type="number" autocomplete="off" Step="0"
-                class="form-control solo-numero" id="exampleInputEmail1" placeholder="Ingresar Precio">
-            <label for="inputEmail4">Mostrar Precio</label>
-            <label class="switch" style="size: 4cm">
-                <input wire:model="mostrarPrecio" type="checkbox" checked>
-                <span class="slider round"></span>
-            </label>
-        </div>
-    
-    <br>
-    <div class="divider py-1 bg-dark"></div>
-    <hr class="mt-5 mb-5">
-    <div class="form-group col-md-12">
-        <h4>Datos de Referencia</h4>
-    </div>
+    <div class="tab-pane fade <?php if($view=='list'){echo 'show active';} ?>" id="pills-profile" role="tabpanel" aria-labelledby="ver-ventas">
+        <div class="container">
+            <div class="card">
+                <div class="card-header">
+                    <h4>
+                        Lista de Ventas
+                    </h4>
+                    <input wire:model='searchVenta' type="text" class="form-control" placeholder="Buscar">
+                </div>
 
-    <div class="form-group col-md-6">
-        <label for="">Nombres y Apellidos</label>
-        <input wire:model='nombre_ref_venta' type="text" class="form-control"
-            placeholder="Ingresar Nombres de Referencia">
-    </div>
-    <div class="form-group col-md-6">
-        <label for="">DNI</label>
-        <input wire:model='dni_ref_venta' type="text" class="form-control" placeholder="Ingresar DNI de Referencia">
-    </div>
-    <div class="form-group col-md-6">
-        <label for="">Teléfono</label>
-        <input wire:model='telefono_ref_venta' type="text" class="form-control"
-            placeholder="Ingresar teléfono de Referencia">
-    </div>
-    <div class="container">
-        <div class="card-body form-row">
-            <button wire:click="store" wire:loading.attr="disabled" class="btn btn-primary" type="button"> <i
-                    class="fa fa-plus-circle"></i> <i wire:target="store" wire:loading.class="fa fa-spinner fa-spin"
-                    aria-hidden="true"></i> Registrar Venta</button>
-            <br>
+                @if ($ventas->count())
+                    <div class="card-body">
+                        <div class="card-body">
+                            <table class="table table-striped table-sm table-responsive-sm">
+                                <thead>
+                                    <th>ID</th>
+                                    <th>E/P</th>
+                                    <th>MATRÍCULA</th>
+                                    <th>TIPO PAGO</th>
+                                    <th>PRECIO X GALÓN</th>
+                                    <th>GALONES</th>
+                                    <th>PAGO</th>
+                                    <th>Ver</th>
+                                </thead>
+                                <tbody>
+                                    @foreach ($ventas as $venta)
+                                        <tr>
+                                            <td>{{ $venta->id_venta }}</td>
+                                            <td>{{ $venta->nombre_emb }}</td>
+                                            <td>{{ $venta->matricula_emb }}</td>
+                                            <td>{{ $venta->nombre_tipo_pago }}</td>
+                                            <td>S/ {{ $venta->precio_x_galon_venta }}</td>
+                                            <td>S/ {{ $venta->galonaje_venta }}</td>
+                                            <td>S/ {{ $venta->precio_venta }}</td>
+                                            <td>
+                                                <button wire:click="modalDetalle({{ $venta->id_venta }})"
+                                                    type="button" class="btn btn-outline-info">
+                                                    <i class='fas fa-eye'></i>
+                                                </button>
+
+                                            </td>
+                                        </tr>
+                                    @endforeach
+
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                @else
+                    <div class="card-body">
+                        <strong>No se encontraron resultados</strong>
+                    </div>
+                @endif
+            </div>
+
         </div>
     </div>
 </div>
 
 
-<br>
+
 
 
 
@@ -255,12 +344,12 @@
                                         </td>
                                         <td>
                                             @if ($embarcacion->galones_credito)
-                                            <span class="badge badge-warning">
-                                               Crédito - Galones
-                                            </span>
-                                            <span class="badge badge-danger">
-                                                {{ $embarcacion->galones_credito }}
-                                            </span>
+                                                <span class="badge badge-warning">
+                                                    Crédito - Galones
+                                                </span>
+                                                <span class="badge badge-danger">
+                                                    {{ $embarcacion->galones_credito }}
+                                                </span>
                                             @endif
 
                                         </td>
