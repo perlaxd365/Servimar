@@ -32,7 +32,8 @@ class VentasIndex extends Component
     public $id_producto, $abastecimiento;
     //datos de venta
     public $galonaje_venta, $precio_venta, $nombre_ref_venta,
-        $dni_ref_venta, $telefono_ref_venta, $moneda_venta, $observacion_venta;
+        $dni_ref_venta, $telefono_ref_venta, $moneda_venta, $observacion_venta,
+        $id_venta;
     //Producto actual de abastecimiento
     public $precio_general, $stock_actual;
     //dolares
@@ -71,7 +72,7 @@ class VentasIndex extends Component
 
         $data = json_decode(file_get_contents('https://api.apis.net.pe/v1/tipo-cambio-sunat'), true);
         $this->dolares = $data['venta'];
-        $this->view='create';
+        $this->view = 'create';
     }
     public function render()
     {
@@ -98,19 +99,29 @@ class VentasIndex extends Component
             ->groupby('embarcacions.id')
             ->paginate($this->show);
 
-        $ventas= Venta::select('*')
-        ->join('embarcacions','embarcacions.id', '=', 'ventas.id_embarcacion')
-        ->join('tipo_pagos','tipo_pagos.id_tipo_pago', '=', 'ventas.id_tipo_pago')
-        ->where(function ($query) {
-            return $query
-            ->orwhere('nombre_emb', 'LIKE', '%' . $this->searchVenta . '%')
-                ->orwhere('nombre_tipo_pago', 'LIKE', '%' . $this->searchVenta . '%');
-        })
-        ->where('fecha_venta', 'LIKE', '%' . now()->format('d/m/Y') . '%')
+        date_default_timezone_set('America/Lima');
+        $ventas = Venta::select('*')
+            ->join('embarcacions', 'embarcacions.id', '=', 'ventas.id_embarcacion')
+            ->join('tipo_pagos', 'tipo_pagos.id_tipo_pago', '=', 'ventas.id_tipo_pago')
+            ->where(function ($query) {
+                return $query
+                    ->orwhere('nombre_emb', 'LIKE', '%' . $this->searchVenta . '%')
+                    ->orwhere('nombre_tipo_pago', 'LIKE', '%' . $this->searchVenta . '%');
+            })
+            ->where('fecha_venta', 'LIKE', '%' . now()->format('d/m/Y') . '%')
+            ->where('ventas.estado_venta', '=', 'Activo')
+            ->orderby('fecha_venta','desc')
+            ->paginate($this->paginasVentas);
+
+            
+        $detalleVenta = Venta::select('*')
+        ->join('embarcacions', 'embarcacions.id', '=', 'ventas.id_embarcacion')
+        ->join('tipo_pagos', 'tipo_pagos.id_tipo_pago', '=', 'ventas.id_tipo_pago')
+        ->where('id_venta', '=', $this->id_venta)
         ->where('ventas.estado_venta', '=', 'Activo')
         ->paginate($this->paginasVentas);
 
-        return view('livewire.ventas.ventas-index', compact('embarcaciones', 'productos', 'tipoPagos','ventas'));
+        return view('livewire.ventas.ventas-index', compact('embarcaciones', 'productos', 'tipoPagos', 'ventas','detalleVenta'));
     }
     public function seleccionEmbarcacion($id, $nombre, $matricula)
     {
@@ -210,7 +221,7 @@ class VentasIndex extends Component
         $this->print();
         $this->default();
 
-        $this->dispatchBrowserEvent('print', ['id' => $id_venta]);
+        //$this->dispatchBrowserEvent('print', ['id' => $id_venta]);
         $this->dispatchBrowserEvent('respuesta', ['res' => 'Se realizó la venta correctamente.']);
     }
 
@@ -305,16 +316,16 @@ class VentasIndex extends Component
             $this->mostrarPrecioFront = true;
         }
     }
-    public function modalDetalle()
+    public function modalDetalle($id_venta)
     {
-        
+        $this->id_venta = $id_venta;
     }
     public function crearVentaView()
     {
-        $this->view='create';
+        $this->view = 'create';
     }
     public function listarVentaView()
     {
-        $this->view='list';
+        $this->view = 'list';
     }
 }

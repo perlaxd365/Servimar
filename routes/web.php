@@ -2,8 +2,10 @@
 
 use App\Http\Controllers\ClienteController;
 use App\Http\Controllers\CreditoCotroller;
+use App\Http\Controllers\PagoController;
 use App\Http\Controllers\printController;
 use App\Http\Controllers\ProductController;
+use App\Http\Controllers\ReporteController;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\UserController;
 use App\Http\Controllers\VentaController;
@@ -51,5 +53,10 @@ Route::resource('ventas', VentaController::class)->names('admin.ventas');
 Route::resource('creditos', CreditoCotroller::class)->names('admin.creditos');
 
 
-
 Route::resource('print/{id}/', printController::class)->names('print.index');
+
+
+Route::resource('reportes', ReporteController::class)->names('admin.reportes');
+
+
+Route::resource('pagos', PagoController::class)->names('admin.pagos');

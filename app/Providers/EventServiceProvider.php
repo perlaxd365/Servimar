@@ -94,6 +94,22 @@ class EventServiceProvider extends ServiceProvider
                 'label_color' => 'info',
                 'can'           => 'admin.creditos.index'
             ]);
+            $event->menu->add([
+                'text' => 'Pagos',
+                'route' => 'admin.pagos.index',
+                'icon' => 'fas fa-money-bill-wave',
+                'can'           => 'admin.pagos.index'
+            ]);
+            $event->menu->add([
+                'header' => 'GESTION DE REPORTES',
+                'can'    => 'admin.reportes.index'
+            ]);
+            $event->menu->add([
+                'text' => 'Reporte de Ventas',
+                'route' => 'admin.reportes.index',
+                'icon' => 'fas fa-file-import',
+                'can'  => 'admin.reportes.index'
+            ]);
         });
     }
 

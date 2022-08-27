@@ -179,7 +179,7 @@
                     </div>
                     <div class="form-group col-md-6">
                         <label for="">DNI</label>
-                        <input wire:model='dni_ref_venta' type="text" class="form-control"
+                        <input wire:model='dni_ref_venta' minlength="8"  type="text" class="form-control"
                             placeholder="Ingresar DNI de Referencia">
                     </div>
                     <div class="form-group col-md-6">
@@ -237,6 +237,7 @@
                                     <th>E/P</th>
                                     <th>MATRÍCULA</th>
                                     <th>TIPO PAGO</th>
+                                    <th>HORA</th>
                                     <th>PRECIO X GALÓN</th>
                                     <th>GALONES</th>
                                     <th>PAGO</th>
@@ -249,12 +250,13 @@
                                             <td>{{ $venta->nombre_emb }}</td>
                                             <td>{{ $venta->matricula_emb }}</td>
                                             <td>{{ $venta->nombre_tipo_pago }}</td>
+                                            <td>{{ Str::substr($venta->fecha_venta, 10, 6).Str::substr($venta->fecha_venta, 19, 3) }}</td>
                                             <td>S/ {{ $venta->precio_x_galon_venta }}</td>
                                             <td>S/ {{ $venta->galonaje_venta }}</td>
                                             <td>S/ {{ $venta->precio_venta }}</td>
                                             <td>
                                                 <button wire:click="modalDetalle({{ $venta->id_venta }})"
-                                                    type="button" class="btn btn-outline-info">
+                                                    type="button" class="btn btn-outline-info" data-toggle="modal" data-target="#detalleVenta">
                                                     <i class='fas fa-eye'></i>
                                                 </button>
 
@@ -278,6 +280,7 @@
 </div>
 
 
+@include('livewire.ventas..modals.md_detalle_venta')
 
 
 
@@ -372,6 +375,11 @@
         </div>
     </div>
 </div>
+
+<!-- Fin Modal -->
+
+
+
 <script>
     window.addEventListener('close-modal', event => {
         var producto = event.detail.producto;

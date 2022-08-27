@@ -53,6 +53,18 @@ class RoleSeeder extends Seeder
        Permission::create(['name'=>'admin.creditos.create'])->syncRoles($role1);
        Permission::create(['name'=>'admin.creditos.update'])->syncRoles($role1);
        Permission::create(['name'=>'admin.creditos.delete'])->syncRoles($role1);
+
+       // PERMISOS PARA REPORTES
+       Permission::create(['name'=>'admin.reportes.index'])->syncRoles($role1);
+       Permission::create(['name'=>'admin.reportes.create'])->syncRoles($role1);
+       Permission::create(['name'=>'admin.reportes.update'])->syncRoles($role1);
+       Permission::create(['name'=>'admin.reportes.delete'])->syncRoles($role1);
+
+       // PERMISOS PARA REPORTES
+       Permission::create(['name'=>'admin.pagos.index'])->syncRoles($role1);
+       Permission::create(['name'=>'admin.pagos.create'])->syncRoles($role1);
+       Permission::create(['name'=>'admin.pagos.update'])->syncRoles($role1);
+       Permission::create(['name'=>'admin.pagos.delete'])->syncRoles($role1);
         
     }
 }
