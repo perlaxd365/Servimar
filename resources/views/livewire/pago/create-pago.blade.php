@@ -121,4 +121,7 @@
         $('#buscarCliente').modal('hide');
 
     });
+    window.addEventListener('actualizar-pagina', event => {
+        location.reload();
+    });
 </script>

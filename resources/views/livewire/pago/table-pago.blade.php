@@ -1,7 +1,7 @@
 
        <div class="card-header">
             <h3>
-                Listado de Clientes
+                Listado de Pagos
             </h3>
             <input wire:model='searchPago' type="text" class="form-control"
                 placeholder="Buscar por cualquier criterio">

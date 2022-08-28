@@ -23,9 +23,10 @@ class CreditosIndex extends Component
     //credito
     public $id_credito;
     //pago
-    public $monto_pagar;
+    public $monto_pagar, $monto_abonado;
     //sede
     public $sede;
+
 
     public function mount()
     {
@@ -118,16 +119,18 @@ class CreditosIndex extends Component
             'monto_credito',
             'galones_credito',
             'precio_galon_credito',
-            'id_credito',
+            'creditos.id_credito',
+            'detalle_pagos.monto_detalle_pago',
         )
             ->join('embarcacions', 'embarcacions.id', '=', 'creditos.id_embarcacion')
+            ->join('detalle_pagos', 'detalle_pagos.id_credito', '=', 'creditos.id_credito')
             ->rightjoin('ventas', 'embarcacions.id', '=', 'ventas.id_embarcacion')
             ->where('embarcacions.id_cliente', '=', $this->id_cliente)
             ->where('creditos.estado_credito', '=', false)
             ->orderby('embarcacions.id_cliente', 'asc')
             ->groupby('id_credito')
             ->paginate($this->show);
-        return view('livewire.credito.creditos-index', compact('clientes', 'embarcaciones', 'pagos', 'creditoPrePago','historialCreditos'));
+        return view('livewire.credito.creditos-index', compact('clientes', 'embarcaciones', 'pagos', 'creditoPrePago', 'historialCreditos'));
     }
     public function updatingSearch()
     {
@@ -149,6 +152,30 @@ class CreditosIndex extends Component
 
     public function store()
     {
+        //pago
+
+        $pagos = Pago::select(
+            'monto_pago',
+        )
+            ->join('clientes', 'clientes.id_cliente', '=', 'pagos.id_cliente')
+            ->where('pagos.id_cliente', '=', $this->id_cliente)
+            ->paginate($this->show);
+        foreach ($pagos as $pago) {
+            $this->monto_abonado = $pago->monto_pago;
+        }
+        $messages = [
+            'monto_pagar.gt' => 'El valor mínimo para agregar es 1.',
+            'monto_pagar.lt' => 'El pago no puede exeder los ' . $this->monto_abonado . ' Soles, por favor realiza un depósito.',
+        ];
+
+        $rules = [
+            'monto_pagar' => 'gt:0|lt:' . $this->monto_abonado + 1,
+
+
+        ];
+        $this->validate($rules, $messages);
+
+
 
         date_default_timezone_set('America/Lima');
         $pagos = Pago::where('id_cliente', '=', $this->id_cliente)->get();

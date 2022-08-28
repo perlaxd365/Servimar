@@ -3,7 +3,7 @@
 
    <div class="card">
        
-       @include('livewire.reporte.reporte-ventas')
+       @include('livewire.reporte.ventas.reporte-ventas')
 
    </div>
 
@@ -11,10 +11,19 @@
 </div>
 
 <script type="text/javascript">
-   window.addEventListener('respuesta', event => {
+    window.addEventListener('respuesta', event => {
+        let res = event.detail.res;
+        Swal.fire({
+            type: 'success',
+            title: res,
+            showConfirmButton: false,
+            timer: 2000
+        })
+    });
+   window.addEventListener('error', event => {
        let res = event.detail.res;
        Swal.fire({
-           type: 'success',
+           type: 'warning',
            title: res,
            showConfirmButton: false,
            timer: 2000

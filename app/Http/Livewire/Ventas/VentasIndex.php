@@ -4,6 +4,7 @@ namespace App\Http\Livewire\Ventas;
 
 use App\Models\Credito;
 use App\Models\Embarcacion;
+use App\Models\Jornada;
 use App\Models\Kardex;
 use App\Models\Product;
 use App\Models\Sede;
@@ -48,9 +49,29 @@ class VentasIndex extends Component
     public $searchVenta;
     //vista
     public $view;
+    //jornada 
+    public $estado_jornada, $entrada_jornada;
 
     public function mount()
     {
+        //Sede
+        $sedes = Sede::where('id_sede', auth()->user()->id_sede)->get();
+        foreach ($sedes as $sede) {
+            $this->sede = $sede->descripcion;
+        }
+        //jornada
+
+        $jornadas = Jornada::select('*')
+        ->where('user_create_jornada', '=', auth()->user()->name)
+        ->where('user_sede', '=', $this->sede)
+            ->orderby('id_jornada', 'desc')
+            ->first();
+
+        $this->estado_jornada = $jornadas->estado_jornada;
+        $this->entrada_jornada = $jornadas->entrada_jornada;
+        
+
+        //producto
         $productos = Product::where('id_sede', auth()->user()->id_sede)->get();
         foreach ($productos as  $producto) {
             $this->id_producto = $producto->id_producto;
@@ -58,10 +79,7 @@ class VentasIndex extends Component
             $this->stock_actual = $producto->stock_pro;
             $this->abastecimiento = $producto->nombre_pro;
         }
-        $sedes = Sede::where('id_sede', auth()->user()->id_sede)->get();
-        foreach ($sedes as $sede) {
-            $this->sede = $sede->descripcion;
-        }
+        
         $this->show = 5;
         $this->paginasVentas = 10;
         $this->idtipopago = 1;
@@ -78,6 +96,7 @@ class VentasIndex extends Component
     {
         $productos = Product::where('id_sede', auth()->user()->id_sede)->get();
         $tipoPagos = TipoPago::All();
+        //EMBARCACIONES
         $embarcaciones = Embarcacion::select(
             DB::raw('SUM(galones_credito) AS galones_credito'),
             'embarcacions.id',
@@ -88,7 +107,10 @@ class VentasIndex extends Component
             'telefono_emb',
         )
             ->join('clientes', 'embarcacions.id_cliente', '=', 'clientes.id_cliente')
-            ->leftjoin('creditos', 'embarcacions.id', '=', 'creditos.id_embarcacion')
+            ->leftjoin('creditos', function ($join) {
+                $join->on('embarcacions.id', '=', 'creditos.id_embarcacion')
+                    ->where('creditos.estado_credito', '=', true);
+            })
             ->where(function ($query) {
                 return $query
                     ->orwhere('razon_cli', 'LIKE', '%' . $this->searchEmbarcacion . '%')
@@ -99,6 +121,7 @@ class VentasIndex extends Component
             ->groupby('embarcacions.id')
             ->paginate($this->show);
 
+        //LISTADO DE VENTAS
         date_default_timezone_set('America/Lima');
         $ventas = Venta::select('*')
             ->join('embarcacions', 'embarcacions.id', '=', 'ventas.id_embarcacion')
@@ -108,20 +131,37 @@ class VentasIndex extends Component
                     ->orwhere('nombre_emb', 'LIKE', '%' . $this->searchVenta . '%')
                     ->orwhere('nombre_tipo_pago', 'LIKE', '%' . $this->searchVenta . '%');
             })
-            ->where('fecha_venta', 'LIKE', '%' . now()->format('d/m/Y') . '%')
+            ->where('fecha_venta', '>',  $this->entrada_jornada)
             ->where('ventas.estado_venta', '=', 'Activo')
-            ->orderby('fecha_venta','desc')
+            ->where('ventas.user_create_venta', '=', auth()->user()->name)
+            ->orderby('fecha_venta', 'desc')
+            ->paginate($this->paginasVentas);
+            
+            foreach ($ventas as $key => $venta) {
+                # code...
+            }
+
+        //DETALLE DE VENTAS
+        $detalleVenta = Venta::select('*')
+            ->join('embarcacions', 'embarcacions.id', '=', 'ventas.id_embarcacion')
+            ->join('tipo_pagos', 'tipo_pagos.id_tipo_pago', '=', 'ventas.id_tipo_pago')
+            ->where('id_venta', '=', $this->id_venta)
+            ->where('ventas.estado_venta', '=', 'Activo')
             ->paginate($this->paginasVentas);
 
-            
-        $detalleVenta = Venta::select('*')
-        ->join('embarcacions', 'embarcacions.id', '=', 'ventas.id_embarcacion')
-        ->join('tipo_pagos', 'tipo_pagos.id_tipo_pago', '=', 'ventas.id_tipo_pago')
-        ->where('id_venta', '=', $this->id_venta)
-        ->where('ventas.estado_venta', '=', 'Activo')
-        ->paginate($this->paginasVentas);
+        //JORNADA
 
-        return view('livewire.ventas.ventas-index', compact('embarcaciones', 'productos', 'tipoPagos', 'ventas','detalleVenta'));
+
+        return view(
+            'livewire.ventas.ventas-index',
+            compact(
+                'embarcaciones',
+                'productos',
+                'tipoPagos',
+                'ventas',
+                'detalleVenta'
+            )
+        );
     }
     public function seleccionEmbarcacion($id, $nombre, $matricula)
     {
@@ -327,5 +367,33 @@ class VentasIndex extends Component
     public function listarVentaView()
     {
         $this->view = 'list';
+    }
+
+    public function finalizarJornada(){
+
+        date_default_timezone_set('America/Lima');
+        $jornada = Jornada::create([
+            'entrada_jornada'=>$this->entrada_jornada,
+            'salida_jornada'=>now()->format('d/m/Y H:i:s A'),
+            'estado_jornada'=> false,
+            'user_create_jornada'=> auth()->user()->name,
+            'user_sede'=>$this->sede
+        ]);
+        $this->dispatchBrowserEvent('respuesta', ['res' => 'Se finalizo la venta de hoy correctamente.']);
+        $this->dispatchBrowserEvent('actualizar-pagina', []);
+
+    }
+    public function iniciarJornada(){
+        
+        date_default_timezone_set('America/Lima');
+        $jornada = Jornada::create([
+            'entrada_jornada'=>now()->format('d/m/Y H:i:s A'),
+            'estado_jornada'=> true,
+            'user_create_jornada'=> auth()->user()->name,
+            'user_sede'=>$this->sede
+        ]);
+        $this->dispatchBrowserEvent('respuesta', ['res' => 'Se inició la venta de hoy correctamente.']);
+        $this->dispatchBrowserEvent('actualizar-pagina', []);
+
     }
 }

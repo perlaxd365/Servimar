@@ -45,7 +45,8 @@ class EventServiceProvider extends ServiceProvider
             foreach ($sedes as $sede) {
                 $nombresede = $sede->descripcion;
             }
-            $event->menu->add('Bienvenido a la sede ( ' . $nombresede . ' )');
+            $event->menu->add('BIENVENIDO A: ( ' . $nombresede . ' )');
+            $event->menu->add('_____________________________');
             $event->menu->add([
                 'header' => 'GESTION DE SISTEMA',
                 'can'    => 'admin.users.index'

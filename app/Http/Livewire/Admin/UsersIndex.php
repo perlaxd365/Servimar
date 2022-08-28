@@ -2,6 +2,7 @@
 
 namespace App\Http\Livewire\Admin;
 
+use App\Models\Jornada;
 use App\Models\Sede;
 use App\Models\User;
 use Livewire\Component;
@@ -80,6 +81,21 @@ class UsersIndex extends Component
             'password' => bcrypt($this->pass1),
             'estado' => true,
 
+        ]);
+
+        
+        $sedes = Sede::where('id_sede', $this->id_sede)->get();
+        foreach ($sedes as $sede) {
+            $this->sede = $sede->descripcion;
+        }
+
+        date_default_timezone_set('America/Lima');
+        Jornada::create([
+            'entrada_jornada'=>now()->format('d/m/Y H:i:s A'),
+            'salida_jornada'=>now()->format('d/m/Y H:i:s A'),
+            'estado_jornada'=> false,
+            'user_create_jornada'=>  $this->name,
+            'user_sede'=>$this->sede
         ]);
 
         $this->dispatchBrowserEvent('respuesta', ['res' => 'Agregó a ' . $this->name . ' con éxito.']);

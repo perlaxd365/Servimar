@@ -156,6 +156,7 @@ class PagoIndex extends Component
 
         //$this->dispatchBrowserEvent('print', ['id' => $id_venta]);
         $this->dispatchBrowserEvent('respuesta', ['res' => 'Se agregó el pago correctamente']);
+        $this->dispatchBrowserEvent('actualizar-pagina', []);
     }
     public function default()
     {
@@ -173,7 +174,6 @@ class PagoIndex extends Component
 
     public function defaulPage()
     {
-
         $this->resetPage();
     }
 }

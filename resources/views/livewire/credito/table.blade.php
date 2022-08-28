@@ -58,6 +58,16 @@
                         <span aria-hidden="true">&times;</span>
                     </button>
                 </div>
+                @if (count($errors) > 0)
+                    <div class="alert border-danger">
+                        <p>Se encontraron los siguientes errores:</p>
+                        <ul>
+                            @foreach ($errors->all() as $message)
+                                <li>{{ $message }}</li>
+                            @endforeach
+                        </ul>
+                    </div>
+                @endif
                 <div class="modal-body">
                     <div class="col clearfix">
                         @foreach ($creditoPrePago as $item)
@@ -66,8 +76,9 @@
                                 <li class="list-group-item">Precio x Galon: {{ $item->precio_galon_credito }} </li>
                                 <li class="list-group-item">
                                     <span class="badge badge-warning">Total:
-                                    {{ $item->galones_credito * $item->precio_galon_credito }}
-                                    </span></li>
+                                        {{ $item->galones_credito * $item->precio_galon_credito }}
+                                    </span>
+                                </li>
                             </ul>
                         @endforeach
                     </div>
@@ -77,30 +88,32 @@
                                 <label>Monto Abonado</label>
                                 @if ($pagos->count())
 
-                                @foreach ($pagos as $pago)
-                                    <input type="text" class="form-control" readonly value="{{ $pago->monto_pago }}"
-                                        placeholder="Monto Abonado">
-                                @endforeach
+                                    @foreach ($pagos as $pago)
+                                        <input type="text" class="form-control" readonly
+                                            value="{{ $pago->monto_pago }}" placeholder="Monto Abonado">
+                                    @endforeach
                                 @else
-                                <br>
+                                    <br>
                                     No se abonó ningun pago
                                 @endif
 
-                                
+
                             </div>
                             <div class="col-sm-3 my-1">
                                 <label>Monto a pagar</label>
                                 @foreach ($creditoPrePago as $item)
-                              <input type="text" wire:model='monto_pagar' class="form-control"  placeholder="Monto a pagar">
+                                    <input type="text" wire:model='monto_pagar' class="form-control"
+                                        placeholder="Monto a pagar">
                                 @endforeach
                             </div>
 
                             @if ($pagos->count())
-                            <div class="col-sm-3 my-1" style="padding-top: 4%">
-                                <button wire:click='store' type="submit" class="btn btn-primary">Realizar Pago</button>
-                            </div>
+                                <div class="col-sm-3 my-1" style="padding-top: 4%">
+                                    <button wire:click='store' type="submit" class="btn btn-primary">Realizar
+                                        Pago</button>
+                                </div>
                             @else
-                            <br>
+                                <br>
                                 A la espera de que se realice un pago
                             @endif
 
@@ -147,18 +160,19 @@
                                 <span class="float-right">
                                     <strong>Monto Abonado </strong>
                                     <br>
+                                    <button type="button" class="btn btn-success">
+                                        Total: <span class="badge badge-light">
+                                            @if ($pagos->count())
 
-                                    <span class="badge badge-success">
-                                        Total:
-                                        @if ($pagos->count())
-
-                                            @foreach ($pagos as $pago)
-                                                {{ $pago->monto_pago }}
-                                            @endforeach
-                                        @else
-                                            0
-                                        @endif
-                                    </span>
+                                                @foreach ($pagos as $pago)
+                                                   S/ {{ $pago->monto_pago }}
+                                                @endforeach
+                                            @else
+                                                0
+                                            @endif
+                                        </span>
+                                        <span class="sr-only">unread messages</span>
+                                    </button>
                                 </span>
                             </div>
                         </li>
@@ -223,6 +237,7 @@
                                 </div>
                             @endif
                         </div>
+                        <!-- TABLA DE HISTORIAL DE PAGOS -->
                         <div class="tab-pane fade" id="pills-profile" role="tabpanel"
                             aria-labelledby="pills-profile-tab">
                             @if ($historialCreditos->count())
@@ -237,12 +252,16 @@
                                             <th scope="col">Fecha</th>
                                             <th scope="col">Precio x Galón</th>
                                             <th scope="col">Galones</th>
+                                            <th scope="col">Pago</th>
+                                            <th scope="col">Estado</th>
                                         </tr>
                                     </thead>
                                     <tbody>
-                                        <?php $total = 0; ?>
+                                        <?php $totalGalones = 0;
+                                        $totalPago = 0; ?>
                                         @foreach ($historialCreditos as $key => $historial)
-                                            <?php $total = $total + $historial->galones_credito; ?>
+                                            <?php $totalGalones = $totalGalones + $historial->galones_credito; ?>
+                                            <?php $totalPago = $totalPago + $historial->monto_detalle_pago; ?>
                                             <tr>
                                                 <td>{{ $key + 1 }}</td>
                                                 <td>{{ $historial->nombre_emb }}</td>
@@ -252,6 +271,12 @@
                                                 <td>{{ $historial->fecha_credito }}</td>
                                                 <td>{{ $historial->precio_galon_credito }}</td>
                                                 <td>{{ $historial->galones_credito }}</td>
+                                                <td>S/{{ $historial->monto_detalle_pago }}</td>
+                                                <td>
+                                                    <span class="badge badge-success">
+                                                        Pagado
+                                                    </span>
+                                                </td>
                                             </tr>
                                         @endforeach
                                         <tr>
@@ -262,7 +287,8 @@
                                             <td></td>
                                             <td></td>
                                             <td><strong>TOTAL:</strong></td>
-                                            <td>{{ $total }}</td>
+                                            <td>{{ $totalGalones }}</td>
+                                            <td>S/{{ $totalPago }}</td>
                                             <td></td>
                                         </tr>
                                     </tbody>
