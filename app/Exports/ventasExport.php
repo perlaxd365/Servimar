@@ -39,6 +39,7 @@ public function drawings()
     {
         return [
             $datos->id_venta,
+            $datos->user_sede,
             $datos->user_create_venta,
             $datos->nombre_emb,
             $datos->matricula_emb,
@@ -61,6 +62,7 @@ public function drawings()
             'G' => NumberFormat::FORMAT_TEXT,
             'H' => NumberFormat::FORMAT_TEXT,
             'I' => NumberFormat::FORMAT_TEXT,
+            'J' => NumberFormat::FORMAT_TEXT,
         ];
     }
     public function columnWidths(): array
@@ -75,6 +77,7 @@ public function drawings()
             'G' => '20',
             'H' => '20',
             'I' => '20',
+            'J' => '20',
         ];
     }
 
@@ -83,13 +86,13 @@ public function drawings()
         return [
             AfterSheet::class    => function (AfterSheet $event) {
 
-                $event->sheet->getDelegate()->getStyle('A1:I1')
+                $event->sheet->getDelegate()->getStyle('A1:J1')
                     ->getFill()
                     ->setFillType(\PhpOffice\PhpSpreadsheet\Style\Fill::FILL_SOLID)
                     ->getStartColor()
                     ->setARGB('0016A2');
 
-                $event->sheet->getDelegate()->getStyle('A1:I1')
+                $event->sheet->getDelegate()->getStyle('A1:J1')
                     ->getFont()
                     ->getColor()
                     ->setARGB('FFFFFF');
@@ -100,6 +103,7 @@ public function drawings()
     {
         return [
             'ID VENTA',
+            'PUNTO',
             'OPERARIO',
             'EMBARCACIÓN PESQUERA',
             'MATRICULA',

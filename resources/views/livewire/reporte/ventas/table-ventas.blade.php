@@ -4,6 +4,7 @@
             <thead class="thead-dark">
                 <tr>
                     <th>ID</th>
+                    <th>Punto</th>
                     <th>Operario</th>
                     <th>E/P</th>
                     <th>MATRÍCULA</th>
@@ -24,6 +25,7 @@
                         <?php $totalVenta = $totalVenta + $venta->precio_venta; ?>
                         <tr>
                             <td>{{ $venta->id_venta }}</td>
+                            <td>{{ $venta->user_sede }}</td>
                             <td>{{ $venta->user_create_venta }}</td>
                             <td>{{ $venta->nombre_emb }}</td>
                             <td>{{ $venta->matricula_emb }}</td>
@@ -52,6 +54,7 @@
                         <td><strong>TOTAL:</strong></td>
                         <td>{{ $totalGalones }}</td>
                         <td>S/{{ $totalVenta }}</td>
+                        <td></td>
                         <td></td>
                     </tr>
                 @else

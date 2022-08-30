@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Jornada;
 use App\Models\Sede;
 use App\Models\User;
 use Illuminate\Http\Request;
@@ -48,7 +49,6 @@ class UserController extends Controller
      */
     public function show(Request $request, User $user)
     {
-        
     }
 
     /**
@@ -77,11 +77,26 @@ class UserController extends Controller
             //rol
             $user->roles()->sync($request->roles);
         } elseif ($request->sede != null) {
-
             //sede
             $usuario = User::find($user->id);
             $usuario->id_sede = $request->sede;
             $usuario->save();
+            
+            //nombre sede
+            $sede_nomnbre = '';
+            $sedes = Sede::where('id_sede', $request->sede)->get();
+            foreach ($sedes as $sede) {
+                $sede_nomnbre = $sede->descripcion;
+            }
+
+            date_default_timezone_set('America/Lima');
+            Jornada::create([
+                'entrada_jornada' => now()->format('d/m/Y H:i:s A'),
+                'salida_jornada' => now()->format('d/m/Y H:i:s A'),
+                'estado_jornada' => true,
+                'user_create_jornada' => $user->name,
+                'user_sede' => $sede_nomnbre
+            ]);
         }
 
         return redirect()->route('admin.users.edit', $user)->with('info', 'Se actualizó  correctamente');

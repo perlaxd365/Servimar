@@ -9,6 +9,10 @@ use Livewire\Component;
 use Livewire\WithPagination;
 use App\Exports\ventasExport;
 use Maatwebsite\Excel\Facades\Excel;
+use Dompdf\Dompdf;
+use Dompdf\Options;
+use PDF as PDF;
+
 
 
 class ReporteIndex extends Component
@@ -68,7 +72,7 @@ class ReporteIndex extends Component
         $this->name_operario = $nombre;
         $this->dispatchBrowserEvent('close-modal');
         $this->resetPage();
-        $this->listaBusqueda=[];
+        $this->listaBusqueda = [];
     }
     public function quitarPersona()
     {
@@ -105,37 +109,59 @@ class ReporteIndex extends Component
         $date = Carbon::now();
         $this->id_operario = '';
         $this->name_operario = '';
-        $this->listaBusqueda=[];
+        $this->listaBusqueda = [];
     }
     public function modalDetalle($id_venta)
     {
+        $this->listVentas();
         $this->id_venta = $id_venta;
     }
-    public function exportar()
+    public function exportarExcel()
     {
         $lista = (array)$this->listaBusqueda;
         if (!$lista) {
 
             $this->dispatchBrowserEvent('error', ['res' => 'No se encontró alguna búsqueda']);
         } else {
+            $this->listVentas();
 
-            $fecha_inicio = Carbon::parse($this->fecha_inicio)->format('d/m/Y H:i:s A');
-            $fecha_fin = Carbon::parse($this->fecha_fin)->format('d/m/Y H:i:s A');
-    
-            $listaBusqueda = Venta::select('*')
-                ->where(function ($query) {
-                    return $query
-                        ->orwhere('user_create_venta', 'LIKE', '%' . $this->name_operario . '%');
-                })
-                ->join('embarcacions', 'embarcacions.id', '=', 'ventas.id_embarcacion')
-                ->join('tipo_pagos', 'tipo_pagos.id_tipo_pago', '=', 'ventas.id_tipo_pago')
-                ->whereBetween('fecha_venta', [$fecha_inicio, $fecha_fin])
-                ->where('ventas.estado_venta', '=', 'Activo')
-                ->orderby('fecha_venta', 'desc')
-                ->get();
-                $this->listaBusqueda=[];
-            
-            return Excel::download(new ventasExport($listaBusqueda), 'users.xlsx');
+            return Excel::download(new ventasExport($this->listaBusqueda), 'users.xlsx');
+        }
+    }
+    public function exportarPdf()
+    {
+
+
+        $lista = (array)$this->listaBusqueda;
+        if (!$lista) {
+
+            $this->dispatchBrowserEvent('error', ['res' => 'No se encontró alguna búsqueda']);
+        } else {
+
+            $this->listVentas();
+            $viewData = [
+                'title'         => 'REPORTE DE VENTAS',
+                'date'          => date('m/d/Y'),
+                'user'          => auth()->user()->name,
+                'listaBusqueda' => $this->listaBusqueda
+            ];
+
+            //perfil de pdf
+            $pdfContent = PDF::loadView('livewire.reporte.pdf.template-view', $viewData)
+                ->setPaper('A4', 'landscape')
+                ->output();
+
+            //fecha y hora 
+
+            date_default_timezone_set('America/Lima');
+            $date = Carbon::now();
+            $date = $date->format('Y_m_d_H_s_A');
+
+            //respuesta
+            return response()->streamDownload(
+                fn () => print($pdfContent),
+                "reporte_venta_" . $date . ".pdf"
+            );
         }
     }
 }

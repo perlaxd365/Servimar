@@ -196,6 +196,7 @@ return [
         App\Providers\RouteServiceProvider::class,
         App\Providers\FortifyServiceProvider::class,
         App\Providers\JetstreamServiceProvider::class,
+        Barryvdh\DomPDF\ServiceProvider::class,
 
     ],
 
@@ -215,6 +216,7 @@ return [
 // ...
   'Form' => 'Collective\Html\FormFacade',
   'Html' => 'Collective\Html\HtmlFacade',
+  'PDF' => Barryvdh\DomPDF\Facade::class,
 // ...
 
     ])->toArray(),

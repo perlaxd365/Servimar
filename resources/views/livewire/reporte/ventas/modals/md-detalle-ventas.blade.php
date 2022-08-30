@@ -96,6 +96,18 @@
                                         <th>TELEFONO:</th>
                                         <td>{{ $detalle->telefono_ref_venta }}</td>
                                     </tr>
+                                    <tr class="bg-info">
+                                        <th>ATENCIÓN</th>
+                                        <th></th>
+                                    </tr>
+                                    <tr>
+                                        <th>PUNTO:</th>
+                                        <td>{{ $detalle->user_sede }}</td>
+                                    </tr>
+                                    <tr>
+                                        <th>OPERARIO:</th>
+                                        <td>{{ $detalle->user_create_venta }}</td>
+                                    </tr>
                                 @endforeach
 
                             </tbody>
