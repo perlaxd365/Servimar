@@ -11,7 +11,7 @@
             <table class="table table-striped table-sm table-responsive-sm">
                 <thead>
                     <th>ID</th>
-                    <th>Sede</th>
+                    <th>Punto</th>
                     <th>Producto</th>
                     <th>Precio</th>
                     <th>Venta</th>

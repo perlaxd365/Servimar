@@ -23,9 +23,9 @@
         <input wire:model='dni' maxlength="8" type="text" class="form-control" placeholder="Ingresar DNI">
     </div>
     <div class="form-group col-md-6">
-        <label for="inputEmail4">Sede</label>
+        <label for="inputEmail4">Punto</label>
         <select wire:model="id_sede" class="form-control" name="" id="">
-            <option value="">Seleccionar Sede</option>
+            <option value="">Seleccionar Punto</option>
             @foreach ($sedes as $sede)
                 <option value="{{ $sede->id_sede }}">{{ $sede->descripcion }}</option>
             @endforeach

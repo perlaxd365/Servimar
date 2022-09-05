@@ -34,7 +34,7 @@ class VentasIndex extends Component
     //datos de venta
     public $galonaje_venta, $precio_venta, $nombre_ref_venta,
         $dni_ref_venta, $telefono_ref_venta, $moneda_venta, $observacion_venta,
-        $id_venta;
+        $id_venta,$precio_galon;
     //Producto actual de abastecimiento
     public $precio_general, $stock_actual;
     //dolares
@@ -76,6 +76,7 @@ class VentasIndex extends Component
         foreach ($productos as  $producto) {
             $this->id_producto = $producto->id_producto;
             $this->precio_general = $producto->precio_pro;
+            $this->precio_galon = $producto->precio_pro;
             $this->stock_actual = $producto->stock_pro;
             $this->abastecimiento = $producto->nombre_pro;
         }
@@ -176,7 +177,7 @@ class VentasIndex extends Component
     public function calcularTotal()
     {
         if ($this->galonaje_venta != null) {
-            $this->precio_venta = $this->galonaje_venta * $this->precio_general;
+            $this->precio_venta = $this->galonaje_venta * $this->precio_galon;
         }
     }
     public function store()
@@ -219,7 +220,7 @@ class VentasIndex extends Component
             'galonaje_venta' => $this->galonaje_venta,
             'precio_venta' => $this->mostrarPrecioFront == false ? 0 : $this->precio_venta,
             'nombre_producto' => $this->abastecimiento,
-            'precio_x_galon_venta' => $this->precio_general,
+            'precio_x_galon_venta' => $this->precio_galon,
             'monto_inicial_venta' => $this->stock_actual,
             'moneda_venta' => $this->moneda_venta,
             'nombre_ref_venta' => $this->nombre_ref_venta,
@@ -237,7 +238,7 @@ class VentasIndex extends Component
             Credito::create([
                 'id_embarcacion' => $this->id_emb,
                 'id_venta' => $id_venta,
-                'precio_galon_credito' => $this->precio_general,
+                'precio_galon_credito' => $this->precio_galon,
                 'galones_credito' => $this->galonaje_venta,
                 'monto_credito' => $this->mostrarPrecioFront == false ? 0 : $this->precio_venta,
                 'fecha_credito' => now(),
@@ -261,7 +262,7 @@ class VentasIndex extends Component
         $this->print();
         $this->default();
 
-        //$this->dispatchBrowserEvent('print', ['id' => $id_venta]);
+        // $this->dispatchBrowserEvent('print', ['id' => $id_venta]);
         $this->dispatchBrowserEvent('respuesta', ['res' => 'Se realizó la venta correctamente.']);
     }
 
@@ -354,6 +355,7 @@ class VentasIndex extends Component
             $this->mostrarPrecio = false;
         } else {
             $this->mostrarPrecioFront = true;
+            $this->mostrarPrecio = true;
         }
     }
     public function modalDetalle($id_venta)

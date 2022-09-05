@@ -187,9 +187,9 @@
                                         <tr>
                                             <th scope="col">#</th>
                                             <th scope="col">Embarcación</th>
+                                            <th scope="col">Punto</th>
                                             <th scope="col">Dueño</th>
                                             <th scope="col">Matrícula</th>
-                                            <th scope="col">Teléfono</th>
                                             <th scope="col">Fecha</th>
                                             <th scope="col">Precio x Galón</th>
                                             <th scope="col">Galones</th>
@@ -203,9 +203,9 @@
                                             <tr>
                                                 <td>{{ $key + 1 }}</td>
                                                 <td>{{ $embarcacion->nombre_emb }}</td>
+                                                <td>{{ $embarcacion->user_sede }}</td>
                                                 <td>{{ $embarcacion->duenio_emb }}</td>
                                                 <td>{{ $embarcacion->matricula_emb }}</td>
-                                                <td>{{ $embarcacion->telefono_emb }}</td>
                                                 <td>{{ $embarcacion->fecha_credito }}</td>
                                                 <td>{{ $embarcacion->precio_galon_credito }}</td>
                                                 <td>{{ $embarcacion->galones_credito }}</td>

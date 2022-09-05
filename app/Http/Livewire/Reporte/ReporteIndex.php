@@ -125,7 +125,12 @@ class ReporteIndex extends Component
         } else {
             $this->listVentas();
 
-            return Excel::download(new ventasExport($this->listaBusqueda), 'users.xlsx');
+            //fecha y hora 
+
+            date_default_timezone_set('America/Lima');
+            $date = Carbon::now();
+            $date = $date->format('Y_m_d_H_s_A');
+            return Excel::download(new ventasExport($this->listaBusqueda), 'reporte_' . $date .'.xlsx');
         }
     }
     public function exportarPdf()

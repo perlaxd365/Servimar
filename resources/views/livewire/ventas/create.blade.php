@@ -37,11 +37,11 @@
     }
 
     input:checked+.slider {
-        background-color: #2196F3;
+        background-color: #14DB00;
     }
 
     input:focus+.slider {
-        box-shadow: 0 0 1px #2196F3;
+        box-shadow: 0 0 1px #14DB00;
     }
 
     input:checked+.slider:before {
@@ -91,7 +91,7 @@
         <div class="card-body">
             <h5 class="card-title">Iniciar la jornada de hoy</h5>
             <p class="card-text">Empezar las ventas del dia de hoy</p>
-            <a href="#" wire:click='iniciarJornada'  class="btn btn-success">Iniciar</a>
+            <a href="#" wire:click='iniciarJornada' class="btn btn-success">Iniciar</a>
         </div>
     </div>
 @else
@@ -177,6 +177,13 @@
                             </select>
                         </div>
                         <div class="form-group col-md-6">
+                            <label for="inputEmail4">Precio x Galón</label>
+                            <input wire:model='precio_galon' wire:keyup='calcularTotal' wire:keypress='calcularTotal'
+                            wire:keydown='calcularTotal'  autocomplete="off"
+                                type="number" Step="0" class="form-control solo-numero"
+                                placeholder="Ingresar Cantidad de Galones">
+                        </div>
+                        <div class="form-group col-md-6">
                             <label for="inputEmail4">Tipo de Pago</label>
                             <select wire:model="idtipopago" class="form-control" name="" id="">
                                 <option value="">Seleccionar Tipo de Pago</option>
@@ -189,9 +196,10 @@
                         <div class="form-group col-md-6"
                             style="@if ($mostrarPrecioFront) display:block @else display:none @endif">
                             <label for="inputEmail4">Precio</label>
-                            <input wire:model='precio_venta' type="number" autocomplete="off" Step="0"
+                            <input readonly wire:model='precio_venta' type="number" autocomplete="off" Step="0"
                                 class="form-control solo-numero" id="exampleInputEmail1"
                                 placeholder="Ingresar Precio">
+                                <br>
                             <label for="inputEmail4">Mostrar Precio</label>
                             <label class="switch" style="size: 4cm">
                                 <input wire:model="mostrarPrecio" type="checkbox" checked>
