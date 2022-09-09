@@ -6,7 +6,8 @@
     tr {
         font-size: x-small
     }
-    a{
+
+    a {
         font-family: 'Franklin Gothic Medium', 'Arial Narrow', Arial, sans-serif;
         size: 30%;
         color: black;
@@ -30,12 +31,12 @@
             <thead>
                 <tr>
                     <div class="card" style="width: 15rem; height: 8rem;">
-                        <div class="card-header" >
+                        <div class="card-header">
                             Registro:
                         </div>
                         <div class="card-body">
-                            <strong>USUARIO:</strong> {{$user}} 
-                                <strong>FECHA:</strong> {{$date}}
+                            <strong>USUARIO:</strong> {{ $user }}
+                            <strong>FECHA:</strong> {{ $date }}
                         </div>
                     </div>
                 </tr>
@@ -53,7 +54,9 @@
         <div class="text-center row">
 
             <div>
-                <strong><p style="font-size: 150%">{{$title}}</p></strong>
+                <strong>
+                    <p style="font-size: 150%">{{ $title }}</p>
+                </strong>
             </div>
         </div>
         <br>
@@ -67,6 +70,7 @@
                     <th>MATRÍCULA</th>
                     <th>TIPO PAGO</th>
                     <th>FECHA </th>
+                    <th>OBSERVACIONES</th>
                     <th>PRECIO GALÓN</th>
                     <th>GALONES</th>
                     <th>PAGO</th>
@@ -75,11 +79,25 @@
             <tbody>
 
                 @if (count($listaBusqueda) > 0)
-                    <?php $totalGalones = 0;
-                    $totalVenta = 0; ?>
+                    <?php
+                    
+                    $totalGalones = 0;
+                    $totalVenta = 0;
+                    $galonesCredito = 0;
+                    $galonesEfectivo = 0; ?>
                     @foreach ($listaBusqueda as $venta)
-                        <?php $totalGalones = $totalGalones + $venta->galonaje_venta; ?>
-                        <?php $totalVenta = $totalVenta + $venta->precio_venta; ?>
+                        <?php
+                        
+                        $totalGalones = $totalGalones + $venta->galonaje_venta;
+                        $totalVenta = $totalVenta + $venta->precio_venta;
+                        if ($venta->nombre_tipo_pago == 'Credito') {
+                            $galonesCredito = $galonesCredito + $venta->galonaje_venta;
+                        }
+                        if ($venta->nombre_tipo_pago == 'Contado Efectivo' || $venta->nombre_tipo_pago == 'Contado Deposito') {
+                            $galonesEfectivo = $galonesEfectivo + $venta->galonaje_venta;
+                        }
+                        
+                        ?>
                         <tr>
                             <td>{{ $venta->id_venta }}</td>
                             <td>{{ $venta->user_sede }}</td>
@@ -87,8 +105,8 @@
                             <td>{{ $venta->nombre_emb }}</td>
                             <td>{{ $venta->matricula_emb }}</td>
                             <td>{{ $venta->nombre_tipo_pago }}</td>
-                            <td>{{ $venta->fecha_venta }}
-                            </td>
+                            <td>{{ $venta->fecha_venta }}</td>
+                            <td>{{ $venta->observacion_venta }}</td>
                             <td>S/ {{ $venta->precio_x_galon_venta }}</td>
                             <td>
                                 <span class="text-info">
@@ -107,9 +125,10 @@
                         <td></td>
                         <td></td>
                         <td></td>
-                        <td></td>
-                        <td></td>
-                        <td></td>
+                        <td><strong>TOTAL GALONES EFECTIVO O DEPOSITO:</strong></td>
+                        <td>{{ $galonesEfectivo }}</td>
+                        <td><strong>TOTAL GALONES A CRÉDITO:</strong></td>
+                        <td>{{ $galonesCredito }}</td>
                         <td><strong>TOTAL:</strong></td>
                         <td>
                             <span class="text-info">
@@ -118,9 +137,11 @@
                         </td>
                         <td>
                             <span class="text-primary">
-                                <i class="fas fa-caret-up me-1"></i><strong><span>S/{{ $totalVenta }}</span></strong>
+                                <i class="fas fa-caret-down me-1"></i><strong><span>S/{{ $totalVenta }}</span></strong>
                             </span>
                         </td>
+                        <td></td>
+                        <td></td>
                     </tr>
                 @else
                     <tr style="cursor:pointer;">

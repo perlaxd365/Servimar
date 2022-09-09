@@ -59,7 +59,7 @@
                         </td>
                     </tr>
                     <tr>
-                        <td  colspan="9">
+                        <td colspan="8">
                             <div id="{{ $cliente->id_cliente }}" style="display:none">
                                 <div id="none" style="display: none" class="card">
                                     <div class="modal-header">
@@ -101,9 +101,10 @@
                                                         <td>{{ $embarcacion->telefono_emb }}</td>
                                                         <td>
 
-                                                                <a wire:click='deleteEmb({{$embarcacion->id}})' class="btn" >
-                                                                    <i class='fa fa-trash text-dark'></i>
-                                                                </a>
+                                                            <a wire:click='deleteEmb({{ $embarcacion->id }})'
+                                                                class="btn">
+                                                                <i class='fa fa-trash text-dark'></i>
+                                                            </a>
                                                         </td>
                                                     </tr>
                                                 @endforeach
@@ -140,7 +141,7 @@
         <div class="modal-content">
             <div class="modal-header">
                 <h5 class="modal-title" id="exampleModalLongTitle">Agregar Embarcación a <strong
-                        id="cliente">{{$nombre_emb_modal}}</strong></h5>
+                        id="cliente">{{ $nombre_emb_modal }}</strong></h5>
                 <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                     <span aria-hidden="true">&times;</span>
                 </button>
@@ -152,7 +153,8 @@
                         <select wire:model="id_tipo_embarcacion" class="form-control" name="" id="">
                             <option value="">Seleccionar Tipo de Embarcación</option>
                             @foreach ($tipoEmbarcaciones as $tipoEmbarcacion)
-                                <option value="{{ $tipoEmbarcacion->id_tipo_embarcacion }}">{{ $tipoEmbarcacion->nombre_tipo }}</option>
+                                <option value="{{ $tipoEmbarcacion->id_tipo_embarcacion }}">
+                                    {{ $tipoEmbarcacion->nombre_tipo }}</option>
                             @endforeach
                         </select>
                     </div>
@@ -168,8 +170,8 @@
                     </div>
                     <div class="form-group">
                         <label>Matrícula</label>
-                        <input wire:model='matricula_emb' type="text" class="form-control" id="exampleInputEmail1"
-                            placeholder="Ingresar Matrícula de Embarcación"></small>
+                        <input wire:model='matricula_emb' type="text" class="form-control"
+                            id="exampleInputEmail1" placeholder="Ingresar Matrícula de Embarcación"></small>
                     </div>
                     <div class="form-group">
                         <label>Teléfono (Contacto)</label>

@@ -7,8 +7,8 @@
 
 @if ($users->count())
     <div class="card-body">
-        <div class="card-body">
-            <table class="table table-striped table-sm table-responsive-sm">
+        <div class="card-body table-responsive">
+            <table class="table table-striped table-sm ">
                 <thead>
                     <th>ID</th>
                     <th>Sede</th>

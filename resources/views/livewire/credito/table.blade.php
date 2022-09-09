@@ -165,7 +165,7 @@
                                             @if ($pagos->count())
 
                                                 @foreach ($pagos as $pago)
-                                                   S/ {{ $pago->monto_pago }}
+                                                    S/ {{ $pago->monto_pago }}
                                                 @endforeach
                                             @else
                                                 0
@@ -182,55 +182,58 @@
                             aria-labelledby="pills-home-tab">
 
                             @if ($embarcaciones->count())
-                                <table class="table table-striped table-sm table-responsive-sm">
-                                    <thead class="thead-light">
-                                        <tr>
-                                            <th scope="col">#</th>
-                                            <th scope="col">Embarcación</th>
-                                            <th scope="col">Punto</th>
-                                            <th scope="col">Dueño</th>
-                                            <th scope="col">Matrícula</th>
-                                            <th scope="col">Fecha</th>
-                                            <th scope="col">Precio x Galón</th>
-                                            <th scope="col">Galones</th>
-                                            <th scope="col">Acción</th>
-                                        </tr>
-                                    </thead>
-                                    <tbody>
-                                        <?php $total = 0; ?>
-                                        @foreach ($embarcaciones as $key => $embarcacion)
-                                            <?php $total = $total + $embarcacion->galones_credito; ?>
+                                <div class="table-responsive">
+                                    <table class="table table-striped table-sm">
+                                        <thead class="thead-light">
                                             <tr>
-                                                <td>{{ $key + 1 }}</td>
-                                                <td>{{ $embarcacion->nombre_emb }}</td>
-                                                <td>{{ $embarcacion->user_sede }}</td>
-                                                <td>{{ $embarcacion->duenio_emb }}</td>
-                                                <td>{{ $embarcacion->matricula_emb }}</td>
-                                                <td>{{ $embarcacion->fecha_credito }}</td>
-                                                <td>{{ $embarcacion->precio_galon_credito }}</td>
-                                                <td>{{ $embarcacion->galones_credito }}</td>
-                                                <td class="center-text">
-                                                    <button wire:click="modalPago({{ $embarcacion->id_credito }})"
-                                                        type="button" data-dismiss="modal" data-toggle="modal"
-                                                        data-target="#modalPago" class="btn btn-primary btn-sm">
-                                                        Pagar
-                                                    </button>
-                                                </td>
+                                                <th scope="col">#</th>
+                                                <th scope="col">Embarcación</th>
+                                                <th scope="col">Punto</th>
+                                                <th scope="col">Dueño</th>
+                                                <th scope="col">Matrícula</th>
+                                                <th scope="col">Fecha</th>
+                                                <th scope="col">Precio x Galón</th>
+                                                <th scope="col">Galones</th>
+                                                <th scope="col">Acción</th>
                                             </tr>
-                                        @endforeach
-                                        <tr>
-                                            <td></td>
-                                            <td></td>
-                                            <td></td>
-                                            <td></td>
-                                            <td></td>
-                                            <td></td>
-                                            <td><strong>TOTAL:</strong></td>
-                                            <td>{{ $total }}</td>
-                                            <td></td>
-                                        </tr>
-                                    </tbody>
-                                </table>
+                                        </thead>
+                                        <tbody>
+                                            <?php $total = 0; ?>
+                                            @foreach ($embarcaciones as $key => $embarcacion)
+                                                <?php $total = $total + $embarcacion->galones_credito; ?>
+                                                <tr>
+                                                    <td>{{ $key + 1 }}</td>
+                                                    <td>{{ $embarcacion->nombre_emb }}</td>
+                                                    <td>{{ $embarcacion->user_sede }}</td>
+                                                    <td>{{ $embarcacion->duenio_emb }}</td>
+                                                    <td>{{ $embarcacion->matricula_emb }}</td>
+                                                    <td>{{ $embarcacion->fecha_credito }}</td>
+                                                    <td>{{ $embarcacion->precio_galon_credito }}</td>
+                                                    <td>{{ $embarcacion->galones_credito }}</td>
+                                                    <td class="center-text">
+                                                        <button wire:click="modalPago({{ $embarcacion->id_credito }})"
+                                                            type="button" data-dismiss="modal" data-toggle="modal"
+                                                            data-target="#modalPago" class="btn btn-primary btn-sm">
+                                                            Pagar
+                                                        </button>
+                                                    </td>
+                                                </tr>
+                                            @endforeach
+                                            <tr>
+                                                <td></td>
+                                                <td></td>
+                                                <td></td>
+                                                <td></td>
+                                                <td></td>
+                                                <td></td>
+                                                <td><strong>TOTAL:</strong></td>
+                                                <td>{{ $total }}</td>
+                                                <td></td>
+                                            </tr>
+                                        </tbody>
+                                    </table>
+
+                                </div>
                             @else
                                 <div class="card-body">
                                     <strong>No se encontraron resultados</strong>
@@ -241,7 +244,9 @@
                         <div class="tab-pane fade" id="pills-profile" role="tabpanel"
                             aria-labelledby="pills-profile-tab">
                             @if ($historialCreditos->count())
-                                <table class="table table-striped table-sm table-responsive-sm">
+                            <div class="table-responsive">
+                                
+                                <table class="table table-striped table-sm">
                                     <thead class="thead-light">
                                         <tr>
                                             <th scope="col">#</th>
@@ -293,6 +298,7 @@
                                         </tr>
                                     </tbody>
                                 </table>
+                            </div>
                             @else
                                 <div class="card-body">
                                     <strong>No se encontraron resultados</strong>
