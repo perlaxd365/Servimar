@@ -19,13 +19,15 @@
             </thead>
             <tbody>
                 @if (count($listaBusqueda) > 0)
-                    <?php $totalGalones = 0;
+                    <?php 
+                    $totalGalones = 0;
                     $totalVenta = 0;
                     $galonesCredito = 0;
                     $galonesEfectivo = 0;
                     ?>
                     @foreach ($listaBusqueda as $venta)
-                        <?php $totalGalones = $totalGalones + $venta->galonaje_venta;
+                        <?php 
+                        $totalGalones = $totalGalones + $venta->galonaje_venta;
                         $totalVenta = $totalVenta + $venta->precio_venta;
                         if ($venta->nombre_tipo_pago == 'Credito') {
                             $galonesCredito=$galonesCredito+$venta->galonaje_venta;
