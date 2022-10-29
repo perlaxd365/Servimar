@@ -2,6 +2,7 @@
 
 namespace App\Http\Livewire\Ventas;
 
+use App\Models\Contometro;
 use App\Models\Credito;
 use App\Models\Embarcacion;
 use App\Models\Jornada;
@@ -34,7 +35,15 @@ class VentasIndex extends Component
     //datos de venta
     public $galonaje_venta, $precio_venta, $nombre_ref_venta,
         $dni_ref_venta, $telefono_ref_venta, $moneda_venta, $observacion_venta,
-        $id_venta,$precio_galon;
+        $id_venta, $precio_galon, $nombre_banco_venta;
+    //datos de contómetro
+    public $contometro_1, $contometro_a, $contometro_b;
+    //datos de contómetro inicio de jornada
+    public $contometro_1_inicio, $contometro_a_inicio, $contometro_b_inicio;
+    //datos de contómetro fin de jornada
+    public $contometro_1_fin, $contometro_a_fin, $contometro_b_fin;
+    //mostrar contometro 1 O 2
+    public $mostrarContrometro = 1;
     //Producto actual de abastecimiento
     public $precio_general, $stock_actual;
     //dolares
@@ -45,12 +54,14 @@ class VentasIndex extends Component
     public $mostrarPrecio;
     //Mostrar precio front
     public $mostrarPrecioFront;
+    //Mostrar bancos cuando es depósito
+    public $depositoBanco;
     //buscar Venta
     public $searchVenta;
     //vista
     public $view;
     //jornada 
-    public $estado_jornada, $entrada_jornada;
+    public $estado_jornada, $entrada_jornada, $id_jornada;
 
     public function mount()
     {
@@ -62,14 +73,15 @@ class VentasIndex extends Component
         //jornada
 
         $jornadas = Jornada::select('*')
-        ->where('user_create_jornada', '=', auth()->user()->name)
-        ->where('user_sede', '=', $this->sede)
+            ->where('user_create_jornada', '=', auth()->user()->name)
+            ->where('user_sede', '=', $this->sede)
             ->orderby('id_jornada', 'desc')
             ->first();
 
+        $this->id_jornada = $jornadas->id_jornada;
         $this->estado_jornada = $jornadas->estado_jornada;
         $this->entrada_jornada = $jornadas->entrada_jornada;
-        
+
 
         //producto
         $productos = Product::where('id_sede', auth()->user()->id_sede)->get();
@@ -80,7 +92,7 @@ class VentasIndex extends Component
             $this->stock_actual = $producto->stock_pro;
             $this->abastecimiento = $producto->nombre_pro;
         }
-        
+
         $this->show = 5;
         $this->paginasVentas = 10;
         $this->idtipopago = 1;
@@ -92,6 +104,11 @@ class VentasIndex extends Component
         $data = json_decode(file_get_contents('https://api.apis.net.pe/v1/tipo-cambio-sunat'), true);
         $this->dolares = $data['venta'];
         $this->view = 'create';
+
+        //contómetro
+        if (auth()->user()->id_sede == 4) {
+            $this->mostrarContrometro = 2;
+        }
     }
     public function render()
     {
@@ -137,16 +154,17 @@ class VentasIndex extends Component
             ->where('ventas.user_create_venta', '=', auth()->user()->name)
             ->orderby('fecha_venta', 'desc')
             ->paginate($this->paginasVentas);
-            
-            foreach ($ventas as $key => $venta) {
-                # code...
-            }
+
+        foreach ($ventas as $key => $venta) {
+            # code...
+        }
 
         //DETALLE DE VENTAS
         $detalleVenta = Venta::select('*')
+            ->join('contometros', 'contometros.id_venta', '=', 'ventas.id_venta')
             ->join('embarcacions', 'embarcacions.id', '=', 'ventas.id_embarcacion')
             ->join('tipo_pagos', 'tipo_pagos.id_tipo_pago', '=', 'ventas.id_tipo_pago')
-            ->where('id_venta', '=', $this->id_venta)
+            ->where('ventas.id_venta', '=', $this->id_venta)
             ->where('ventas.estado_venta', '=', 'Activo')
             ->paginate($this->paginasVentas);
 
@@ -229,6 +247,7 @@ class VentasIndex extends Component
             'fecha_venta' => now()->format('d/m/Y H:i:s A'),
             'estado_venta' => 'Activo',
             'mostrar_venta' => $this->mostrarPrecio,
+            'nombre_banco_venta' => $this->nombre_banco_venta,
             'observacion_venta' => $this->observacion_venta,
             'user_create_venta' => auth()->user()->name,
             'user_sede' => $this->sede,
@@ -259,6 +278,20 @@ class VentasIndex extends Component
 
         ]);
         $this->stock_actual = $this->stock_actual - $this->galonaje_venta;
+
+        //registro de contometro
+        Contometro::create([
+            'id_venta' => $id_venta,
+            'id_jornada' => $this->id_jornada,
+            'id_sede' => auth()->user()->id_sede,
+            'contometro_1' => $this->contometro_1,
+            'contometro_a' => $this->contometro_a,
+            'contometro_b' => $this->contometro_b,
+            'estado_contometro' => 'Activo',
+            'user_create' => auth()->user()->name,
+            'user_sede' => $this->sede,
+        ]);
+
         $this->print();
         $this->default();
 
@@ -345,6 +378,7 @@ class VentasIndex extends Component
         $this->id_emb = '';
         $this->nombre_emb = '';
         $this->observacion_venta = '';
+        $this->nombre_banco_venta = '';
     }
 
     public function updatedidtipopago()
@@ -353,7 +387,15 @@ class VentasIndex extends Component
 
             $this->mostrarPrecioFront = false;
             $this->mostrarPrecio = false;
+            $this->depositoBanco = false;
+        } else if ($this->idtipopago == 3) {
+
+            $this->mostrarPrecioFront = true;
+            $this->mostrarPrecio = true;
+            $this->depositoBanco = true;
         } else {
+
+            $this->depositoBanco = false;
             $this->mostrarPrecioFront = true;
             $this->mostrarPrecio = true;
         }
@@ -371,31 +413,101 @@ class VentasIndex extends Component
         $this->view = 'list';
     }
 
-    public function finalizarJornada(){
+    public function finalizarJornada()
+    {
 
+        //resto
+        $rules_all = [
+            'contometro_1_fin' => 'required',
+        ];
+        $messages_all = [
+            'contometro_1_fin.required' => 'Por favor ingresar Contómetro',
+        ];
+        //paita
+        $rules_paita = [
+            'contometro_a_fin' => 'required',
+            'contometro_b_fin' => 'required',
+        ];
+        $messages_paita = [
+            'contometro_a_fin.required' => 'Por favor ingresar contómetro A',
+            'contometro_b_fin.required' => 'Por favor ingresar contómetro B',
+        ];
+
+        if (auth()->user()->id_sede == 4) {
+
+            $this->validate($rules_paita, $messages_paita);
+        } else {
+
+            $this->validate($rules_all, $messages_all);
+        }
         date_default_timezone_set('America/Lima');
         $jornada = Jornada::create([
-            'entrada_jornada'=>$this->entrada_jornada,
-            'salida_jornada'=>now()->format('d/m/Y H:i:s A'),
-            'estado_jornada'=> false,
-            'user_create_jornada'=> auth()->user()->name,
-            'user_sede'=>$this->sede
+            'entrada_jornada' => $this->entrada_jornada,
+            'salida_jornada' => now()->format('d/m/Y H:i:s A'),
+            'estado_jornada' => false,
+            'user_create_jornada' => auth()->user()->name,
+            'user_sede' => $this->sede
+        ])->id_jornada;
+        //registro de contometro
+        Contometro::create([
+            'id_jornada' => $jornada,
+            'id_sede' => auth()->user()->id_sede,
+            'contometro_1' => $this->contometro_1_fin,
+            'contometro_a' => $this->contometro_a_fin,
+            'contometro_b' => $this->contometro_b_fin,
+            'estado_contometro' => 'Activo',
+            'user_create' => auth()->user()->name,
+            'user_sede' => $this->sede,
         ]);
         $this->dispatchBrowserEvent('respuesta', ['res' => 'Se finalizo la venta de hoy correctamente.']);
         $this->dispatchBrowserEvent('actualizar-pagina', []);
-
     }
-    public function iniciarJornada(){
-        
+    public function iniciarJornada()
+    {
+
+        //resto
+        $rules_all = [
+            'contometro_1_inicio' => 'required',
+        ];
+        $messages_all = [
+            'contometro_1_inicio.required' => 'Por favor ingresar Contómetro',
+        ];
+        //paita
+        $rules_paita = [
+            'contometro_a_inicio' => 'required',
+            'contometro_b_inicio' => 'required',
+        ];
+        $messages_paita = [
+            'contometro_a_inicio.required' => 'Por favor ingresar contómetro A',
+            'contometro_b_inicio.required' => 'Por favor ingresar contómetro B',
+        ];
+
+        if (auth()->user()->id_sede == 4) {
+
+            $this->validate($rules_paita, $messages_paita);
+        } else {
+
+            $this->validate($rules_all, $messages_all);
+        }
         date_default_timezone_set('America/Lima');
         $jornada = Jornada::create([
-            'entrada_jornada'=>now()->format('d/m/Y H:i:s A'),
-            'estado_jornada'=> true,
-            'user_create_jornada'=> auth()->user()->name,
-            'user_sede'=>$this->sede
+            'entrada_jornada' => now()->format('d/m/Y H:i:s A'),
+            'estado_jornada' => true,
+            'user_create_jornada' => auth()->user()->name,
+            'user_sede' => $this->sede
+        ])->id_jornada;
+        //registro de contometro
+        Contometro::create([
+            'id_jornada' => $jornada,
+            'id_sede' => auth()->user()->id_sede,
+            'contometro_1' => $this->contometro_1_inicio,
+            'contometro_a' => $this->contometro_a_inicio,
+            'contometro_b' => $this->contometro_b_inicio,
+            'estado_contometro' => 'Activo',
+            'user_create' => auth()->user()->name,
+            'user_sede' => $this->sede,
         ]);
         $this->dispatchBrowserEvent('respuesta', ['res' => 'Se inició la venta de hoy correctamente.']);
         $this->dispatchBrowserEvent('actualizar-pagina', []);
-
     }
 }

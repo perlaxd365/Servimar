@@ -91,6 +91,39 @@
         <div class="card-body">
             <h5 class="card-title">Iniciar la jornada de hoy</h5>
             <p class="card-text">Empezar las ventas del dia de hoy</p>
+            @if (count($errors) > 0)
+                <div class="alert border-danger">
+                    <p>Se encontraron los siguientes errores:</p>
+                    <ul>
+                        @foreach ($errors->all() as $message)
+                            <li>{{ $message }}</li>
+                        @endforeach
+                    </ul>
+                </div>
+            @endif
+            <div class="card-body  form-row">
+                @if ($mostrarContrometro == 1)
+                    <div class="form-group col-md-6">
+                        <label for="">Indicar valor de contómetro</label>
+                        <input wire:model='contometro_1_inicio' type="text" class="form-control"
+                            placeholder="Ingresar el número que marca en el contómetro">
+                            <small class="text-danger">Introducir al iniciar la jornada de hoy</small>
+                    </div>
+                @else
+                    <div class="form-group col-md-6">
+                        <label for="">Indicar valor de contómetro A</label>
+                        <input wire:model='contometro_a_inicio' type="text" class="form-control"
+                            placeholder="Ingresar el número que marca en el contómetro A">
+                            <small class="text-danger">Introducir al iniciar la jornada de hoy</small>
+                    </div>
+                    <div class="form-group col-md-6">
+                        <label for="">Indicar el valor de contómetro B</label>
+                        <input wire:model='contometro_b_inicio' type="text" class="form-control"
+                            placeholder="Ingresar el número que marca en el contómetro B">
+                            <small class="text-danger">Introducir al iniciar la jornada de hoy</small>
+                    </div>
+                @endif
+            </div>
             <a href="#" wire:click='iniciarJornada' class="btn btn-success">Iniciar</a>
         </div>
     </div>
@@ -102,6 +135,39 @@
         <div class="card-body">
             <h5 class="card-title">Culminación de labor</h5>
             <p class="card-text">Se cerrarán las ventas del dia de hoy.</p>
+            @if (count($errors) > 0)
+                <div class="alert border-danger">
+                    <p>Se encontraron los siguientes errores:</p>
+                    <ul>
+                        @foreach ($errors->all() as $message)
+                            <li>{{ $message }}</li>
+                        @endforeach
+                    </ul>
+                </div>
+            @endif
+            <div class="card-body  form-row">
+                @if ($mostrarContrometro == 1)
+                    <div class="form-group col-md-6">
+                        <label for="">Indicar valor de contómetro</label>
+                        <input wire:model='contometro_1_fin' type="text" class="form-control"
+                            placeholder="Ingresar el número que marca en el contómetro">
+                            <small class="text-danger">Introducir al finalizar la jornada de hoy</small>
+                    </div>
+                @else
+                    <div class="form-group col-md-6">
+                        <label for="">Indicar valor de contómetro A</label>
+                        <input wire:model='contometro_a_fin' type="text" class="form-control"
+                            placeholder="Ingresar el número que marca en el contómetro A">
+                            <small class="text-danger">Introducir al finalizar la jornada de hoy</small>
+                    </div>
+                    <div class="form-group col-md-6">
+                        <label for="">Indicar el valor de contómetro B</label>
+                        <input wire:model='contometro_b_fin' type="text" class="form-control"
+                            placeholder="Ingresar el número que marca en el contómetro B">
+                            <small class="text-danger">Introducir al finalizar la jornada de hoy</small>
+                    </div>
+                @endif
+            </div>
             <a href="#" wire:click='finalizarJornada' class="btn btn-warning">Finalizar</a>
         </div>
     </div>
@@ -127,7 +193,7 @@
 
             <div>
                 <div class="card">
-                    <div class="card-header">
+                    <div class="card-header  alert-secondary">
                         <h5>Datos de Embarcación</h5>
                     </div>
                     @if (count($errors) > 0)
@@ -158,7 +224,7 @@
                 </div>
 
                 <div class="card">
-                    <div class="card-header">
+                    <div class="card-header  alert-secondary">
                         <h5>Datos de Venta</h5>
                     </div>
                     <div class="card-body  form-row">
@@ -179,9 +245,8 @@
                         <div class="form-group col-md-6">
                             <label for="inputEmail4">Precio x Galón</label>
                             <input wire:model='precio_galon' wire:keyup='calcularTotal' wire:keypress='calcularTotal'
-                            wire:keydown='calcularTotal'  autocomplete="off"
-                                type="number" Step="0" class="form-control solo-numero"
-                                placeholder="Ingresar Cantidad de Galones">
+                                wire:keydown='calcularTotal' autocomplete="off" type="number" Step="0"
+                                class="form-control solo-numero" placeholder="Ingresar Cantidad de Galones">
                         </div>
                         <div class="form-group col-md-6">
                             <label for="inputEmail4">Tipo de Pago</label>
@@ -196,21 +261,64 @@
                         <div class="form-group col-md-6"
                             style="@if ($mostrarPrecioFront) display:block @else display:none @endif">
                             <label for="inputEmail4">Precio</label>
-                            <input readonly wire:model='precio_venta' type="number" autocomplete="off" Step="0"
-                                class="form-control solo-numero" id="exampleInputEmail1"
+                            <input readonly wire:model='precio_venta' type="number" autocomplete="off"
+                                Step="0" class="form-control solo-numero" id="exampleInputEmail1"
                                 placeholder="Ingresar Precio">
-                                <br>
+                            <br>
                             <label for="inputEmail4">Mostrar Precio</label>
                             <label class="switch" style="size: 4cm">
                                 <input wire:model="mostrarPrecio" type="checkbox" checked>
                                 <span class="slider round"></span>
                             </label>
                         </div>
+                        <div class="form-group col-md-6"
+                            style="@if ($mostrarPrecioFront && $depositoBanco) display:block @else display:none @endif">
+                            <label for="inputEmail4">Cuenta a depositar</label>
+                            <select wire:model="nombre_banco_venta" class="form-control" name=""
+                                id="">
+                                <option value="">Seleccionar Banco</option>
+                                <option value="BCP">BCP</option>
+                                <option value="BBVA">BBVA</option>
+                                <option value="SCOTIABANK">SCOTIABANK</option>
+                            </select>
+                        </div>
                     </div>
                 </div>
 
                 <div class="card">
-                    <div class="card-header">
+                    <div class="card-header alert-secondary">
+                        <h5>Datos de Contometro</h5>
+                    </div>
+                    <div class="container">
+                        
+                    </div>
+                    <div class="card-body  form-row">
+                        @if ($mostrarContrometro == 1)
+                            <div class="form-group col-md-6">
+                                <label for="">Indicar valor de contómetro</label>
+                                <input wire:model='contometro_1' type="text" class="form-control"
+                                    placeholder="Ingresar el número que marca en el contómetro">
+                                    <small class="text-danger">Introducir después del despacho de petroleo</small>
+                            </div>
+                        @else
+                            <div class="form-group col-md-6">
+                                <label for="">Indicar valor de contómetro A</label>
+                                <input wire:model='contometro_a' type="text" class="form-control"
+                                    placeholder="Ingresar el número que marca en el contómetro A">
+                                    <small class="text-danger">Introducir después del despacho de petroleo</small>
+                            </div>
+                            <div class="form-group col-md-6">
+                                <label for="">Indicar el valor de contómetro B</label>
+                                <input wire:model='contometro_b' type="text" class="form-control"
+                                    placeholder="Ingresar el número que marca en el contómetro B">
+                                    <small class="text-danger">Introducir después del despacho de petroleo</small>
+                            </div>
+                        @endif
+                    </div>
+                </div>
+
+                <div class="card">
+                    <div class="card-header  alert-secondary">
                         <h5>Datos de Referencia</h5>
                     </div>
                     <div class="card-body  form-row">
@@ -234,7 +342,7 @@
 
 
                 <div class="card">
-                    <div class="card-header">
+                    <div class="card-header  alert-secondary">
                         <h4>Observaciones</h4>
                     </div>
                     <div class="card-body  form-row">

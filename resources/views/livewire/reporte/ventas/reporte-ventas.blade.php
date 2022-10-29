@@ -15,6 +15,15 @@
 
     <div class="form-row">
         <div class="form-group col-md-12">
+            <label for="inputEmail4">Punto</label>
+            <select wire:model="id_sede" class="form-control" name="" id="">
+                <option value="">Seleccionar Punto</option>
+                @foreach ($sedes as $sede)
+                    <option value="{{ $sede->descripcion }}">{{ $sede->descripcion }}</option>
+                @endforeach
+            </select>
+        </div>
+        <div class="form-group col-md-12">
             <label for="">Operarios</label>
             <div class="row">
                 <div class="col-8">

@@ -24,6 +24,7 @@ class Venta extends Model
         'dni_ref_venta',
         'telefono_ref_venta',
         'fecha_venta',
+        'nombre_banco_venta',
         'estado_venta',
         'observacion_venta',
         'mostrar_venta',

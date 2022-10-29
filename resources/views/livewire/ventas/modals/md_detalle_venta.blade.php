@@ -80,6 +80,22 @@
                                         <th>OBSERVACIONES:</th>
                                         <td>{{ $detalle->observacion_venta }}</td>
                                     </tr>
+                                    <tr class="bg-primary">
+                                        <th>CONTOMETRO</th>
+                                        <th></th>
+                                    </tr>
+                                    <tr>
+                                        <th>Contrometro 1</th>
+                                        <td>{{ $detalle->contometro_1 }}</td>
+                                    </tr>
+                                    <tr>
+                                        <th>Contrometro A Paita</th>
+                                        <td>{{ $detalle->contometro_a }}</td>
+                                    </tr>
+                                    <tr>
+                                        <th>Contrometro B Paita</th>
+                                        <td>{{ $detalle->contometro_b }}</td>
+                                    </tr>
                                     <tr class="bg-secondary">
                                         <th>REFERENCIA</th>
                                         <th></th>
@@ -95,6 +111,18 @@
                                     <tr>
                                         <th>TELEFONO:</th>
                                         <td>{{ $detalle->telefono_ref_venta }}</td>
+                                    </tr>
+                                    <tr class="bg-info">
+                                        <th>ATENCIÓN</th>
+                                        <th></th>
+                                    </tr>
+                                    <tr>
+                                        <th>PUNTO:</th>
+                                        <td>{{ $detalle->user_sede }}</td>
+                                    </tr>
+                                    <tr>
+                                        <th>OPERARIO:</th>
+                                        <td>{{ $detalle->user_create_venta }}</td>
                                     </tr>
                                 @endforeach
 

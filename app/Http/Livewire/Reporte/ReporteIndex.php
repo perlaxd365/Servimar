@@ -8,6 +8,7 @@ use Carbon\Carbon;
 use Livewire\Component;
 use Livewire\WithPagination;
 use App\Exports\ventasExport;
+use App\Models\Sede;
 use Maatwebsite\Excel\Facades\Excel;
 use Dompdf\Dompdf;
 use Dompdf\Options;
@@ -29,6 +30,8 @@ class ReporteIndex extends Component
     public $listaBusqueda = [];
     //venta
     public $id_venta;
+    //sede
+    public $id_sede;
 
     public function mount()
     {
@@ -53,13 +56,16 @@ class ReporteIndex extends Component
 
         //DETALLE DE VENTAS
         $detalleVenta = Venta::select('*')
+            ->join('contometros', 'contometros.id_venta', '=', 'ventas.id_venta')
             ->join('embarcacions', 'embarcacions.id', '=', 'ventas.id_embarcacion')
             ->join('tipo_pagos', 'tipo_pagos.id_tipo_pago', '=', 'ventas.id_tipo_pago')
-            ->where('id_venta', '=', $this->id_venta)
+            ->where('ventas.id_venta', '=', $this->id_venta)
             ->where('ventas.estado_venta', '=', 'Activo')
             ->paginate($this->show);
 
-        return view('livewire.reporte.reporte-index', compact('operarios', 'detalleVenta'));
+        $sedes = Sede::all();
+
+        return view('livewire.reporte.reporte-index', compact('operarios', 'detalleVenta', 'sedes'));
     }
     public function updatingSearch()
     {
@@ -94,8 +100,10 @@ class ReporteIndex extends Component
         $this->listaBusqueda = Venta::select('*')
             ->where(function ($query) {
                 return $query
-                    ->orwhere('user_create_venta', 'LIKE', '%' . $this->name_operario . '%');
+                    ->where('ventas.user_sede', 'LIKE', '%' . $this->id_sede . '%')
+                    ->where('user_create_venta', 'LIKE', '%' . $this->name_operario . '%');
             })
+            ->join('contometros', 'contometros.id_venta', '=', 'ventas.id_venta')
             ->join('embarcacions', 'embarcacions.id', '=', 'ventas.id_embarcacion')
             ->join('tipo_pagos', 'tipo_pagos.id_tipo_pago', '=', 'ventas.id_tipo_pago')
             ->whereBetween('fecha_venta', [$fecha_inicio, $fecha_fin])
@@ -130,7 +138,7 @@ class ReporteIndex extends Component
             date_default_timezone_set('America/Lima');
             $date = Carbon::now();
             $date = $date->format('Y_m_d_H_s_A');
-            return Excel::download(new ventasExport($this->listaBusqueda), 'reporte_' . $date .'.xlsx');
+            return Excel::download(new ventasExport($this->listaBusqueda), 'reporte_' . $date . '.xlsx');
         }
     }
     public function exportarPdf()
