@@ -111,6 +111,12 @@ class EventServiceProvider extends ServiceProvider
                 'icon' => 'fas fa-file-import',
                 'can'  => 'admin.reportes.index'
             ]);
+            $event->menu->add([
+                'text' => 'Reporte de Jornadas',
+                'route' => 'admin.reportejornada.index',
+                'icon' => 'fas fa-file-import',
+                'can'  => 'admin.reportes-jornada.index'
+            ]);
         });
     }
 

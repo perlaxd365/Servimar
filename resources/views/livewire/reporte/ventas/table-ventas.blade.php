@@ -40,7 +40,7 @@
                             <td>{{ $venta->id_venta }}</td>
                             <td>{{ $venta->user_sede }}</td>
                             <td>{{ $venta->user_create_venta }}</td>
-                            <td>{{ $venta->nombre_emb }}</td>
+                            <td>{{ $venta->nombre_emb }}<br>({{$venta->razon_cli}})</td>
                             <td>{{ $venta->matricula_emb }}</td>
                             <td>{{ $venta->nombre_tipo_pago }}</td>
                             <td>{{ $venta->fecha_venta }}

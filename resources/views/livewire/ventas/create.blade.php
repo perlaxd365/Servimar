@@ -85,12 +85,10 @@
 {{-- Validando la jornada --}}
 @if ($estado_jornada == false)
     <div class="card">
-        <div class="card-header">
+        <div class="card-header alert-warning">
             Iniciar Jornada
         </div>
         <div class="card-body">
-            <h5 class="card-title">Iniciar la jornada de hoy</h5>
-            <p class="card-text">Empezar las ventas del dia de hoy</p>
             @if (count($errors) > 0)
                 <div class="alert border-danger">
                     <p>Se encontraron los siguientes errores:</p>
@@ -101,6 +99,7 @@
                     </ul>
                 </div>
             @endif
+            <h5 class="card-title">Iniciar la jornada <small>(ventas)</small> de hoy</h5>
             <div class="card-body  form-row">
                 @if ($mostrarContrometro == 1)
                     <div class="form-group col-md-6">
@@ -129,22 +128,21 @@
     </div>
 @else
     <div class="card">
-        <div class="card-header">
+        <div class="card-header alert-warning">
             Finalizar Jornada de Hoy
         </div>
+        @if (count($errors) > 0)
+            <div class="alert border-danger">
+                <p>Se encontraron los siguientes errores:</p>
+                <ul>
+                    @foreach ($errors->all() as $message)
+                        <li>{{ $message }}</li>
+                    @endforeach
+                </ul>
+            </div>
+        @endif
         <div class="card-body">
-            <h5 class="card-title">Culminación de labor</h5>
-            <p class="card-text">Se cerrarán las ventas del dia de hoy.</p>
-            @if (count($errors) > 0)
-                <div class="alert border-danger">
-                    <p>Se encontraron los siguientes errores:</p>
-                    <ul>
-                        @foreach ($errors->all() as $message)
-                            <li>{{ $message }}</li>
-                        @endforeach
-                    </ul>
-                </div>
-            @endif
+            <h5 class="card-title">Cerrar las ventas para autoenviar reporte</h5>
             <div class="card-body  form-row">
                 @if ($mostrarContrometro == 1)
                     <div class="form-group col-md-6">

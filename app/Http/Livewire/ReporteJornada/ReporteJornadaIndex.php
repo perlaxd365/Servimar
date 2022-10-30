@@ -1,24 +1,18 @@
 <?php
 
-namespace App\Http\Livewire\Reporte;
+namespace App\Http\Livewire\ReporteJornada;
 
+use App\Models\Jornada;
+use App\Models\Sede;
 use App\Models\User;
 use App\Models\Venta;
+use Barryvdh\DomPDF\Facade\Pdf;
 use Carbon\Carbon;
+use Illuminate\Support\Facades\DB;
 use Livewire\Component;
 use Livewire\WithPagination;
-use App\Exports\ventasExport;
-use App\Models\Cliente;
-use App\Models\Sede;
-use App\Models\TipoPago;
-use Maatwebsite\Excel\Facades\Excel;
-use Dompdf\Dompdf;
-use Dompdf\Options;
-use PDF as PDF;
 
-
-
-class ReporteIndex extends Component
+class ReporteJornadaIndex extends Component
 {
     use WithPagination;
     protected $paginationTheme = "bootstrap";
@@ -34,11 +28,6 @@ class ReporteIndex extends Component
     public $id_venta;
     //sede
     public $id_sede;
-    //tipo de pago
-    public $id_tipo_pago;
-
-    //id cliente
-    public $id_cliente;
 
     public function mount()
     {
@@ -47,7 +36,7 @@ class ReporteIndex extends Component
         $date = Carbon::now();
         $this->fecha_inicio = $date->format('Y-m-d');
         $this->fecha_fin = $date->addDay()->format('Y-m-d');
-        $this->show = 5;
+        $this->show = 8;
     }
 
     public function render()
@@ -62,35 +51,17 @@ class ReporteIndex extends Component
             ->paginate($this->show);
 
         //DETALLE DE VENTAS
-        $detalleVenta = Venta::select('*')
-            ->join('contometros', 'contometros.id_venta', '=', 'ventas.id_venta')
-            ->join('embarcacions', 'embarcacions.id', '=', 'ventas.id_embarcacion')
-            ->join('tipo_pagos', 'tipo_pagos.id_tipo_pago', '=', 'ventas.id_tipo_pago')
-            ->where('ventas.id_venta', '=', $this->id_venta)
-            ->where('ventas.estado_venta', '=', 'Activo')
+        $usuarios = User::select('*')
+            ->join('jornadas', 'jornadas.id_user', '=', 'users.id')
+            ->join('sedes', 'sedes.id_sede', DB::raw('users.id_sede and id_jornada = (SELECT MAX(id_jornada) from jornadas WHERE jornadas.id_user=users.id)'))
+            
             ->paginate($this->show);
 
+        //SEDES
         $sedes = Sede::all();
-        $tipoPagos = TipoPago::All();
 
-        $clientes = Cliente::select(
-            'clientes.id_cliente',
-            'duenio_cli',
-            'razon_cli',
-            'ruc_cli',
-        )
-            ->join('embarcacions', 'embarcacions.id_cliente', '=', 'clientes.id_cliente')
-            ->where(function ($query) {
-                return $query
-                    ->orwhere('razon_cli', 'LIKE', '%' . $this->search . '%')
-                    ->orwhere('duenio_cli', 'LIKE', '%' . $this->search . '%')
-                    ->orwhere('ruc_cli', 'LIKE', '%' . $this->search . '%');
-            })
-            ->where('estado_cli', '=', true)
-            ->groupby('clientes.id_cliente')
-            ->paginate($this->show);
 
-        return view('livewire.reporte.reporte-index', compact('operarios', 'detalleVenta', 'sedes', 'tipoPagos', 'clientes'));
+        return view('livewire.reporte-jornada.reporte-jornada-index', compact('operarios', 'usuarios', 'sedes'));
     }
     public function updatingSearch()
     {
@@ -112,7 +83,7 @@ class ReporteIndex extends Component
         $this->name_operario = '';
     }
 
-    public function listVentas()
+    public function list_jornadas()
     {
         $rules = [
             'fecha_inicio' => 'required|date',
@@ -122,38 +93,30 @@ class ReporteIndex extends Component
         $fecha_inicio = Carbon::parse($this->fecha_inicio)->format('d/m/Y H:i:s A');
         $fecha_fin = Carbon::parse($this->fecha_fin)->format('d/m/Y H:i:s A');
 
-        $this->listaBusqueda = Venta::select('*')
-            ->where(function ($query) {
-                return $query
-                ->where('clientes.id_cliente', 'LIKE', '%' . $this->id_cliente . '%')
-                ->where('ventas.user_sede', 'LIKE', '%' . $this->id_sede . '%')
-                    ->where('ventas.user_sede', 'LIKE', '%' . $this->id_sede . '%')
-                    ->where('user_create_venta', 'LIKE', '%' . $this->name_operario . '%')
-                    ->where('ventas.id_tipo_pago', 'LIKE', '%' . $this->id_tipo_pago . '%');
-            })
-            ->join('contometros', 'contometros.id_venta', '=', 'ventas.id_venta')
-            ->join('embarcacions', 'embarcacions.id', '=', 'ventas.id_embarcacion')
-            ->join('clientes', 'clientes.id_cliente', '=', 'embarcacions.id_cliente')
-            ->join('tipo_pagos', 'tipo_pagos.id_tipo_pago', '=', 'ventas.id_tipo_pago')
-            ->whereBetween('fecha_venta', [$fecha_inicio, $fecha_fin])
-            ->where('ventas.estado_venta', '=', 'Activo')
-            ->orderby('fecha_venta', 'desc')
-            ->get();
+        $this->listaBusqueda = User::select('*')
+        ->join('jornadas', 'jornadas.id_user', '=', 'users.id')
+        ->join('sedes', 'sedes.id_sede', DB::raw('users.id_sede and id_jornada = (SELECT MAX(id_jornada) from jornadas WHERE jornadas.id_user=users.id)'))
+        
+        ->where(function ($query) {
+            return $query
+                ->where('users.id_sede', 'LIKE', $this->id_sede)
+                ->where('users.id', 'LIKE', $this->id_operario);
+        })
+        ->whereBetween('entrada_jornada', [$fecha_inicio, $fecha_fin])
+        ->where('users.estado', true)
+        ->get();
     }
     public function default()
     {
 
         $date = Carbon::now();
         $this->id_operario = '';
-        $this->id_sede = '';
-        $this->id_tipo_pago = '';
         $this->name_operario = '';
         $this->listaBusqueda = [];
-        $this->defaultCliente();    
     }
     public function modalDetalle($id_venta)
     {
-        $this->listVentas();
+        $this->list_jornadas();
         $this->id_venta = $id_venta;
     }
     public function exportarExcel()
@@ -163,14 +126,14 @@ class ReporteIndex extends Component
 
             $this->dispatchBrowserEvent('error', ['res' => 'No se encontró alguna búsqueda']);
         } else {
-            $this->listVentas();
+            $this->list_jornadas();
 
             //fecha y hora 
 
             date_default_timezone_set('America/Lima');
             $date = Carbon::now();
             $date = $date->format('Y_m_d_H_s_A');
-            return Excel::download(new ventasExport($this->listaBusqueda), 'reporte_' . $date . '.xlsx');
+            //return Excel::download(new ventasExport($this->listaBusqueda), 'reporte_' . $date . '.xlsx');
         }
     }
     public function exportarPdf()
@@ -183,7 +146,7 @@ class ReporteIndex extends Component
             $this->dispatchBrowserEvent('error', ['res' => 'No se encontró alguna búsqueda']);
         } else {
 
-            $this->listVentas();
+            $this->list_jornadas();
             $viewData = [
                 'title'         => 'REPORTE DE VENTAS',
                 'date'          => date('m/d/Y'),
@@ -192,7 +155,7 @@ class ReporteIndex extends Component
             ];
 
             //perfil de pdf
-            $pdfContent = PDF::loadView('livewire.reporte.pdf.template-view', $viewData)
+            $pdfContent = Pdf::loadView('livewire.reporte.pdf.template-view', $viewData)
                 ->setPaper('A4', 'landscape')
                 ->output();
 
@@ -209,21 +172,4 @@ class ReporteIndex extends Component
             );
         }
     }
-
-    public function seleccionarCliente($id_cliente, $razon_cli, $ruc_cli)
-    {
-        $this->id_cliente = $id_cliente;
-        $this->razon_cli = $razon_cli;
-        $this->ruc_cli = $ruc_cli;
-        $this->dispatchBrowserEvent('close-modal-cliente');
-        $this->resetPage();
-    }
-    public function defaultCliente()
-    {
-        $this->id_cliente = '';
-        $this->razon_cli = '';
-        $this->monto_pago = '';
-        $this->resetPage();
-    }
-
 }

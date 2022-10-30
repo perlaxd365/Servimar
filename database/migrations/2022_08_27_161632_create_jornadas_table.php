@@ -16,6 +16,7 @@ return new class extends Migration
     {
         Schema::create('jornadas', function (Blueprint $table) {
             $table->bigIncrements('id_jornada')->comment('id de la jornada');
+            $table->unsignedBigInteger('id_user')->nullable()->comment('id del usuario');
             //datos de jornada
             $table->string('entrada_jornada')->nullable()->comment('Fecha y hora de entrada');
             $table->string('salida_jornada')->nullable()->comment('Fecha y hora de salida');
@@ -26,6 +27,9 @@ return new class extends Migration
             $table->string('user_create_jornada')->nullable()->comment('Usuario quien registra');
             $table->string('user_sede')->nullable()->comment('sede donde se registra');
             $table->timestamps();
+
+            //CLAVES FORANEAS
+            $table->foreign('id_user')->references('id')->on('users');
         });
         date_default_timezone_set('America/Lima');
         DB::table('jornadas')->insert(

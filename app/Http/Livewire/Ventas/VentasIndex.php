@@ -442,6 +442,7 @@ class VentasIndex extends Component
         }
         date_default_timezone_set('America/Lima');
         $jornada = Jornada::create([
+            'id_user' => auth()->user()->id,
             'entrada_jornada' => $this->entrada_jornada,
             'salida_jornada' => now()->format('d/m/Y H:i:s A'),
             'estado_jornada' => false,
@@ -491,6 +492,7 @@ class VentasIndex extends Component
         }
         date_default_timezone_set('America/Lima');
         $jornada = Jornada::create([
+            'id_user' => auth()->user()->id,
             'entrada_jornada' => now()->format('d/m/Y H:i:s A'),
             'estado_jornada' => true,
             'user_create_jornada' => auth()->user()->name,

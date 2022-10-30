@@ -11,6 +11,7 @@ class Jornada extends Model
     protected $name="jornadas";
     protected $primaryKey = 'id_jornada';
     protected $fillable = [
+        'id_user' ,
         'entrada_jornada' ,
         'salida_jornada',
         'estado_jornada',
