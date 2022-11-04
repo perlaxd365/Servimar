@@ -369,16 +369,19 @@ class VentasIndex extends Component
         $this->mostrarPrecio = true;
         $this->mostrarPrecioFront = true;
         $this->idtipopago = 1;
-        $this->galonaje_venta = '';
-        $this->precio_venta = '';
-        $this->nombre_ref_venta = '';
-        $this->dni_ref_venta = '';
-        $this->telefono_ref_venta = '';
+        $this->galonaje_venta = null;
+        $this->precio_venta = null;
+        $this->nombre_ref_venta = null;
+        $this->dni_ref_venta = null;
+        $this->telefono_ref_venta = null;
         $this->moneda_venta = 'Soles';
-        $this->id_emb = '';
-        $this->nombre_emb = '';
-        $this->observacion_venta = '';
-        $this->nombre_banco_venta = '';
+        $this->id_emb = null;
+        $this->nombre_emb = null;
+        $this->observacion_venta = null;
+        $this->nombre_banco_venta = null;
+        $this->contometro_1 = null;
+        $this->contometro_a = null;
+        $this->contometro_b = null;
     }
 
     public function updatedidtipopago()

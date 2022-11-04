@@ -32,6 +32,10 @@ class SedeSeeder extends Seeder
             "descripcion"=>'Chata Paita',
             "estado"=>'1'
         ]);
+        Sede::create([
+            "descripcion"=>'Administracion',
+            "estado"=>'1'
+        ]);
         
     }
 }

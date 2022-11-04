@@ -101,7 +101,7 @@
             @endif
             <h5 class="card-title">Iniciar la jornada <small>(ventas)</small> de hoy</h5>
             <div class="card-body  form-row">
-                @if ($mostrarContrometro == 1)
+                @if ($mostrarContrometro != 2)
                     <div class="form-group col-md-6">
                         <label for="">Indicar valor de contómetro</label>
                         <input wire:model='contometro_1_inicio' type="text" class="form-control"

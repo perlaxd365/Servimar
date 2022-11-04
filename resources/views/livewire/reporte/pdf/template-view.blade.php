@@ -84,7 +84,9 @@
                     $totalGalones = 0;
                     $totalVenta = 0;
                     $galonesCredito = 0;
-                    $galonesEfectivo = 0; ?>
+                    $galonesEfectivo = 0;
+                    
+                    ?>
                     @foreach ($listaBusqueda as $venta)
                         <?php
                         
@@ -102,12 +104,19 @@
                             <td>{{ $venta->id_venta }}</td>
                             <td>{{ $venta->user_sede }}</td>
                             <td>{{ $venta->user_create_venta }}</td>
-                            <td>{{ $venta->nombre_emb }}</td>
+                            <td>{{ $venta->nombre_emb }} <br> ({{ $venta->razon_cli }} <br> {{ $venta->duenio_cli }})
+                            </td>
                             <td>{{ $venta->matricula_emb }}</td>
                             <td>{{ $venta->nombre_tipo_pago }}</td>
                             <td>{{ $venta->fecha_venta }}</td>
                             <td>{{ $venta->observacion_venta }}</td>
-                            <td>S/ {{ $venta->precio_x_galon_venta }}</td>
+                            <td><?php
+                            if ($venta->nombre_tipo_pago != 'Credito') {
+                                echo 'S/ ' . $venta->precio_x_galon_venta;
+                            }
+                            ?></td>
+
+
                             <td>
                                 <span class="text-info">
                                     <i class="fas fa-caret-down me-1"></i><span>{{ $venta->galonaje_venta }}</span>
@@ -115,7 +124,13 @@
                             </td>
                             <td>
                                 <span class="text-primary">
-                                    <i class="fas fa-caret-up me-1"></i><span>S/ {{ $venta->precio_venta }}</span>
+                                    <i class="fas fa-caret-up me-1"></i><span>
+                                        <?php
+                                        if ($venta->nombre_tipo_pago != 'Credito') {
+                                            echo 'S/ ' . $venta->precio_venta;
+                                        }
+                                        ?>
+                                    </span>
                                 </span>
                             </td>
                         </tr>
@@ -137,7 +152,8 @@
                         </td>
                         <td>
                             <span class="text-primary">
-                                <i class="fas fa-caret-down me-1"></i><strong><span>S/{{ $totalVenta }}</span></strong>
+                                <i
+                                    class="fas fa-caret-down me-1"></i><strong><span>S/{{ $totalVenta }}</span></strong>
                             </span>
                         </td>
                         <td></td>

@@ -41,7 +41,13 @@ class EventServiceProvider extends ServiceProvider
             $clientes = Cliente::all()->count();
             $ventas = Venta::all()->count();
             $creditos = Credito::all()->count();
-            $sedes = Sede::where('id_sede', auth()->user()->id_sede)->get();
+            if (!auth()->check()) {
+
+                return redirect()->route('login');
+            } else {
+
+                $sedes = Sede::where('id_sede', auth()->user()->id_sede)->get();
+            }
             foreach ($sedes as $sede) {
                 $nombresede = $sede->descripcion;
             }

@@ -62,19 +62,6 @@
                     class="fa fa-text"></i> <i wire:target="default" wire:loading.class="fa fa-spinner fa-spin"
                     aria-hidden="true"></i> Limpiar</button>
         </div>
-        <div class="col clearfix">
-            <div class="float-right">
-
-                <button wire:click="exportarExcel" wire:loading.attr="disabled"  data-toggle="tooltip" data-placement="top" title="IMPRIMIR EXCEL" class="btn btn-success" type="button"> <i
-                        class="fas fa-file-excel"></i> <i wire:target="exportarExcel"
-                        wire:loading.class="fa fa-spinner fa-spin" aria-hidden="true"></i></button>
-
-                <button wire:click="exportarPdf" wire:loading.attr="disabled"  data-toggle="tooltip" data-placement="top" title="IMPRIMIR PDF" class="btn btn-danger" type="button"> <i
-                        class="fas fa-file-pdf"></i> <i wire:target="exportarPdf"
-                        wire:loading.class="fa fa-spinner fa-spin" aria-hidden="true"></i></button>
-            </div>
-
-        </div>
     </div>
 
     <br>

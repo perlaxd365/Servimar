@@ -15,7 +15,7 @@ class ClienteSeeder extends Seeder
      */
     public function run()
     {
-        Cliente::create([
+        /* Cliente::create([
 
             'id_persona'=>'1',
             'duenio_cli'=>'Chita',
@@ -27,8 +27,7 @@ class ClienteSeeder extends Seeder
             'email_cli'=>'perlaxd365@gmail.com',
             'user_create_cli'=>'Admin',
             'estado_cli'=>true,
-        ]);
+        ]); */
 
-        Cliente::factory(40)->create();
     }
 }

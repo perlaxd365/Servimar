@@ -125,8 +125,8 @@ class ReporteIndex extends Component
         $this->listaBusqueda = Venta::select('*')
             ->where(function ($query) {
                 return $query
-                ->where('clientes.id_cliente', 'LIKE', '%' . $this->id_cliente . '%')
-                ->where('ventas.user_sede', 'LIKE', '%' . $this->id_sede . '%')
+                    ->where('clientes.id_cliente', 'LIKE', '%' . $this->id_cliente . '%')
+                    ->where('ventas.user_sede', 'LIKE', '%' . $this->id_sede . '%')
                     ->where('ventas.user_sede', 'LIKE', '%' . $this->id_sede . '%')
                     ->where('user_create_venta', 'LIKE', '%' . $this->name_operario . '%')
                     ->where('ventas.id_tipo_pago', 'LIKE', '%' . $this->id_tipo_pago . '%');
@@ -144,12 +144,12 @@ class ReporteIndex extends Component
     {
 
         $date = Carbon::now();
-        $this->id_operario = '';
-        $this->id_sede = '';
-        $this->id_tipo_pago = '';
-        $this->name_operario = '';
+        $this->id_operario = null;
+        $this->id_sede = null;
+        $this->id_tipo_pago = null;
+        $this->name_operario = null;
         $this->listaBusqueda = [];
-        $this->defaultCliente();    
+        $this->defaultCliente();
     }
     public function modalDetalle($id_venta)
     {
@@ -225,5 +225,4 @@ class ReporteIndex extends Component
         $this->monto_pago = '';
         $this->resetPage();
     }
-
 }

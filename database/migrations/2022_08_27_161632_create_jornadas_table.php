@@ -31,15 +31,7 @@ return new class extends Migration
             //CLAVES FORANEAS
             $table->foreign('id_user')->references('id')->on('users');
         });
-        date_default_timezone_set('America/Lima');
-        DB::table('jornadas')->insert(
-            [
-                'entrada_jornada'   => now()->format('d/m/Y H:i:s A'), 
-                'estado_jornada'    => true,
-                'user_create_jornada' => 'Cesar Raul Baca',
-                'user_sede'         => 'Gildemeister'
-            ]
-        );
+        
     }
 
     /**

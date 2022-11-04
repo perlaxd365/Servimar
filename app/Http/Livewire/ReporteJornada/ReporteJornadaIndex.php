@@ -2,6 +2,7 @@
 
 namespace App\Http\Livewire\ReporteJornada;
 
+use App\Models\Contometro;
 use App\Models\Jornada;
 use App\Models\Sede;
 use App\Models\User;
@@ -28,6 +29,12 @@ class ReporteJornadaIndex extends Component
     public $id_venta;
     //sede
     public $id_sede;
+    //ventas por jornada
+    public $detalleVentaJornada = [];
+    public $searchVentaJornada, $paginasVentasJornada, $usuarioJornada;
+    //contometro
+    public $contometro_1, $contometro_a, $contometro_b,$salida_jonada = false;
+
 
     public function mount()
     {
@@ -37,6 +44,7 @@ class ReporteJornadaIndex extends Component
         $this->fecha_inicio = $date->format('Y-m-d');
         $this->fecha_fin = $date->addDay()->format('Y-m-d');
         $this->show = 8;
+        $this->paginasVentasJornada = 8;
     }
 
     public function render()
@@ -54,8 +62,10 @@ class ReporteJornadaIndex extends Component
         $usuarios = User::select('*')
             ->join('jornadas', 'jornadas.id_user', '=', 'users.id')
             ->join('sedes', 'sedes.id_sede', DB::raw('users.id_sede and id_jornada = (SELECT MAX(id_jornada) from jornadas WHERE jornadas.id_user=users.id)'))
-            
+
             ->paginate($this->show);
+
+
 
         //SEDES
         $sedes = Sede::all();
@@ -94,24 +104,24 @@ class ReporteJornadaIndex extends Component
         $fecha_fin = Carbon::parse($this->fecha_fin)->format('d/m/Y H:i:s A');
 
         $this->listaBusqueda = User::select('*')
-        ->join('jornadas', 'jornadas.id_user', '=', 'users.id')
-        ->join('sedes', 'sedes.id_sede', DB::raw('users.id_sede and id_jornada = (SELECT MAX(id_jornada) from jornadas WHERE jornadas.id_user=users.id)'))
-        
-        ->where(function ($query) {
-            return $query
-                ->where('users.id_sede', 'LIKE', $this->id_sede)
-                ->where('users.id', 'LIKE', $this->id_operario);
-        })
-        ->whereBetween('entrada_jornada', [$fecha_inicio, $fecha_fin])
-        ->where('users.estado', true)
-        ->get();
+            ->join('jornadas', 'jornadas.id_user', '=', 'users.id')
+            ->join('sedes', 'sedes.id_sede', DB::raw('users.id_sede and id_jornada = (SELECT MAX(id_jornada) from jornadas WHERE jornadas.id_user=users.id)'))
+
+            ->where(function ($query) {
+                return $query
+                    ->where('users.id_sede', 'LIKE', $this->id_sede)
+                    ->where('users.id', 'LIKE', $this->id_operario);
+            })
+            ->whereBetween('entrada_jornada', [$fecha_inicio, $fecha_fin])
+            ->where('users.estado', true)
+            ->get();
     }
     public function default()
     {
 
         $date = Carbon::now();
-        $this->id_operario = '';
-        $this->name_operario = '';
+        $this->id_operario = null;
+        $this->id_sede = null;
         $this->listaBusqueda = [];
     }
     public function modalDetalle($id_venta)
@@ -171,5 +181,33 @@ class ReporteJornadaIndex extends Component
                 "reporte_venta_" . $date . ".pdf"
             );
         }
+    }
+
+    public function verVentasJornada($user, $entrada, $salida, $id_jornada)
+    {
+        $this->usuarioJornada = $user;
+        $contometro = Contometro::where('id_jornada', $id_jornada)->orderBy('id_contometro', 'asc')->limit(1)->get();
+        foreach ($contometro as $key => $value) {
+            $this->contometro_1 = $value->contometro_1;
+            $this->contometro_a = $value->contometro_a;
+            $this->contometro_b = $value->contometro_b;
+        }
+        if($salida!= null)
+        {
+            $this->salida_jonada=true;
+        }
+
+        //modal ventas por jornada
+        $this->detalleVentaJornada = Venta::select('*')
+            ->join('embarcacions', 'embarcacions.id', '=', 'ventas.id_embarcacion')
+            ->join('clientes', 'clientes.id_cliente', '=', 'embarcacions.id_cliente')
+            ->join('contometros', 'contometros.id_venta', '=', 'ventas.id_venta')
+            ->join('tipo_pagos', 'tipo_pagos.id_tipo_pago', '=', 'ventas.id_tipo_pago')
+            ->where('fecha_venta', '>',  $entrada)
+            ->where('ventas.estado_venta', '=', 'Activo')
+            ->where('ventas.user_create_venta', '=', $user)
+            ->orderby('fecha_venta', 'ASC')
+            ->get();
+        $this->list_jornadas();
     }
 }
