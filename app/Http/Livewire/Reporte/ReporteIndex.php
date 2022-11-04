@@ -184,8 +184,14 @@ class ReporteIndex extends Component
         } else {
 
             $this->listVentas();
+            $nombre_pago = '';
+            if ($this->id_tipo_pago) {
+            $tipo_pago = TipoPago::find($this->id_tipo_pago);
+            $nombre_pago=$tipo_pago->nombre_tipo_pago;
+            }
             $viewData = [
                 'title'         => 'REPORTE DE VENTAS',
+                'subtitle'      => $nombre_pago,
                 'date'          => date('m/d/Y'),
                 'user'          => auth()->user()->name,
                 'listaBusqueda' => $this->listaBusqueda

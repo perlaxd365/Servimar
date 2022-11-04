@@ -56,6 +56,9 @@
             <div>
                 <strong>
                     <p style="font-size: 150%">{{ $title }}</p>
+                    @if ($subtitle)
+                    <p style="font-size: 80%">({{ $subtitle }})</p>
+                    @endif
                 </strong>
             </div>
         </div>
