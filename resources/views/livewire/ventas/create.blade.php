@@ -278,6 +278,7 @@
                                 <option value="BCP">BCP</option>
                                 <option value="BBVA">BBVA</option>
                                 <option value="SCOTIABANK">SCOTIABANK</option>
+                                <option value="SCOTIABANK">INTERBANK</option>
                             </select>
                         </div>
                     </div>
