@@ -94,7 +94,7 @@ class VentasIndex extends Component
         }
 
         $this->show = 5;
-        $this->paginasVentas = 10;
+        $this->paginasVentas = 30;
         $this->idtipopago = 1;
         $this->moneda_venta = 'Soles';
         $this->mostrarPrecio = true;
