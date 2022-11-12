@@ -14,7 +14,7 @@
         <p class="lead">
             <a class="btn btn-primary" href="{{ route('admin.ventas.index') }}" role="button">Ir a Ventas</a>
         </p>
-        
+
         @can('admin.users.index')
             <div class="grey-bg container-fluid">
                 <section id="minimal-statistics">
@@ -31,6 +31,7 @@
                                 ->join('sedes', 'sedes.id_sede', 'products.id_sede')
                                 ->groupby('products.id_producto')
                                 ->get();
+                            
                         @endphp
                         @foreach ($productos as $item)
                             <div class="col-xl-3 col-sm-6 col-12">
@@ -67,13 +68,40 @@
                                 </div>
                             </div>
                         @endforeach
+                        @php
+                            
+                            $agua = DB::table('venta_aguas')
+                                ->latest()
+                                ->first();
+                        @endphp
+                        <div class="col-xl-3 col-sm-6 col-12">
+                            <div class="card">
+                                <div class="card-content">
+                                    <div class="card-body">
+                                        <div class="media d-flex">
+                                            <div class="align-self-center">
+
+                                                <i class='fas fa-hand-holding-water text-primary'></i>
+                                            </div>
+                                            <div class="media-body text-right">
+                                                <h3>Agua - Chata Paita</h3>
+                                                <br>
+                                                <small class="text-warning">Contometro:
+                                                </small><span class="text-primary">{{ $agua->contometro_agua }}</span>
+                                                
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
                     </div>
                 </section>
 
             </div>
         @endcan
     </div>
-    
+
 @endsection
 
 <script src="https://code.jquery.com/jquery-3.2.1.js"></script>

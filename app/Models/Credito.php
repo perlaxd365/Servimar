@@ -15,7 +15,7 @@ class Credito extends Model
         'id_venta', 
         'precio_galon_credito',
         'galones_credito',
-        'monto_credito',
+        'monto_credito_pagado',
         'fecha_credito',
         'estado_credito',
         'user_create_credito'

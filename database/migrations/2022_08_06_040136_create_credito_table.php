@@ -21,7 +21,7 @@ return new class extends Migration
             
             $table->decimal('precio_galon_credito',10,2)->nullable()->comment(' precio de galones de credito');
             $table->decimal('galones_credito',10,2)->nullable()->comment('galones de credito');
-            $table->decimal('monto_credito',10,2)->nullable()->comment('precio de credito');
+            $table->decimal('monto_credito_pagado',10,2)->nullable()->comment('precio de credito');
             
             $table->string('fecha_credito')->nullable()->comment('Fecha de la venta');
             $table->boolean('estado_credito')->nullable()->comment('Estado credito : 1 activo - 0 pagado');

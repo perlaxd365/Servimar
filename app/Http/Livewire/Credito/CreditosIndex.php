@@ -21,12 +21,17 @@ class CreditosIndex extends Component
     //cliente
     public $id_cliente, $razon_cliente;
     //credito
-    public $id_credito;
+    public $id_credito, $precio_galon_credito_form;
     //pago
     public $monto_pagar, $monto_abonado;
     //sede
     public $sede;
-
+    //actualizar precio por galon individual
+    public $mostrar_edit_precio = false,
+        $precio_galon_credito_individual_form,
+        $id_credito_individual_form;
+    //activar ventana
+    public $credito_pendiente = true, $historial_credito=false;
 
     public function mount()
     {
@@ -67,7 +72,7 @@ class CreditosIndex extends Component
             'matricula_emb',
             'telefono_emb',
             'fecha_credito',
-            'monto_credito',
+            'monto_credito_pagado',
             'galones_credito',
             'precio_galon_credito',
             'id_credito',
@@ -89,27 +94,6 @@ class CreditosIndex extends Component
             ->paginate($this->show);
 
 
-        $creditoPrePago =  Credito::select(
-            'id',
-            'nombre_emb',
-            'duenio_emb',
-            'matricula_emb',
-            'telefono_emb',
-            'fecha_credito',
-            'monto_credito',
-            'galones_credito',
-            'precio_galon_credito',
-            'id_credito',
-        )
-            ->join('embarcacions', 'embarcacions.id', '=', 'creditos.id_embarcacion')
-            ->rightjoin('ventas', 'embarcacions.id', '=', 'ventas.id_embarcacion')
-            ->where('embarcacions.id_cliente', '=', $this->id_cliente)
-            ->where('creditos.id_credito', '=', $this->id_credito)
-            ->where('creditos.estado_credito', '=', true)
-            ->orderby('embarcacions.id_cliente', 'asc')
-            ->groupby('id_credito')
-            ->paginate($this->show);
-
         $historialCreditos =   Credito::select(
             'id',
             'nombre_emb',
@@ -117,21 +101,19 @@ class CreditosIndex extends Component
             'matricula_emb',
             'telefono_emb',
             'fecha_credito',
-            'monto_credito',
+            'monto_credito_pagado',
             'galones_credito',
             'precio_galon_credito',
             'creditos.id_credito',
-            'detalle_pagos.monto_detalle_pago',
         )
             ->join('embarcacions', 'embarcacions.id', '=', 'creditos.id_embarcacion')
-            ->join('detalle_pagos', 'detalle_pagos.id_credito', '=', 'creditos.id_credito')
             ->rightjoin('ventas', 'embarcacions.id', '=', 'ventas.id_embarcacion')
             ->where('embarcacions.id_cliente', '=', $this->id_cliente)
             ->where('creditos.estado_credito', '=', false)
             ->orderby('embarcacions.id_cliente', 'asc')
             ->groupby('id_credito')
             ->paginate($this->show);
-        return view('livewire.credito.creditos-index', compact('clientes', 'embarcaciones', 'pagos', 'creditoPrePago', 'historialCreditos'));
+        return view('livewire.credito.creditos-index', compact('clientes', 'embarcaciones', 'pagos', 'historialCreditos'));
     }
     public function updatingSearch()
     {
@@ -146,75 +128,56 @@ class CreditosIndex extends Component
         $this->dispatchBrowserEvent('modal-detalle', ['producto' =>  '']);
     }
 
-    public function modalPago($id_credito)
+    public function modalPago($id_credito, $monto_credito)
     {
-        $this->id_credito = $id_credito;
+        $credito = Credito::find($id_credito);
+        $credito->update([
+            'monto_credito_pagado' => $monto_credito,
+            'estado_credito' => false,
+        ]);
+        $this->dispatchBrowserEvent('respuesta', ['res' => 'Se realizó el pago correctamente']);
     }
 
-    public function store()
+
+    public function modalPrecioGalon($id_cliente, $razon_cliente)
     {
-        //pago
 
-        $pagos = Pago::select(
-            'monto_pago',
-        )
-            ->join('clientes', 'clientes.id_cliente', '=', 'pagos.id_cliente')
-            ->where('pagos.id_cliente', '=', $this->id_cliente)
-            ->paginate($this->show);
-        foreach ($pagos as $pago) {
-            $this->monto_abonado = $pago->monto_pago;
-        }
-        $messages = [
-            'monto_pagar.gt' => 'El valor mínimo para agregar es 1.',
-            'monto_pagar.lt' => 'El pago no puede exeder los ' . $this->monto_abonado . ' Soles, por favor realiza un depósito.',
-        ];
-
-        $rules = [
-            'monto_pagar' => 'gt:0|lt:' . $this->monto_abonado + 1,
-
-
-        ];
-        $this->validate($rules, $messages);
-
-
-
-        date_default_timezone_set('America/Lima');
-        $pagos = Pago::where('id_cliente', '=', $this->id_cliente)->get();
-        if ($pagos) {
-            foreach ($pagos as $pago) {
-                $this->id_pago = $pago->id_pago;
-            }
-            if ($this->id_pago) {
-
-                date_default_timezone_set('America/Lima');
-                DetallePago::create([
-                    'id_pago'               => $this->id_pago,
-                    'id_credito'               => $this->id_credito,
-                    'monto_detalle_pago'    => $this->monto_pagar,
-                    'tipo_pago'             => 'Credito',
-                    'fecha_pago'            => now()->format('d/m/Y H:i:s A'),
-                    'user_create_venta' => auth()->user()->name,
-                    'user_sede' => $this->sede,
-                ]);
-                $pago = Pago::find($this->id_pago);
-                $pago->update([
-                    'monto_pago' => $pago->monto_pago - $this->monto_pagar,
-                ]);
-            } else {
-            }
-            $credito = Credito::find($this->id_credito);
-            $credito->update([
-
-                'estado_credito' => false
-            ]);
-
-            $this->dispatchBrowserEvent('close-modal', []);
-            $this->dispatchBrowserEvent('respuesta', ['res' => 'Se realizó el pago correctamente.']);
-        }
-        $this->default();
+        $this->razon_cliente = $razon_cliente;
+        $this->id_cliente = $id_cliente;
+        $this->dispatchBrowserEvent('modal-precio-galon', ['producto' =>  '']);
     }
-    public function default()
+
+    public function updatePrecioGalon()
     {
-        $this->monto_pagar = '';
+        Credito::where('estado_credito', true)->update(array('precio_galon_credito' => $this->precio_galon_credito_form));
+
+        $this->dispatchBrowserEvent('respuesta', ['res' => 'Se actualizó el precio por Galón correctamente']);
+
+        $this->precio_galon_credito_form = '';
+    }
+
+    public function editarPrecioIndividual($precio, $id_credito)
+    {
+        $this->mostrar_edit_precio = true;
+        $this->id_credito_individual_form = $id_credito;
+        $this->precio_galon_credito_individual_form = $precio;
+    }
+
+    public function updatePrecioGalonIndivual()
+    {
+        $credito = Credito::find($this->id_credito_individual_form);
+        $credito->update([
+            'precio_galon_credito' => $this->precio_galon_credito_individual_form
+        ]);
+        $this->limpiarPrecioGalonIndividual();
+    }
+
+    public function limpiarPrecioGalonIndividual()
+    {
+
+        $this->id_credito_individual_form = null;
+        $this->precio_galon_credito_individual_form = null;
+        $this->mostrar_edit_precio = false;
+
     }
 }

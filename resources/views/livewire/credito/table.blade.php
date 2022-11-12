@@ -15,7 +15,8 @@
                     <th>Dueño</th>
                     <th>RUC</th>
                     <th>Nombre</th>
-                    <th>Acción</th>
+                    <th>Ver </th>
+                    <th>Precio por Galones</th>
                 </thead>
                 <tbody>
                     @foreach ($clientes as $cliente)
@@ -30,7 +31,16 @@
                                     <button
                                         wire:click="modalDetalle({{ $cliente->id_cliente }},'{{ $cliente->razon_cli }}')"
                                         type="button" class="btn btn-info">
-                                        <i class='fa fa-address-card'></i>
+                                        <i class='fa fa-address-card'></i>&nbsp;Créditos
+                                    </button>
+                                </div>
+                            </td>
+                            <td class="center-text">
+                                <div class="btn-group" role="group" aria-label="Basic example">
+                                    <button
+                                        wire:click="modalPrecioGalon({{ $cliente->id_cliente }},'{{ $cliente->razon_cli }}')"
+                                        type="button" class="btn btn-primary">
+                                        <i class='fas fa-dollar-sign'></i>&nbsp;Editar
                                     </button>
                                 </div>
                             </td>
@@ -45,89 +55,7 @@
         {{ $clientes->links() }}
     </div>
 
-    <!-- Modal Pago-->
-    <div wire:ignore.self class="modal fade bd-example-modal-lg" id="modalPago" tabindex="-1" role="dialog"
-        aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
-        <div class="modal-dialog modal-dialog-centered  modal-lg" role="document">
-            <div class="modal-content">
-                <div class="modal-header">
-                    <h5 class="modal-title" id="exampleModalLongTitle">Pago
-                        <strong>{{ $razon_cliente }}</strong>
-                    </h5>
-                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                        <span aria-hidden="true">&times;</span>
-                    </button>
-                </div>
-                @if (count($errors) > 0)
-                    <div class="alert border-danger">
-                        <p>Se encontraron los siguientes errores:</p>
-                        <ul>
-                            @foreach ($errors->all() as $message)
-                                <li>{{ $message }}</li>
-                            @endforeach
-                        </ul>
-                    </div>
-                @endif
-                <div class="modal-body">
-                    <div class="col clearfix">
-                        @foreach ($creditoPrePago as $item)
-                            <ul class="list-group">
-                                <li class="list-group-item">Galones: {{ $item->galones_credito }}</li>
-                                <li class="list-group-item">Precio x Galon: {{ $item->precio_galon_credito }} </li>
-                                <li class="list-group-item">
-                                    <span class="badge badge-warning">Total:
-                                        {{ $item->galones_credito * $item->precio_galon_credito }}
-                                    </span>
-                                </li>
-                            </ul>
-                        @endforeach
-                    </div>
-                    <div class="col clearfix">
-                        <div class="form-row align-items-center">
-                            <div class="col-sm-3 my-1">
-                                <label>Monto Abonado</label>
-                                @if ($pagos->count())
 
-                                    @foreach ($pagos as $pago)
-                                        <input type="text" class="form-control" readonly
-                                            value="{{ $pago->monto_pago }}" placeholder="Monto Abonado">
-                                    @endforeach
-                                @else
-                                    <br>
-                                    No se abonó ningun pago
-                                @endif
-
-
-                            </div>
-                            <div class="col-sm-3 my-1">
-                                <label>Monto a pagar</label>
-                                @foreach ($creditoPrePago as $item)
-                                    <input type="text" wire:model='monto_pagar' class="form-control"
-                                        placeholder="Monto a pagar">
-                                @endforeach
-                            </div>
-
-                            @if ($pagos->count())
-                                <div class="col-sm-3 my-1" style="padding-top: 4%">
-                                    <button wire:click='store' type="submit" class="btn btn-primary">Realizar
-                                        Pago</button>
-                                </div>
-                            @else
-                                <br>
-                                A la espera de que se realice un pago
-                            @endif
-
-
-                        </div>
-                    </div>
-
-                </div>
-                <div class="modal-footer">
-                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Cancelar</button>
-                </div>
-            </div>
-        </div>
-    </div>
 
 
     <!-- Modal detalle-->
@@ -147,40 +75,49 @@
 
                     <ul class="nav nav-pills mb-3" id="pills-tab" role="tablist">
                         <li class="nav-item">
-                            <a class="nav-link active" id="pills-home-tab" data-toggle="pill" href="#pills-home"
-                                role="tab" aria-controls="pills-home" aria-selected="true">Créditos Pendientes</a>
+                            <a class="nav-link active" id="pills-home-tab"
+                                data-toggle="pill" href="#pills-home" role="tab" aria-controls="pills-home"
+                                aria-selected="true">Créditos Pendientes</a>
                         </li>
                         <li class="nav-item">
-                            <a class="nav-link" id="pills-profile-tab" data-toggle="pill" href="#pills-profile"
-                                role="tab" aria-controls="pills-profile" aria-selected="false">Historial de Créditos
+                            <a class="nav-link " id="pills-profile-tab" data-toggle="pill"
+                                href="#pills-profile" role="tab" aria-controls="pills-profile"
+                                aria-selected="false">Historial de Créditos
                             </a>
                         </li>
-                        <li class="nav-item col clearfix">
-                            <div class="col clearfix">
-                                <span class="float-right">
-                                    <strong>Monto Abonado </strong>
-                                    <br>
-                                    <button type="button" class="btn btn-success">
-                                        Total: <span class="badge badge-light">
-                                            @if ($pagos->count())
+                        @if ($mostrar_edit_precio)
+                            <li class="col-md-6 col-md-offset-2">
+                                <div class="card">
+                                    <div class="card-body d-flex justify-content-between align-items-center">
+                                        <b>Actualizar Precio</b>
+                                        <div class="row">
+                                            <div class="col-md-6">
+                                                <input type="number" wire:model='precio_galon_credito_individual_form'
+                                                    class="form-control" placeholder="Precio">
+                                            </div>
+                                            <div class="col-md-2">
 
-                                                @foreach ($pagos as $pago)
-                                                    S/ {{ $pago->monto_pago }}
-                                                @endforeach
-                                            @else
-                                                0
-                                            @endif
-                                        </span>
-                                        <span class="sr-only">unread messages</span>
-                                    </button>
-                                </span>
-                            </div>
-                        </li>
+                                                <div class="col-md-1">
+                                                    <button wire:click="updatePrecioGalonIndivual"
+                                                        class="btn btn-primary">Actualizar</button>
+                                                </div>
+                                                <div class="col-md-1">
+                                                    <button wire:click="limpiarPrecioGalonIndividual"
+                                                        class="btn btn-danger">Cancelar</button>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </li>
+                        @endif
                     </ul>
-                    <div class="tab-content" id="pills-tabContent">
+                    <div wire:ignore.self class="tab-content" id="pills-tabContent">
                         <div class="tab-pane fade show active" id="pills-home" role="tabpanel"
                             aria-labelledby="pills-home-tab">
 
+                            <div id="ok" class="alert alert-success" style="display:none" role="alert">registrado exitosamente! <i class="fa fa-check-circle" aria-hidden="true"></i>
+                            </div>
                             @if ($embarcaciones->count())
                                 <div class="table-responsive">
                                     <table class="table table-striped table-sm">
@@ -201,6 +138,7 @@
                                             <?php $total = 0; ?>
                                             @foreach ($embarcaciones as $key => $embarcacion)
                                                 <?php $total = $total + $embarcacion->galones_credito; ?>
+                                                <?php $monto_credito = $embarcacion->precio_galon_credito * $embarcacion->galones_credito; ?>
                                                 <tr>
                                                     <td>{{ $key + 1 }}</td>
                                                     <td>{{ $embarcacion->nombre_emb }}</td>
@@ -208,10 +146,17 @@
                                                     <td>{{ $embarcacion->duenio_emb }}</td>
                                                     <td>{{ $embarcacion->matricula_emb }}</td>
                                                     <td>{{ $embarcacion->fecha_credito }}</td>
-                                                    <td>{{ $embarcacion->precio_galon_credito }}</td>
+                                                    <td>{{ $embarcacion->precio_galon_credito }}
+
+                                                        &nbsp;
+                                                        <a wire:click='editarPrecioIndividual({{ $embarcacion->precio_galon_credito }}, {{ $embarcacion->id_credito }})'
+                                                            href="javascript:"><i class='fas fa-pencil-alt text-danger'>
+                                                            </i></a>
+                                                    </td>
                                                     <td>{{ $embarcacion->galones_credito }}</td>
                                                     <td class="center-text">
-                                                        <button wire:click="modalPago({{ $embarcacion->id_credito }})"
+                                                        <button
+                                                            wire:click="modalPago({{ $embarcacion->id_credito }}, {{ $monto_credito }} )"
                                                             type="button" data-dismiss="modal" data-toggle="modal"
                                                             data-target="#modalPago" class="btn btn-primary btn-sm">
                                                             Pagar
@@ -244,61 +189,61 @@
                         <div class="tab-pane fade" id="pills-profile" role="tabpanel"
                             aria-labelledby="pills-profile-tab">
                             @if ($historialCreditos->count())
-                            <div class="table-responsive">
-                                
-                                <table class="table table-striped table-sm">
-                                    <thead class="thead-light">
-                                        <tr>
-                                            <th scope="col">#</th>
-                                            <th scope="col">Embarcación</th>
-                                            <th scope="col">Dueño</th>
-                                            <th scope="col">Matrícula</th>
-                                            <th scope="col">Teléfono</th>
-                                            <th scope="col">Fecha</th>
-                                            <th scope="col">Precio x Galón</th>
-                                            <th scope="col">Galones</th>
-                                            <th scope="col">Pago</th>
-                                            <th scope="col">Estado</th>
-                                        </tr>
-                                    </thead>
-                                    <tbody>
-                                        <?php $totalGalones = 0;
-                                        $totalPago = 0; ?>
-                                        @foreach ($historialCreditos as $key => $historial)
-                                            <?php $totalGalones = $totalGalones + $historial->galones_credito; ?>
-                                            <?php $totalPago = $totalPago + $historial->monto_detalle_pago; ?>
+                                <div class="table-responsive">
+
+                                    <table class="table table-striped table-sm">
+                                        <thead class="thead-light">
                                             <tr>
-                                                <td>{{ $key + 1 }}</td>
-                                                <td>{{ $historial->nombre_emb }}</td>
-                                                <td>{{ $historial->duenio_emb }}</td>
-                                                <td>{{ $historial->matricula_emb }}</td>
-                                                <td>{{ $historial->telefono_emb }}</td>
-                                                <td>{{ $historial->fecha_credito }}</td>
-                                                <td>{{ $historial->precio_galon_credito }}</td>
-                                                <td>{{ $historial->galones_credito }}</td>
-                                                <td>S/{{ $historial->monto_detalle_pago }}</td>
-                                                <td>
-                                                    <span class="badge badge-success">
-                                                        Pagado
-                                                    </span>
-                                                </td>
+                                                <th scope="col">#</th>
+                                                <th scope="col">Embarcación</th>
+                                                <th scope="col">Dueño</th>
+                                                <th scope="col">Matrícula</th>
+                                                <th scope="col">Teléfono</th>
+                                                <th scope="col">Fecha</th>
+                                                <th scope="col">Precio x Galón</th>
+                                                <th scope="col">Galones</th>
+                                                <th scope="col">Pago</th>
+                                                <th scope="col">Estado</th>
                                             </tr>
-                                        @endforeach
-                                        <tr>
-                                            <td></td>
-                                            <td></td>
-                                            <td></td>
-                                            <td></td>
-                                            <td></td>
-                                            <td></td>
-                                            <td><strong>TOTAL:</strong></td>
-                                            <td>{{ $totalGalones }}</td>
-                                            <td>S/{{ $totalPago }}</td>
-                                            <td></td>
-                                        </tr>
-                                    </tbody>
-                                </table>
-                            </div>
+                                        </thead>
+                                        <tbody>
+                                            <?php $totalGalones = 0;
+                                            $totalPago = 0; ?>
+                                            @foreach ($historialCreditos as $key => $historial)
+                                                <?php $totalGalones = $totalGalones + $historial->galones_credito; ?>
+                                                <?php $totalPago = $totalPago + $historial->monto_credito_pagado; ?>
+                                                <tr>
+                                                    <td>{{ $key + 1 }}</td>
+                                                    <td>{{ $historial->nombre_emb }}</td>
+                                                    <td>{{ $historial->duenio_emb }}</td>
+                                                    <td>{{ $historial->matricula_emb }}</td>
+                                                    <td>{{ $historial->telefono_emb }}</td>
+                                                    <td>{{ $historial->fecha_credito }}</td>
+                                                    <td>{{ $historial->precio_galon_credito }}</td>
+                                                    <td>{{ $historial->galones_credito }}</td>
+                                                    <td>S/{{ $historial->monto_credito_pagado }}</td>
+                                                    <td>
+                                                        <span class="badge badge-success">
+                                                            Pagado
+                                                        </span>
+                                                    </td>
+                                                </tr>
+                                            @endforeach
+                                            <tr>
+                                                <td></td>
+                                                <td></td>
+                                                <td></td>
+                                                <td></td>
+                                                <td></td>
+                                                <td></td>
+                                                <td><strong>TOTAL:</strong></td>
+                                                <td>{{ $totalGalones }}</td>
+                                                <td>S/{{ $totalPago }}</td>
+                                                <td></td>
+                                            </tr>
+                                        </tbody>
+                                    </table>
+                                </div>
                             @else
                                 <div class="card-body">
                                     <strong>No se encontraron resultados</strong>
@@ -313,17 +258,55 @@
             </div>
         </div>
     </div>
+
+    <!-- Modal detalle-->
+    <div wire:ignore.self class="modal fade bd-example-modal-lg" id="modalUpdatePrecioGalon" tabindex="-1"
+        role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered  modal-lg" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="exampleModalLongTitle">Embarcaciones
+                        <span class="badge badge-primary">
+                            {{ $razon_cliente }}
+                        </span>
+                        &nbsp;
+                        |
+                        &nbsp;
+                        <strong>Actualizacion de Precio x Galón a Créditos</strong>
+                    </h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    <div class="container">
+                        <div class="row">
+                            <div class="col-md-10 col-md-offset-2">
+                                <div class="card">
+                                    <div class="card-body d-flex justify-content-between align-items-center">
+                                        <b>Ingresar precio por Galón General</b>
+                                        <div class="row">
+                                            <div class="col-md-6">
+                                                <input type="number" wire:model='precio_galon_credito_form'
+                                                    class="form-control" placeholder="Ingresar Precio">
+                                            </div>
+                                            <div class="col-md-2">
+                                                <button wire:click="updatePrecioGalon"
+                                                    class="btn btn-primary">Guardar</button>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                </div>
+            </div>
+        </div>
+    </div>
 @else
     <div class="card-body">
         <strong>No se encontraron resultados</strong>
     </div>
 @endif
-
-<script>
-    window.addEventListener('close-modal', event => {
-
-        $('#modalPago').modal('hide');
-
-    });
-</script>
-<script></script>

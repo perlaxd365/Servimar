@@ -2,7 +2,7 @@
 
 
     <div class="card">
-        
+
         @include('livewire.credito.table')
 
     </div>
@@ -22,6 +22,18 @@
     });
     window.addEventListener('modal-detalle', event => {
         $('#modalDetalleEmbarcacion').modal('show');
+
+    });
+    window.addEventListener('modal-precio-galon', event => {
+        $('#modalUpdatePrecioGalon').modal('show');
+
+    });
+    window.addEventListener('credito-pagado', event => {
+        var x = document.getElementById("ok");
+        x.style.display = "block";
+        setTimeout(function() {
+            $("#ok").fadeOut(3000);
+        }, 3000);
 
     });
 </script>

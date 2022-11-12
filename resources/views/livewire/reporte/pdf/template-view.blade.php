@@ -55,9 +55,9 @@
 
             <div>
                 <strong>
-                    <p style="font-size: 150%">{{ $title }}</p>
+                    <p style="font-size: 130%">{{ $title }}</p>
                     @if ($subtitle)
-                    <p style="font-size: 80%">({{ $subtitle }})</p>
+                    <p style="font-size: 110%">({{ $subtitle }})</p>
                     @endif
                 </strong>
             </div>
@@ -88,6 +88,10 @@
                     $totalVenta = 0;
                     $galonesCredito = 0;
                     $galonesEfectivo = 0;
+                    $galonesDeposito = 0;
+                    //Total de efectivos
+                    $total_efectivo_soles = 0;
+                    $total_deposito_soles = 0;
                     
                     ?>
                     @foreach ($listaBusqueda as $venta)
@@ -98,8 +102,13 @@
                         if ($venta->nombre_tipo_pago == 'Credito') {
                             $galonesCredito = $galonesCredito + $venta->galonaje_venta;
                         }
-                        if ($venta->nombre_tipo_pago == 'Contado Efectivo' || $venta->nombre_tipo_pago == 'Contado Deposito') {
+                        if ($venta->nombre_tipo_pago == 'Contado Efectivo') {
+                            $total_efectivo_soles = $total_efectivo_soles + $venta->precio_venta;
                             $galonesEfectivo = $galonesEfectivo + $venta->galonaje_venta;
+                        }
+                        if ($venta->nombre_tipo_pago == 'Contado Deposito') {
+                            $total_deposito_soles = $total_deposito_soles + $venta->precio_venta;
+                            $galonesDeposito = $galonesDeposito + $venta->galonaje_venta;
                         }
                         
                         ?>
@@ -140,13 +149,33 @@
                     @endforeach
                     <tr>
                         <td></td>
+                        <td>
+                            <strong>TOTAL EFECTIVO: 
+                                <small class="badge badge-success">S/{{ $total_efectivo_soles }}</small>
+                            </strong>
+                        </td>
+                        <td>
+                            <strong>TOTAL DEPOSITO: 
+                                <small class="badge badge-success">S/{{ $total_deposito_soles }}</small>
+                            </strong>
+                        </td>
+                        <td>
+                            <strong>TOTAL GALONES EFECTIVO: 
+                                <small class="badge badge-success">{{ $galonesEfectivo }}</small>
+                            </strong>
+                        </td>
+                        <td>
+                            <strong>TOTAL GALONES DEPÓSITO: 
+                                <small class="badge badge-success">{{ $galonesDeposito }}</small>
+                            </strong>
+                        </td>
+                        <td>
+                            <strong>TOTAL GALONES CRÉDITO: 
+                                <small class="badge badge-success">{{ $galonesCredito }}</small>
+                            </strong>
+                        </td>
                         <td></td>
                         <td></td>
-                        <td></td>
-                        <td><strong>TOTAL GALONES EFECTIVO O DEPOSITO:</strong></td>
-                        <td>{{ $galonesEfectivo }}</td>
-                        <td><strong>TOTAL GALONES A CRÉDITO:</strong></td>
-                        <td>{{ $galonesCredito }}</td>
                         <td><strong>TOTAL:</strong></td>
                         <td>
                             <span class="text-info">
@@ -159,8 +188,6 @@
                                     class="fas fa-caret-down me-1"></i><strong><span>S/{{ $totalVenta }}</span></strong>
                             </span>
                         </td>
-                        <td></td>
-                        <td></td>
                     </tr>
                 @else
                     <tr style="cursor:pointer;">

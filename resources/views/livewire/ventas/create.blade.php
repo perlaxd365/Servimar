@@ -101,25 +101,25 @@
             @endif
             <h5 class="card-title">Iniciar la jornada <small>(ventas)</small> de hoy</h5>
             <div class="card-body  form-row">
-                @if ($mostrarContrometro != 2)
+                @if ($punto_paita)
                     <div class="form-group col-md-6">
                         <label for="">Indicar valor de contómetro</label>
                         <input wire:model='contometro_1_inicio' type="text" class="form-control"
                             placeholder="Ingresar el número que marca en el contómetro">
-                            <small class="text-danger">Introducir al iniciar la jornada de hoy</small>
+                        <small class="text-danger">Introducir al iniciar la jornada de hoy</small>
                     </div>
                 @else
                     <div class="form-group col-md-6">
                         <label for="">Indicar valor de contómetro A</label>
                         <input wire:model='contometro_a_inicio' type="text" class="form-control"
                             placeholder="Ingresar el número que marca en el contómetro A">
-                            <small class="text-danger">Introducir al iniciar la jornada de hoy</small>
+                        <small class="text-danger">Introducir al iniciar la jornada de hoy</small>
                     </div>
                     <div class="form-group col-md-6">
                         <label for="">Indicar el valor de contómetro B</label>
                         <input wire:model='contometro_b_inicio' type="text" class="form-control"
                             placeholder="Ingresar el número que marca en el contómetro B">
-                            <small class="text-danger">Introducir al iniciar la jornada de hoy</small>
+                        <small class="text-danger">Introducir al iniciar la jornada de hoy</small>
                     </div>
                 @endif
             </div>
@@ -144,25 +144,25 @@
         <div class="card-body">
             <h5 class="card-title">Cerrar las ventas para autoenviar reporte</h5>
             <div class="card-body  form-row">
-                @if ($mostrarContrometro == 1)
-                    <div class="form-group col-md-6">
-                        <label for="">Indicar valor de contómetro</label>
-                        <input wire:model='contometro_1_fin' type="text" class="form-control"
-                            placeholder="Ingresar el número que marca en el contómetro">
-                            <small class="text-danger">Introducir al finalizar la jornada de hoy</small>
-                    </div>
-                @else
+                @if ($punto_paita)
                     <div class="form-group col-md-6">
                         <label for="">Indicar valor de contómetro A</label>
                         <input wire:model='contometro_a_fin' type="text" class="form-control"
                             placeholder="Ingresar el número que marca en el contómetro A">
-                            <small class="text-danger">Introducir al finalizar la jornada de hoy</small>
+                        <small class="text-danger">Introducir al finalizar la jornada de hoy</small>
                     </div>
                     <div class="form-group col-md-6">
                         <label for="">Indicar el valor de contómetro B</label>
                         <input wire:model='contometro_b_fin' type="text" class="form-control"
                             placeholder="Ingresar el número que marca en el contómetro B">
-                            <small class="text-danger">Introducir al finalizar la jornada de hoy</small>
+                        <small class="text-danger">Introducir al finalizar la jornada de hoy</small>
+                    </div>
+                @else
+                    <div class="form-group col-md-6">
+                        <label for="">Indicar valor de contómetro</label>
+                        <input wire:model='contometro_1_fin' type="text" class="form-control"
+                            placeholder="Ingresar el número que marca en el contómetro">
+                        <small class="text-danger">Introducir al finalizar la jornada de hoy</small>
                     </div>
                 @endif
             </div>
@@ -176,6 +176,15 @@
             } ?>" id="crear-venta" wire:click="crearVentaView" data-toggle="pill"
                 href="#pills-home" role="tab"aria-controls="pills-home" aria-selected="true">Crear Venta</a>
         </li>
+        @if ($punto_paita)
+            <li class="nav-item">
+                <a class="nav-link <?php if ($view == 'create_venta_agua') {
+                    echo 'active';
+                } ?>" id="crear-venta-agua" wire:click="crearVentaAguaView"
+                    data-toggle="pill" href="#pills-home" role="tab"aria-controls="pills-home"
+                    aria-selected="true">Venta Agua</a>
+            </li>
+        @endif
         <li class="nav-item">
             <a class="nav-link <?php if ($view == 'list') {
                 echo 'active';
@@ -187,7 +196,8 @@
     <div class="tab-content" id="pills-tabContent">
         <div class="tab-pane fade <?php if ($view == 'create') {
             echo 'show active';
-        } ?>" id="pills-home" role="tabpanel" aria-labelledby="crear-venta">
+        } ?>" id="pills-home" role="tabpanel"
+            aria-labelledby="crear-venta">
 
             <div>
                 <div class="card">
@@ -228,9 +238,10 @@
                     <div class="card-body  form-row">
                         <div class="form-group col-md-6">
                             <label for="inputEmail4">Galones</label>
-                            <input wire:model='galonaje_venta' wire:keyup='calcularTotal' wire:keypress='calcularTotal'
-                                wire:keydown='calcularTotal' autocomplete="off" type="number" Step="0"
-                                class="form-control solo-numero" placeholder="Ingresar Cantidad de Galones">
+                            <input wire:model='galonaje_venta' wire:keyup='calcularTotal'
+                                wire:keypress='calcularTotal' wire:keydown='calcularTotal' autocomplete="off"
+                                type="number" Step="0" class="form-control solo-numero"
+                                placeholder="Ingresar Cantidad de Galones">
                         </div>
                         <div class="form-group col-md-6">
                             <label for="inputEmail4">Moneda</label>
@@ -289,28 +300,28 @@
                         <h5>Datos de Contometro</h5>
                     </div>
                     <div class="container">
-                        
+
                     </div>
                     <div class="card-body  form-row">
-                        @if ($mostrarContrometro == 1)
-                            <div class="form-group col-md-6">
-                                <label for="">Indicar valor de contómetro</label>
-                                <input wire:model='contometro_1' type="text" class="form-control"
-                                    placeholder="Ingresar el número que marca en el contómetro">
-                                    <small class="text-danger">Introducir después del despacho de petroleo</small>
-                            </div>
-                        @else
+                        @if ($punto_paita)
                             <div class="form-group col-md-6">
                                 <label for="">Indicar valor de contómetro A</label>
                                 <input wire:model='contometro_a' type="text" class="form-control"
                                     placeholder="Ingresar el número que marca en el contómetro A">
-                                    <small class="text-danger">Introducir después del despacho de petroleo</small>
+                                <small class="text-danger">Introducir después del despacho de petroleo</small>
                             </div>
                             <div class="form-group col-md-6">
                                 <label for="">Indicar el valor de contómetro B</label>
                                 <input wire:model='contometro_b' type="text" class="form-control"
                                     placeholder="Ingresar el número que marca en el contómetro B">
-                                    <small class="text-danger">Introducir después del despacho de petroleo</small>
+                                <small class="text-danger">Introducir después del despacho de petroleo</small>
+                            </div>
+                        @else
+                            <div class="form-group col-md-6">
+                                <label for="">Indicar valor de contómetro</label>
+                                <input wire:model='contometro_1' type="text" class="form-control"
+                                    placeholder="Ingresar el número que marca en el contómetro">
+                                <small class="text-danger">Introducir después del despacho de petroleo</small>
                             </div>
                         @endif
                     </div>
@@ -368,6 +379,120 @@
 
             </div>
         </div>
+        <div class="tab-pane fade <?php if ($view == 'create_venta_agua') {
+            echo 'show active';
+        } ?>" id="pills-home" role="tabpanel"
+            aria-labelledby="crear-venta-agua">
+
+            <div>
+                <div class="card">
+                    <div class="card-header  alert-secondary">
+                        <h5>Datos de Embarcación</h5>
+                    </div>
+                    @if (count($errors) > 0)
+                        <div class="alert border-danger">
+                            <p>Se encontraron los siguientes errores:</p>
+                            <ul>
+                                @foreach ($errors->all() as $message)
+                                    <li>{{ $message }}</li>
+                                @endforeach
+                            </ul>
+                        </div>
+                    @endif
+                    <div class="card-body">
+                        <label for="">Embarcacion</label>
+                        <div class="row">
+                            <div class="col-8">
+                                <input wire:model='nombre_emb' readonly type="text" class="form-control"
+                                    placeholder="Seleccionar Embarcación">
+                                <input wire:model='id_emb' type="hidden" class="form-control">
+                            </div>
+                            <div class="col-4">
+                                <button class="btn btn-primary" data-toggle="modal"
+                                    data-target="#buscarEmbarcacion">Buscar
+                                    Embarcación</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="card">
+                    <div class="card-header  alert-secondary">
+                        <h5>Datos de venta</h5>
+                    </div>
+                    <div class="card-body">
+                        <div class="row">
+                            <div class="col-md-6">
+                                <label class="" for="inlineFormInputGroup">Ingresar Venta de agua</label>
+                                <div class="input-group mb-2">
+                                    <div class="input-group-prepend">
+                                        <div class="input-group-text">m³</div>
+                                    </div>
+                                    <input wire:model='monto_agua' type="number" class="form-control"
+                                        id="inlineFormInputGroup" placeholder="0.00">
+                                </div>
+                            </div>
+                            <div class="col-md-6">
+                                <label class="" for="inlineFormInputGroup">Ingresar Contómetro</label>
+                                <input wire:model='contometro_agua' type="text" class="form-control"
+                                    id="inlineFormInputGroup" placeholder="Ingresa contometro">
+                            </div>
+                        </div>
+                    </div>
+                    <div class="container">
+                        <div class="card-body form-row">
+                            <button wire:click="store_agua" wire:loading.attr="disabled" class="btn btn-primary"
+                                type="button">
+                                <i class="fa fa-plus-circle"></i> <i wire:target="store_agua"
+                                    wire:loading.class="fa fa-spinner fa-spin" aria-hidden="true"></i>
+                                Registrar
+                                Venta</button>
+                            <br>
+                        </div>
+                    </div>
+                </div>
+                <div class="card">
+
+                    <div class="card-header  alert-secondary">
+                        <h5>Ventas de agua</h5>
+                    </div>
+                    <div class="card-body">
+                        <table class="table">
+                            <thead>
+                                <tr>
+                                    <th scope="col">#</th>
+                                    <th scope="col">Embarcación</th>
+                                    <th scope="col">Agua</th>
+                                    <th scope="col">Contómetro</th>
+                                    <th scope="col">Fecha</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+
+                                @if (count($listaAgua) > 0)
+
+                                    @foreach ($listaAgua as $item)
+                                        <tr>
+                                            <th scope="row">{{ $item->id_venta_agua }}</th>
+                                            <td>{{ $item->nombre_emb }}</td>
+                                            <td>{{ $item->monto_agua }}</td>
+                                            <td>{{ $item->contometro_agua }}</td>
+                                            <td>{{ $item->fecha_venta_agua }}</td>
+                                        </tr>
+                                    @endforeach
+                                @else
+                                    <tr style="cursor:pointer;">
+                                        <th colspan="12" style="background-color: bisque" scope="row">No hay
+                                            resultados</th>
+                                    </tr>
+                                @endif
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+
+            </div>
+        </div>
 
         {{-- Area de ventas --}}
         <div class="tab-pane fade <?php if ($view == 'list') {
@@ -397,7 +522,8 @@
                                         <th>PRECIO X GALÓN</th>
                                         <th>GALONES</th>
                                         <th>PAGO</th>
-                                        <th>Ver</th>
+                                        <th>VER</th>
+                                        <th>IMPRIMIR</th>
                                     </thead>
                                     <tbody>
                                         <?php $totalGalones = 0;
@@ -422,6 +548,13 @@
                                                         <i class='fas fa-eye'></i>
                                                     </button>
 
+                                                </td>
+                                                <td>
+                                                    <button wire:click="print({{ $venta->id_venta }})" type="button"
+                                                        class="btn btn-outline-danger">
+
+                                                        <i class='fa fa-print'></i>
+                                                    </button>
                                                 </td>
                                             </tr>
                                         @endforeach

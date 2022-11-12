@@ -11,6 +11,7 @@ use App\Models\Product;
 use App\Models\Sede;
 use App\Models\TipoPago;
 use App\Models\Venta;
+use App\Models\VentaAgua;
 use DateTime;
 use Exception;
 use Illuminate\Support\Facades\DB;
@@ -43,7 +44,7 @@ class VentasIndex extends Component
     //datos de contómetro fin de jornada
     public $contometro_1_fin, $contometro_a_fin, $contometro_b_fin;
     //mostrar contometro 1 O 2
-    public $mostrarContrometro = 1;
+    public $punto_paita = false;
     //Producto actual de abastecimiento
     public $precio_general, $stock_actual;
     //dolares
@@ -62,6 +63,8 @@ class VentasIndex extends Component
     public $view;
     //jornada 
     public $estado_jornada, $entrada_jornada, $id_jornada;
+    //Agua
+    public $monto_agua, $contometro_agua;
 
     public function mount()
     {
@@ -98,7 +101,7 @@ class VentasIndex extends Component
         $this->idtipopago = 1;
         $this->moneda_venta = 'Soles';
         $this->mostrarPrecio = true;
-        $this->mostrarPrecioFront = true; 
+        $this->mostrarPrecioFront = true;
 
 
         $data = json_decode(file_get_contents('https://api.apis.net.pe/v1/tipo-cambio-sunat'), true);
@@ -107,7 +110,7 @@ class VentasIndex extends Component
 
         //contómetro
         if (auth()->user()->id_sede == 4) {
-            $this->mostrarContrometro = 2;
+            $this->punto_paita = true;
         }
     }
     public function render()
@@ -168,7 +171,10 @@ class VentasIndex extends Component
             ->where('ventas.estado_venta', '=', 'Activo')
             ->paginate($this->paginasVentas);
 
-        //JORNADA
+        //AGUA
+        $listaAgua = VentaAgua::select('*')
+            ->join('embarcacions', 'embarcacions.id', '=', 'venta_aguas.id_embarcacion')
+            ->paginate($this->paginasVentas);
 
 
         return view(
@@ -178,7 +184,8 @@ class VentasIndex extends Component
                 'productos',
                 'tipoPagos',
                 'ventas',
-                'detalleVenta'
+                'detalleVenta',
+                'listaAgua'
             )
         );
     }
@@ -259,7 +266,7 @@ class VentasIndex extends Component
                 'id_venta' => $id_venta,
                 'precio_galon_credito' => $this->precio_galon,
                 'galones_credito' => $this->galonaje_venta,
-                'monto_credito' => $this->mostrarPrecioFront == false ? 0 : $this->precio_venta,
+                'monto_credito_pagado' => $this->mostrarPrecioFront == false ? 0 : $this->precio_venta,
                 'fecha_credito' => now(),
                 'estado_credito' => true,
                 'user_create_credito' => auth()->user()->name,
@@ -292,76 +299,16 @@ class VentasIndex extends Component
             'user_sede' => $this->sede,
         ]);
 
-        $this->print();
+        $this->print($id_venta);
         $this->default();
 
-        // $this->dispatchBrowserEvent('print', ['id' => $id_venta]);
         $this->dispatchBrowserEvent('respuesta', ['res' => 'Se realizó la venta correctamente.']);
     }
 
-    public function print()
+    public function print($id_venta)
     {
-
-
-        // $formaPago = TipoPago::where('idtipopago', $this->idtipopago)->get();
-        // foreach ($formaPago as  $value) {
-        //     $formapago = $value->nombre_tipo_pago;
-        // }
-
-        // //FECHA
-        // date_default_timezone_set('America/Lima');
-        // //FIN FECHA
-
-        // /* Call this file 'hello-world.php' */
-        // $connector = new WindowsPrintConnector("XP-58");
-        // $printer = new Printer($connector);
-        // $printer->setJustification(Printer::JUSTIFY_CENTER);
-        // $logo = EscposImage::load("logo.jpg", false);
-        // $printer->bitImage($logo);
-
-        // $printer->setJustification(Printer::JUSTIFY_CENTER);
-        // $printer->setTextSize(2, 2);
-        // $printer->text("NOTA DE DESPACHO\n");
-        // $printer->setTextSize(1, 1);
-        // $printer->text("(" . $this->sede . ")\n");
-        // $printer->setJustification(Printer::JUSTIFY_LEFT);
-        // $printer->feed(1);
-        // $printer->text("ATENCION: " . auth()->user()->name . "\n");
-        // $printer->text("FECHA: " . now()->format('d/m/Y H:i:s A') . "\n");
-        // $printer->text("EMBARCACION: " . $this->nombre_emb . "\n");
-        // $printer->text("MATRICULA: " . $this->matricula_emb . "\n");
-        // $printer->text("REFERENCIA: " . $this->nombre_ref_venta . "\n");
-        // $printer->setJustification(Printer::JUSTIFY_CENTER);
-        // $printer->text("--------------------------\n");
-        // $printer->setJustification(Printer::JUSTIFY_LEFT);
-        // $printer->text("FORMA DE PAGO: " . $formapago . "\n");
-        // $printer->text("MONEDA: " . $this->moneda_venta . "\n");
-        // $printer->setJustification(Printer::JUSTIFY_CENTER);
-        // $printer->text("--------------------------\n");
-        // $printer->setJustification(Printer::JUSTIFY_LEFT);
-        // $this->moneda_venta == 'Soles' ? $signoMoneda = 'S/ ' : $signoMoneda = '$ ';
-
-        // if ($this->mostrarPrecio == true) {
-
-        //     $printer->text("CANTIDAD              PRECIO \n");
-        //     $printer->text("GALONES: " . $this->galonaje_venta . "           " . $signoMoneda . $this->precio_venta . "\n");
-        // } else {
-
-        //     $printer->text("CANTIDAD               \n");
-        //     $printer->text("GALONES: " . $this->galonaje_venta . "\n");
-        // }
-
-
-        // $printer->feed(2);
-        // $testStr = "Testing 123";
-        // $printer->setJustification(Printer::JUSTIFY_CENTER);
-        // $printer->qrCode($testStr, Printer::QR_ECLEVEL_L, 7, Printer::QR_MODEL_1);
-        // $printer->feed();
-        // $printer->text("Visita nuestra pagina web para  ver precios y enviar requerimientos escaneando el codigo QR o   ingresando a:\n");
-        // $printer->text("www.servimar.xyz\n");
-
-        // $printer->feed(5);
-        // $printer->close();
+        
+        $this->dispatchBrowserEvent('print', ['id' => $id_venta]);
     }
 
     public function default()
@@ -410,6 +357,10 @@ class VentasIndex extends Component
     public function crearVentaView()
     {
         $this->view = 'create';
+    }
+    public function crearVentaAguaView()
+    {
+        $this->view = 'create_venta_agua';
     }
     public function listarVentaView()
     {
@@ -514,5 +465,51 @@ class VentasIndex extends Component
         ]);
         $this->dispatchBrowserEvent('respuesta', ['res' => 'Se inició la venta de hoy correctamente.']);
         $this->dispatchBrowserEvent('actualizar-pagina', []);
+    }
+
+
+    public function store_agua()
+    {
+
+        $messages = [
+            'id_emb.required' => 'Por favor selecciona una embarcación',
+            'monto_agua.required' => 'Por favor ingresa la cantidad de agua',
+            'contometro_agua.required' => 'Por favor ingresa el contómetro de agua',
+        ];
+
+        $rules = [
+
+
+            'id_emb' => 'required',
+            'monto_agua' => 'required',
+            'contometro_agua' => 'required',
+
+
+        ];
+        $this->validate($rules, $messages);
+
+        date_default_timezone_set('America/Lima');
+
+        //registro de contometro
+        VentaAgua::create([
+            'id_embarcacion' => $this->id_emb,
+            'monto_agua' => $this->monto_agua,
+            'contometro_agua' => $this->contometro_agua,
+            'fecha_venta_agua' => now()->format('d/m/Y H:i:s A'),
+            'user_create_venta' => auth()->user()->name,
+            'user_sede' => $this->sede,
+        ]);
+
+        $this->default_agua();
+
+        $this->dispatchBrowserEvent('respuesta', ['res' => 'Se realizó la venta de agua correctamente.']);
+    }
+
+    public function default_agua()
+    {
+        $this->id_embarcacion = null;
+        $this->nombre_emb = null;
+        $this->monto_agua = null;
+        $this->contometro_agua = null;
     }
 }

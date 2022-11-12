@@ -40,7 +40,7 @@ class EventServiceProvider extends ServiceProvider
             $products = Product::all()->count();
             $clientes = Cliente::all()->count();
             $ventas = Venta::all()->count();
-            $creditos = Credito::all()->count();
+            $creditos = Credito::all()->where('estado_credito',true)->count();
             if (!auth()->check()) {
 
                 return redirect()->route('login');
