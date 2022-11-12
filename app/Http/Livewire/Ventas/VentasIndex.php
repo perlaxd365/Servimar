@@ -94,11 +94,11 @@ class VentasIndex extends Component
         }
 
         $this->show = 5;
-        $this->paginasVentas = 30;
+        $this->paginasVentas = 100;
         $this->idtipopago = 1;
         $this->moneda_venta = 'Soles';
         $this->mostrarPrecio = true;
-        $this->mostrarPrecioFront = true;
+        $this->mostrarPrecioFront = true; 
 
 
         $data = json_decode(file_get_contents('https://api.apis.net.pe/v1/tipo-cambio-sunat'), true);
