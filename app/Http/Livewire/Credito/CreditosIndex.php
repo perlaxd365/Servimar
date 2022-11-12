@@ -35,7 +35,7 @@ class CreditosIndex extends Component
 
     public function mount()
     {
-        $this->show = 10;
+        $this->show = 100;
         $sedes = Sede::where('id_sede', auth()->user()->id_sede)->get();
         foreach ($sedes as $sede) {
             $this->sede = $sede->descripcion;

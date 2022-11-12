@@ -103,13 +103,6 @@
             <div class="card-body  form-row">
                 @if ($punto_paita)
                     <div class="form-group col-md-6">
-                        <label for="">Indicar valor de contómetro</label>
-                        <input wire:model='contometro_1_inicio' type="text" class="form-control"
-                            placeholder="Ingresar el número que marca en el contómetro">
-                        <small class="text-danger">Introducir al iniciar la jornada de hoy</small>
-                    </div>
-                @else
-                    <div class="form-group col-md-6">
                         <label for="">Indicar valor de contómetro A</label>
                         <input wire:model='contometro_a_inicio' type="text" class="form-control"
                             placeholder="Ingresar el número que marca en el contómetro A">
@@ -119,6 +112,13 @@
                         <label for="">Indicar el valor de contómetro B</label>
                         <input wire:model='contometro_b_inicio' type="text" class="form-control"
                             placeholder="Ingresar el número que marca en el contómetro B">
+                        <small class="text-danger">Introducir al iniciar la jornada de hoy</small>
+                    </div>
+                @else
+                    <div class="form-group col-md-6">
+                        <label for="">Indicar valor de contómetro</label>
+                        <input wire:model='contometro_1_inicio' type="text" class="form-control"
+                            placeholder="Ingresar el número que marca en el contómetro">
                         <small class="text-danger">Introducir al iniciar la jornada de hoy</small>
                     </div>
                 @endif
