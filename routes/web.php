@@ -6,6 +6,7 @@ use App\Http\Controllers\PagoController;
 use App\Http\Controllers\printController;
 use App\Http\Controllers\ProductController;
 use App\Http\Controllers\ReporteController;
+use App\Http\Controllers\ReporteCredito;
 use App\Http\Controllers\ReporteJornada;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\UserController;
@@ -64,3 +65,6 @@ Route::resource('pagos', PagoController::class)->names('admin.pagos');
 
 
 Route::resource('reportejornada', ReporteJornada::class)->names('admin.reportejornada');
+
+
+Route::resource('reportecredito', ReporteCredito::class)->names('admin.reportecredito');

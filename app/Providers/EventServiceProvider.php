@@ -123,6 +123,12 @@ class EventServiceProvider extends ServiceProvider
                 'icon' => 'fas fa-file-import',
                 'can'  => 'admin.reportes-jornada.index'
             ]);
+            $event->menu->add([
+                'text' => 'Reporte de Créditos',
+                'route' => 'admin.reportecredito.index',
+                'icon' => 'fas fa-file-import',
+                'can'  => 'admin.reportes.index'
+            ]);
         });
     }
 

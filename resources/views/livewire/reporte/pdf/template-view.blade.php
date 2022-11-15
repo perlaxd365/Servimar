@@ -63,7 +63,7 @@
             </div>
         </div>
         <br>
-        <table class="table table-hover ">
+            <table id="tabla" class="table table-striped table-sm table-responsive-sm">
             <thead class="table-secondary">
                 <tr>
                     <th>ID</th>

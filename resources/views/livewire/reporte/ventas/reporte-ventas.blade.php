@@ -104,7 +104,7 @@
     <br>
 </div>
 
-<!-- Modal -->
+<!-- Modal buscar cliente -->
 <div wire:ignore.self class="modal fade" id="buscarCliente"  data-backdrop="static" data-keyboard="false" tabindex="-1" role="dialog"
     aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
     <div class="modal-dialog modal-dialog-centered  modal-lg" role="document">

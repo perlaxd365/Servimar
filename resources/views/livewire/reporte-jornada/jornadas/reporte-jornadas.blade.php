@@ -1,6 +1,6 @@
 <div class="card-header">
     <h3>
-        Reporte de Ventas Diarias
+        Reporte de Jornadas
     </h3>
     @if (count($errors) > 0)
         <div class="alert border-danger">
