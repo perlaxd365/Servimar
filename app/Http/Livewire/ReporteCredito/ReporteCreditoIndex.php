@@ -54,10 +54,10 @@ class ReporteCreditoIndex extends Component
             )
         );
     }
-    public function seleccionarCliente($id_cliente, $razon_cli)
+    public function seleccionarCliente($id_cliente, $razon_cli, $duenio)
     {
         $this->id_cliente = $id_cliente;
-        $this->razon_cli = $razon_cli;
+        $this->razon_cli = $razon_cli." ".$duenio;
         $this->dispatchBrowserEvent('close-modal-cliente');
         $this->resetPage();
     }
@@ -106,7 +106,7 @@ class ReporteCreditoIndex extends Component
             $this->list_creditos();
             $viewData = [
                 'title'         => 'REPORTE DE CRÉDITO',
-                'date'          => date('m/d/Y'),
+                'date'          => date('d/m/Y'),
                 'user'          => auth()->user()->name,
                 'listaBusqueda' => $this->listaBusqueda
             ];

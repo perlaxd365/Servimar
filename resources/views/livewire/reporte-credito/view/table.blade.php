@@ -26,10 +26,10 @@
                                 $creditos = DB::table('creditos')
                                     ->select(DB::raw('*'))
                                     ->join('embarcacions', 'embarcacions.id', '=', 'creditos.id_embarcacion')
-                                    ->rightjoin('ventas', 'embarcacions.id', '=', 'ventas.id_embarcacion')
+                                    ->leftjoin('ventas', 'ventas.id_embarcacion', '=', 'embarcacions.id')
                                     ->where('embarcacions.id_cliente', '=', $obj->id_cliente)
                                     ->where('creditos.estado_credito', '=', true)
-                                    ->orderby('embarcacions.id_cliente', 'asc')
+                                    ->orderby('creditos.fecha_credito', 'asc')
                                     ->groupby('id_credito')
                                     ->get();
                                 $total = 0;
@@ -45,7 +45,7 @@
                                         <td>{{ $item->nombre_emb }}</td>
                                         <td>{{ $item->user_sede }}</td>
                                         <td>{{ $item->user_create_venta }}</td>
-                                        <td>{{ $item->fecha_venta }}</td>
+                                        <td>{{ $item->fecha_credito}}</td>
                                         <td>{{ $item->precio_galon_credito }}</td>
                                         <td>{{ $item->galones_credito }}</td>
                                         <td>{{ $item->precio_galon_credito * $item->galones_credito }}</td>

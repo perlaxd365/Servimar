@@ -216,11 +216,10 @@ class ReporteIndex extends Component
         }
     }
 
-    public function seleccionarCliente($id_cliente, $razon_cli, $ruc_cli)
+    public function seleccionarCliente($id_cliente, $razon_cli, $duenio)
     {
         $this->id_cliente = $id_cliente;
-        $this->razon_cli = $razon_cli;
-        $this->ruc_cli = $ruc_cli;
+        $this->razon_cli = $razon_cli." ".$duenio;
         $this->dispatchBrowserEvent('close-modal-cliente');
         $this->resetPage();
     }

@@ -36,7 +36,7 @@
                                     }
                                 </style>
                                 @foreach ($clientes as $cliente)
-                                    <tr wire:click="seleccionarCliente('{{ $cliente->id_cliente }}','{{ $cliente->razon_cli }}','{{ $cliente->ruc_cli }}')"
+                                    <tr wire:click="seleccionarCliente('{{ $cliente->id_cliente }}','{{ $cliente->razon_cli }}','{{ $cliente->duenio_cli }}')"
                                         style="cursor: pointer; tr:hover{ background-color: yellow}">
                                         <td>
                                             {{ $cliente->razon_cli }} <br> ({{ $cliente->duenio_cli }})
