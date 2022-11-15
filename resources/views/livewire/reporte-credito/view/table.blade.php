@@ -3,7 +3,7 @@
         <div class="card">
             <div class="card-body row  table-responsive">
                 <div class="jumbotron" style="padding: 1%">
-                    <h1 class="display-6">{{ $obj->razon_cli }} {{ $obj->duenio_cli }}</h1>
+                    <h3 class="display-9">{{ $obj->razon_cli }} {{ $obj->duenio_cli }}</h3>
                     <p class="lead">RUC : {{ $obj->ruc_cli }} </p>
                     <hr class="my-4">
 
