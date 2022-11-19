@@ -1,6 +1,6 @@
 <div class="card">
     <div class="card-body row  table-responsive">
-        <table id="tabla" class="table table-striped table-sm table-responsive-sm">
+        <table id="tabla" class="table table-striped table-sm table-responsive-sm" style="">
             <thead class="thead-dark">
                 <tr>
                     <th>ID</th>

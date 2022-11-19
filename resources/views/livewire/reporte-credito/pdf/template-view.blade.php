@@ -65,8 +65,8 @@
                 <div class="card">
                     <div class="card-body row  table-responsive">
                         <div class="jumbotron" style="padding: 1%">
-                            <h3 class="display-8">{{ $obj->razon_cli }} {{ $obj->duenio_cli }}</h3>
-                            <h4 class="lead">RUC : {{ $obj->ruc_cli }} </h4>
+                            <h3 class="display-9">{{ $obj->razon_cli }} {{ $obj->duenio_cli }}</h3>
+                            <h6 class="lead">RUC : {{ $obj->ruc_cli }} </h6>
                             <hr class="my-4">
                             <table id="tabla" class="table table-striped table-sm table-responsive-sm">
                                 <thead class="thead-dark">

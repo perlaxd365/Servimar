@@ -426,7 +426,7 @@
                                 <label class="" for="inlineFormInputGroup">Ingresar Venta de agua</label>
                                 <div class="input-group mb-2">
                                     <div class="input-group-prepend">
-                                        <div class="input-group-text">m³</div>
+                                        <div class="input-group-text">Cilindros</div>
                                     </div>
                                     <input wire:model='monto_agua' type="number" class="form-control"
                                         id="inlineFormInputGroup" placeholder="0.00">

@@ -29,7 +29,7 @@
                             <td class="center-text">
                                 <div class="btn-group" role="group" aria-label="Basic example">
                                     <button
-                                        wire:click="modalDetalle({{ $cliente->id_cliente }},'{{ $cliente->razon_cli }}')"
+                                        wire:click="modalDetalle({{ $cliente->id_cliente }},'{{ $cliente->razon_cli }}','{{ $cliente->duenio_cli }}')"
                                         type="button" class="btn btn-info">
                                         <i class='fa fa-address-card'></i>&nbsp;Créditos
                                     </button>
@@ -38,7 +38,7 @@
                             <td class="center-text">
                                 <div class="btn-group" role="group" aria-label="Basic example">
                                     <button
-                                        wire:click="modalPrecioGalon({{ $cliente->id_cliente }},'{{ $cliente->razon_cli }}')"
+                                        wire:click="modalPrecioGalon({{ $cliente->id_cliente }},'{{ $cliente->razon_cli }}','{{ $cliente->duenio_cli }}')"
                                         type="button" class="btn btn-primary">
                                         <i class='fas fa-dollar-sign'></i>&nbsp;Editar
                                     </button>
@@ -65,7 +65,8 @@
             <div class="modal-content">
                 <div class="modal-header">
                     <h5 class="modal-title" id="exampleModalLongTitle">Embarcaciones
-                        <strong>{{ $razon_cliente }}</strong>
+                        <strong>{{ $razon_cliente }}</strong> | 
+                        <strong>{{ $duenio }}</strong>
                     </h5>
                     <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                         <span aria-hidden="true">&times;</span>
@@ -267,7 +268,8 @@
                 <div class="modal-header">
                     <h5 class="modal-title" id="exampleModalLongTitle">Embarcaciones
                         <span class="badge badge-primary">
-                            {{ $razon_cliente }}
+                            {{ $razon_cliente }} |
+                            {{ $duenio}}
                         </span>
                         &nbsp;
                         |

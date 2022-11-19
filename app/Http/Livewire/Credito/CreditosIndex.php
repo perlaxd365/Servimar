@@ -19,7 +19,7 @@ class CreditosIndex extends Component
     public $show;
     public $search;
     //cliente
-    public $id_cliente, $razon_cliente;
+    public $id_cliente, $razon_cliente, $duenio;
     //credito
     public $id_credito, $precio_galon_credito_form;
     //pago
@@ -120,11 +120,12 @@ class CreditosIndex extends Component
         $this->resetPage();
     }
 
-    public function modalDetalle($id_cliente, $razon_cliente)
+    public function modalDetalle($id_cliente, $razon_cliente, $duenio)
     {
 
         $this->razon_cliente = $razon_cliente;
         $this->id_cliente = $id_cliente;
+        $this->duenio = $duenio;
         $this->dispatchBrowserEvent('modal-detalle', ['producto' =>  '']);
     }
 
@@ -139,17 +140,23 @@ class CreditosIndex extends Component
     }
 
 
-    public function modalPrecioGalon($id_cliente, $razon_cliente)
+    public function modalPrecioGalon($id_cliente, $razon_cliente, $duenio)
     {
 
         $this->razon_cliente = $razon_cliente;
         $this->id_cliente = $id_cliente;
+        $this->duenio = $duenio;
         $this->dispatchBrowserEvent('modal-precio-galon', ['producto' =>  '']);
     }
 
     public function updatePrecioGalon()
     {
-        Credito::where('estado_credito', true)->update(array('precio_galon_credito' => $this->precio_galon_credito_form));
+        Credito::
+        join('embarcacions','embarcacions.id','creditos.id_embarcacion')
+        ->join('clientes','clientes.id_cliente','embarcacions.id_cliente')
+        ->where('estado_credito',true)
+        ->where('clientes.id_cliente',  $this->id_cliente)
+        ->update(array('precio_galon_credito' => $this->precio_galon_credito_form));
 
         $this->dispatchBrowserEvent('respuesta', ['res' => 'Se actualizó el precio por Galón correctamente']);
 
