@@ -137,6 +137,7 @@ class CreditosIndex extends Component
             'estado_credito' => false,
         ]);
         $this->dispatchBrowserEvent('respuesta', ['res' => 'Se realizó el pago correctamente']);
+        $this->dispatchBrowserEvent('modal-detalle', ['producto' =>  '']);
     }
 
 

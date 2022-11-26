@@ -125,6 +125,7 @@
                                         <thead class="thead-light">
                                             <tr>
                                                 <th scope="col">#</th>
+                                                <th scope="col">ID</th>
                                                 <th scope="col">Embarcación</th>
                                                 <th scope="col">Punto</th>
                                                 <th scope="col">Dueño</th>
@@ -142,6 +143,7 @@
                                                 <?php $monto_credito = $embarcacion->precio_galon_credito * $embarcacion->galones_credito; ?>
                                                 <tr>
                                                     <td>{{ $key + 1 }}</td>
+                                                    <td>{{ $embarcacion->id_credito }}</td>
                                                     <td>{{ $embarcacion->nombre_emb }}</td>
                                                     <td>{{ $embarcacion->user_sede }}</td>
                                                     <td>{{ $embarcacion->duenio_emb }}</td>
@@ -196,6 +198,7 @@
                                         <thead class="thead-light">
                                             <tr>
                                                 <th scope="col">#</th>
+                                                <th scope="col">ID</th>
                                                 <th scope="col">Embarcación</th>
                                                 <th scope="col">Dueño</th>
                                                 <th scope="col">Matrícula</th>
@@ -215,6 +218,7 @@
                                                 <?php $totalPago = $totalPago + $historial->monto_credito_pagado; ?>
                                                 <tr>
                                                     <td>{{ $key + 1 }}</td>
+                                                    <td>{{ $historial->id_credito }}</td>
                                                     <td>{{ $historial->nombre_emb }}</td>
                                                     <td>{{ $historial->duenio_emb }}</td>
                                                     <td>{{ $historial->matricula_emb }}</td>
