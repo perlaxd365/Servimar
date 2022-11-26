@@ -65,7 +65,7 @@
             <div class="modal-content">
                 <div class="modal-header">
                     <h5 class="modal-title" id="exampleModalLongTitle">Embarcaciones
-                        <strong>{{ $razon_cliente }}</strong> | 
+                        <strong>{{ $razon_cliente }}</strong> |
                         <strong>{{ $duenio }}</strong>
                     </h5>
                     <button type="button" class="close" data-dismiss="modal" aria-label="Close">
@@ -76,14 +76,12 @@
 
                     <ul class="nav nav-pills mb-3" id="pills-tab" role="tablist">
                         <li class="nav-item">
-                            <a class="nav-link active" id="pills-home-tab"
-                                data-toggle="pill" href="#pills-home" role="tab" aria-controls="pills-home"
-                                aria-selected="true">Créditos Pendientes</a>
+                            <a class="nav-link active" id="pills-home-tab" data-toggle="pill" href="#pills-home"
+                                role="tab" aria-controls="pills-home" aria-selected="true">Créditos Pendientes</a>
                         </li>
                         <li class="nav-item">
-                            <a class="nav-link " id="pills-profile-tab" data-toggle="pill"
-                                href="#pills-profile" role="tab" aria-controls="pills-profile"
-                                aria-selected="false">Historial de Créditos
+                            <a class="nav-link " id="pills-profile-tab" data-toggle="pill" href="#pills-profile"
+                                role="tab" aria-controls="pills-profile" aria-selected="false">Historial de Créditos
                             </a>
                         </li>
                         @if ($mostrar_edit_precio)
@@ -117,13 +115,17 @@
                         <div class="tab-pane fade show active" id="pills-home" role="tabpanel"
                             aria-labelledby="pills-home-tab">
 
-                            <div id="ok" class="alert alert-success" style="display:none" role="alert">registrado exitosamente! <i class="fa fa-check-circle" aria-hidden="true"></i>
+                            <div id="ok" class="alert alert-success" style="display:none" role="alert">
+                                registrado exitosamente! <i class="fa fa-check-circle" aria-hidden="true"></i>
                             </div>
                             @if ($embarcaciones->count())
                                 <div class="table-responsive">
                                     <table class="table table-striped table-sm">
                                         <thead class="thead-light">
                                             <tr>
+                                                <button wire:click='pagar_varios' class="btn btn-outline-success">Pagar Varios</button>
+                                                <br>
+                                                <th scope="col">Pagar</th>
                                                 <th scope="col">#</th>
                                                 <th scope="col">ID</th>
                                                 <th scope="col">Embarcación</th>
@@ -142,6 +144,12 @@
                                                 <?php $total = $total + $embarcacion->galones_credito; ?>
                                                 <?php $monto_credito = $embarcacion->precio_galon_credito * $embarcacion->galones_credito; ?>
                                                 <tr>
+                                                    <td>
+                                                        <div class="form-check">
+                                                            <input  wire:model='id_creditos' class="form-check-input" type="checkbox"
+                                                                value="{{ $embarcacion->id_credito }}" id="flexCheckDefault">
+                                                        </div>
+                                                    </td>
                                                     <td>{{ $key + 1 }}</td>
                                                     <td>{{ $embarcacion->id_credito }}</td>
                                                     <td>{{ $embarcacion->nombre_emb }}</td>
@@ -153,7 +161,8 @@
 
                                                         &nbsp;
                                                         <a wire:click='editarPrecioIndividual({{ $embarcacion->precio_galon_credito }}, {{ $embarcacion->id_credito }})'
-                                                            href="javascript:"><i class='fas fa-pencil-alt text-danger'>
+                                                            href="javascript:"><i
+                                                                class='fas fa-pencil-alt text-danger'>
                                                             </i></a>
                                                     </td>
                                                     <td>{{ $embarcacion->galones_credito }}</td>
@@ -168,6 +177,8 @@
                                                 </tr>
                                             @endforeach
                                             <tr>
+                                                <td></td>
+                                                <td></td>
                                                 <td></td>
                                                 <td></td>
                                                 <td></td>
@@ -241,6 +252,7 @@
                                                 <td></td>
                                                 <td></td>
                                                 <td></td>
+                                                <td></td>
                                                 <td><strong>TOTAL:</strong></td>
                                                 <td>{{ $totalGalones }}</td>
                                                 <td>S/{{ $totalPago }}</td>
@@ -273,7 +285,7 @@
                     <h5 class="modal-title" id="exampleModalLongTitle">Embarcaciones
                         <span class="badge badge-primary">
                             {{ $razon_cliente }} |
-                            {{ $duenio}}
+                            {{ $duenio }}
                         </span>
                         &nbsp;
                         |

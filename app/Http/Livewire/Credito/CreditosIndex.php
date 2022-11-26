@@ -31,7 +31,9 @@ class CreditosIndex extends Component
         $precio_galon_credito_individual_form,
         $id_credito_individual_form;
     //activar ventana
-    public $credito_pendiente = true, $historial_credito=false;
+    public $credito_pendiente = true, $historial_credito = false;
+    //eliminar varios creditos
+    public $id_creditos = [];
 
     public function mount()
     {
@@ -152,12 +154,11 @@ class CreditosIndex extends Component
 
     public function updatePrecioGalon()
     {
-        Credito::
-        join('embarcacions','embarcacions.id','creditos.id_embarcacion')
-        ->join('clientes','clientes.id_cliente','embarcacions.id_cliente')
-        ->where('estado_credito',true)
-        ->where('clientes.id_cliente',  $this->id_cliente)
-        ->update(array('precio_galon_credito' => $this->precio_galon_credito_form));
+        Credito::join('embarcacions', 'embarcacions.id', 'creditos.id_embarcacion')
+            ->join('clientes', 'clientes.id_cliente', 'embarcacions.id_cliente')
+            ->where('estado_credito', true)
+            ->where('clientes.id_cliente',  $this->id_cliente)
+            ->update(array('precio_galon_credito' => $this->precio_galon_credito_form));
 
         $this->dispatchBrowserEvent('respuesta', ['res' => 'Se actualizó el precio por Galón correctamente']);
 
@@ -186,6 +187,23 @@ class CreditosIndex extends Component
         $this->id_credito_individual_form = null;
         $this->precio_galon_credito_individual_form = null;
         $this->mostrar_edit_precio = false;
+    }
 
+    public function pagar_varios()
+    {
+        if ($this->id_creditos == []) {
+            $this->dispatchBrowserEvent('respuesta-error', ['res' => 'Por favor selecciona un crédito.']);
+        }
+        for ($i = 0; $i < count($this->id_creditos); $i++) {
+
+            $credito = Credito::find($this->id_creditos[$i]);
+
+            $credito->update([
+                'monto_credito_pagado' => $credito->precio_galon_credito * $credito->galones_credito,
+                'estado_credito' => false,
+            ]);
+            $this->dispatchBrowserEvent('respuesta', ['res' => 'Se realizaron los pagos correctamente']);
+            $this->dispatchBrowserEvent('modal-detalle', ['producto' =>  '']);
+        }
     }
 }

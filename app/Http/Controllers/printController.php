@@ -13,9 +13,10 @@ class printController extends Controller
     {
         $ventas = Venta::select('*')
             ->join('embarcacions', 'embarcacions.id', 'ventas.id_embarcacion')
+            ->leftjoin('clientes', 'clientes.id_cliente', 'embarcacions.id_cliente')
             ->join('tipo_pagos', 'tipo_pagos.id_tipo_pago', 'ventas.id_tipo_pago')
-            ->where('ventas.id_venta',$id)
-            ->get(); 
+            ->where('ventas.id_venta', $id)
+            ->get();
         print_r(json_encode($ventas));
     }
 }
