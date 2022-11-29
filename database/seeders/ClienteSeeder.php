@@ -28,6 +28,5 @@ class ClienteSeeder extends Seeder
             'user_create_cli'=>'Admin',
             'estado_cli'=>true,
         ]); */
-
     }
 }
