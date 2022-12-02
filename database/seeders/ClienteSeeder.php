@@ -16,7 +16,6 @@ class ClienteSeeder extends Seeder
     public function run()
     {
         /* Cliente::create([
-
             'id_persona'=>'1',
             'duenio_cli'=>'Chita',
             'ruc_cli'=>'10738883123',

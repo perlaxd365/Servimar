@@ -83,8 +83,7 @@ class VentasIndex extends Component
 
         $this->id_jornada = $jornadas->id_jornada;
         $this->estado_jornada = $jornadas->estado_jornada;
-        $this->entrada_jornada = $jornadas->entrada_jornada;
-
+        $this->entrada_jornada = $jornadas->created_at;
 
         //producto
         $productos = Product::where('id_sede', auth()->user()->id_sede)->get();
@@ -152,15 +151,13 @@ class VentasIndex extends Component
                     ->orwhere('nombre_emb', 'LIKE', '%' . $this->searchVenta . '%')
                     ->orwhere('nombre_tipo_pago', 'LIKE', '%' . $this->searchVenta . '%');
             })
-            ->where('fecha_venta', '>',  $this->entrada_jornada)
+            //->where('fecha_venta', '>',  $this->entrada_jornada)
+            ->whereBetween('ventas.created_at', [$this->entrada_jornada, now()])
             ->where('ventas.estado_venta', '=', 'Activo')
             ->where('ventas.user_create_venta', '=', auth()->user()->name)
             ->orderby('fecha_venta', 'desc')
             ->paginate($this->paginasVentas);
-
-        foreach ($ventas as $key => $venta) {
-            # code...
-        }
+            
 
         //DETALLE DE VENTAS
         $detalleVenta = Venta::select('*')
