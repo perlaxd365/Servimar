@@ -119,8 +119,8 @@ class ReporteIndex extends Component
             'fecha_fin' => 'required|date|after_or_equal:fecha_inicio',
         ];
         $this->validate($rules);
-        $fecha_inicio = Carbon::parse($this->fecha_inicio)->format('d/m/Y H:i:s A');
-        $fecha_fin = Carbon::parse($this->fecha_fin)->format('d/m/Y H:i:s A');
+        $fecha_inicio = Carbon::parse($this->fecha_inicio)->format('Y-m-d');
+        $fecha_fin = Carbon::parse($this->fecha_fin)->format('Y-m-d');
 
         $this->listaBusqueda = Venta::select('*')
             ->where(function ($query) {
@@ -135,7 +135,7 @@ class ReporteIndex extends Component
             ->join('embarcacions', 'embarcacions.id', '=', 'ventas.id_embarcacion')
             ->join('clientes', 'clientes.id_cliente', '=', 'embarcacions.id_cliente')
             ->join('tipo_pagos', 'tipo_pagos.id_tipo_pago', '=', 'ventas.id_tipo_pago')
-            ->whereBetween('fecha_venta', [$fecha_inicio, $fecha_fin])
+            ->whereBetween('ventas.created_at', [$fecha_inicio, $fecha_fin])
             ->where('ventas.estado_venta', '=', 'Activo')
             ->orderby('fecha_venta', 'desc')
             ->get();
