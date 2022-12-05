@@ -291,6 +291,9 @@
                                 <option value="SCOTIABANK">SCOTIABANK</option>
                                 <option value="SCOTIABANK">INTERBANK</option>
                             </select>
+                            <label for="inputEmail4">Número de Operación</label>
+                            <input wire:model='num_operacion_venta' autocomplete="off"
+                                type="text" class="form-control" placeholder="Ingresar el número de la operación">
                         </div>
                     </div>
                 </div>

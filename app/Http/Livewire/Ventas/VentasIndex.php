@@ -36,7 +36,7 @@ class VentasIndex extends Component
     //datos de venta
     public $galonaje_venta, $precio_venta, $nombre_ref_venta,
         $dni_ref_venta, $telefono_ref_venta, $moneda_venta, $observacion_venta,
-        $id_venta, $precio_galon, $nombre_banco_venta;
+        $id_venta, $precio_galon;
     //datos de contómetro
     public $contometro_1, $contometro_a, $contometro_b;
     //datos de contómetro inicio de jornada
@@ -65,6 +65,8 @@ class VentasIndex extends Component
     public $estado_jornada, $entrada_jornada, $id_jornada;
     //Agua
     public $monto_agua, $contometro_agua;
+    //banco
+    public $nombre_banco_venta, $num_operacion_venta;
 
     public function mount()
     {
@@ -252,6 +254,7 @@ class VentasIndex extends Component
             'estado_venta' => 'Activo',
             'mostrar_venta' => $this->mostrarPrecio,
             'nombre_banco_venta' => $this->nombre_banco_venta,
+            'num_operacion_venta' => $this->num_operacion_venta,
             'observacion_venta' => $this->observacion_venta,
             'user_create_venta' => auth()->user()->name,
             'user_sede' => $this->sede,

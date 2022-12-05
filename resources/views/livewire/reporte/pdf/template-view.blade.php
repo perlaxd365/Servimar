@@ -57,13 +57,13 @@
                 <strong>
                     <p style="font-size: 130%">{{ $title }}</p>
                     @if ($subtitle)
-                    <p style="font-size: 110%">({{ $subtitle }})</p>
+                        <p style="font-size: 110%">({{ $subtitle }})</p>
                     @endif
                 </strong>
             </div>
         </div>
         <br>
-            <table id="tabla" class="table table-striped table-sm table-responsive-sm">
+        <table id="tabla" class="table table-striped table-sm table-responsive-sm">
             <thead class="table-secondary">
                 <tr>
                     <th>ID</th>
@@ -72,6 +72,7 @@
                     <th>E/P</th>
                     <th>MATRÍCULA</th>
                     <th>TIPO PAGO</th>
+                    <th>BANCO</th>
                     <th>FECHA </th>
                     <th>OBSERVACIONES</th>
                     <th>PRECIO GALÓN</th>
@@ -114,12 +115,37 @@
                         ?>
                         <tr>
                             <td>{{ $venta->id_venta }}</td>
-                            <td>{{ $venta->user_sede }}</td>
+                            <td>
+                                @switch($venta->local)
+                                    @case($venta->local == 'Gildemeister')
+                                        <small class="badge badge-warning">{{ $venta->local }}</small>
+                                    @break
+
+                                    @case($venta->local == 'Chata Chimbote')
+                                        <small class="badge badge-primary">{{ $venta->local }}</small>
+                                    @break
+
+                                    @case($venta->local == 'Chata Paita')
+                                        <small class="badge badge-info">{{ $venta->local }}</small>
+                                    @break
+
+                                    @case($venta->local == 'Cridany')
+                                        <small class="badge badge-danger">{{ $venta->local }}</small>
+                                    @break
+
+                                    @default
+                                @endswitch
+                            </td>
                             <td>{{ $venta->user_create_venta }}</td>
                             <td>{{ $venta->nombre_emb }} <br> ({{ $venta->razon_cli }} <br> {{ $venta->duenio_cli }})
                             </td>
                             <td>{{ $venta->matricula_emb }}</td>
                             <td>{{ $venta->nombre_tipo_pago }}</td>
+                            <td>
+                                <small class="badge badge-success">{{ $venta->nombre_banco_venta }}</small>
+                                <br>
+                                {{ $venta->num_operacion_venta }}
+                            </td>
                             <td>{{ $venta->fecha_venta }}</td>
                             <td>{{ $venta->observacion_venta }}</td>
                             <td><?php
@@ -150,30 +176,31 @@
                     <tr>
                         <td></td>
                         <td>
-                            <strong>TOTAL EFECTIVO: 
+                            <strong>TOTAL EFECTIVO:
                                 <small class="badge badge-success">S/{{ $total_efectivo_soles }}</small>
                             </strong>
                         </td>
                         <td>
-                            <strong>TOTAL DEPOSITO: 
+                            <strong>TOTAL DEPOSITO:
                                 <small class="badge badge-success">S/{{ $total_deposito_soles }}</small>
                             </strong>
                         </td>
                         <td>
-                            <strong>TOTAL GALONES EFECTIVO: 
+                            <strong>TOTAL GALONES EFECTIVO:
                                 <small class="badge badge-success">{{ $galonesEfectivo }}</small>
                             </strong>
                         </td>
                         <td>
-                            <strong>TOTAL GALONES DEPÓSITO: 
+                            <strong>TOTAL GALONES DEPÓSITO:
                                 <small class="badge badge-success">{{ $galonesDeposito }}</small>
                             </strong>
                         </td>
                         <td>
-                            <strong>TOTAL GALONES CRÉDITO: 
+                            <strong>TOTAL GALONES CRÉDITO:
                                 <small class="badge badge-success">{{ $galonesCredito }}</small>
                             </strong>
                         </td>
+                        <td></td>
                         <td></td>
                         <td></td>
                         <td><strong>TOTAL:</strong></td>

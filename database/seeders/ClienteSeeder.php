@@ -15,17 +15,17 @@ class ClienteSeeder extends Seeder
      */
     public function run()
     {
-        /* Cliente::create([
-            'id_persona'=>'1',
-            'duenio_cli'=>'Chita',
-            'ruc_cli'=>'10738883123',
-            'dni_cli'=>'73888312',
-            'razon_cli'=>'Perli S.A.C.',
-            'nombre_cli'=>'Cesar Raul Baca',
-            'telefono_cli'=>'902517849',
-            'email_cli'=>'perlaxd365@gmail.com',
-            'user_create_cli'=>'Admin',
-            'estado_cli'=>true,
-        ]); */
+        Cliente::create([
+            'id_persona' => '1',
+            'duenio_cli' => 'Chita',
+            'ruc_cli' => '10738883123',
+            'dni_cli' => '73888312',
+            'razon_cli' => 'Perli S.A.C.',
+            'nombre_cli' => 'Cesar Raul Baca',
+            'telefono_cli' => '902517849',
+            'email_cli' => 'perlaxd365@gmail.com',
+            'user_create_cli' => 'Admin',
+            'estado_cli' => true,
+        ]);
     }
 }

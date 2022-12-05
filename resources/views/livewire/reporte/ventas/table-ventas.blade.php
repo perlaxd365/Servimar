@@ -9,6 +9,7 @@
                     <th>E/P</th>
                     <th>MATRÍCULA</th>
                     <th>TIPO PAGO</th>
+                    <th>BANCO</th>
                     <th>FECHA </th>
                     <th>PRECIO GALÓN</th>
                     <th>GALONES</th>
@@ -47,11 +48,37 @@
                         ?>
                         <tr>
                             <td>{{ $venta->id_venta }}</td>
-                            <td>{{ $venta->user_sede }}</td>
+                            <td>
+                                @switch($venta->local)
+                                    @case($venta->local == 'Gildemeister')
+                                        <small class="badge badge-warning">{{ $venta->local }}</small>
+                                    @break
+
+                                    @case($venta->local == 'Chata Chimbote')
+                                        <small class="badge badge-primary">{{ $venta->local }}</small>
+                                    @break
+
+                                    @case($venta->local == 'Chata Paita')
+                                        <small class="badge badge-info">{{ $venta->local }}</small>
+                                    @break
+
+                                    @case($venta->local == 'Cridany')
+                                        <small class="badge badge-danger">{{ $venta->local }}</small>
+                                    @break
+
+                                    @default
+                                @endswitch
+                            </td>
                             <td>{{ $venta->user_create_venta }}</td>
-                            <td>{{ $venta->nombre_emb }}<br>({{ $venta->razon_cli }} <br> {{ $venta->duenio_cli }})</td>
+                            <td>{{ $venta->nombre_emb }}<br>({{ $venta->razon_cli }} <br> {{ $venta->duenio_cli }})
+                            </td>
                             <td>{{ $venta->matricula_emb }}</td>
                             <td>{{ $venta->nombre_tipo_pago }}</td>
+                            <td>
+                                <small class="badge badge-success">{{ $venta->nombre_banco_venta }}</small>
+                                <br>
+                                {{ $venta->num_operacion_venta }}
+                            </td>
                             <td>{{ $venta->fecha_venta }}
                             </td>
                             <td>
@@ -83,30 +110,31 @@
                     <tr>
                         <td></td>
                         <td>
-                            <strong>TOTAL EFECTIVO: 
+                            <strong>TOTAL EFECTIVO:
                                 <small class="badge badge-success">S/{{ $total_efectivo_soles }}</small>
                             </strong>
                         </td>
                         <td>
-                            <strong>TOTAL DEPOSITO: 
+                            <strong>TOTAL DEPOSITO:
                                 <small class="badge badge-success">S/{{ $total_deposito_soles }}</small>
                             </strong>
                         </td>
                         <td>
-                            <strong>TOTAL GALONES EFECTIVO: 
+                            <strong>TOTAL GALONES EFECTIVO:
                                 <small class="badge badge-success">{{ $galonesEfectivo }}</small>
                             </strong>
                         </td>
                         <td>
-                            <strong>TOTAL GALONES DEPÓSITO: 
+                            <strong>TOTAL GALONES DEPÓSITO:
                                 <small class="badge badge-success">{{ $galonesDeposito }}</small>
                             </strong>
                         </td>
                         <td>
-                            <strong>TOTAL GALONES CRÉDITO: 
+                            <strong>TOTAL GALONES CRÉDITO:
                                 <small class="badge badge-success">{{ $galonesCredito }}</small>
                             </strong>
                         </td>
+                        <td></td>
                         <td></td>
                         <td><strong>TOTAL:</strong></td>
                         <td>{{ $totalGalones }}</td>
@@ -116,7 +144,7 @@
                     </tr>
                 @else
                     <tr style="cursor:pointer;">
-                        <th colspan="12" style="background-color: bisque" scope="row">No hay resultados</th>
+                        <th colspan="13" style="background-color: bisque" scope="row">No hay resultados</th>
                     </tr>
                 @endif
             </tbody>

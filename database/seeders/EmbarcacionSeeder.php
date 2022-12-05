@@ -16,7 +16,7 @@ class EmbarcacionSeeder extends Seeder
     public function run()
     {
         
-       /*  Embarcacion::create([
+       Embarcacion::create([
 
             'id_cliente'=>'1',
             'id_tipo_embarcacion'=>'1',
@@ -26,7 +26,7 @@ class EmbarcacionSeeder extends Seeder
             'telefono_emb'=>'947228623',
             'user_create_emb'=>'Servimar',
             'estado_emb'=>true,
-        ]); */
+        ]); 
 
     }
 }

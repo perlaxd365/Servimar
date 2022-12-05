@@ -28,6 +28,7 @@ return new class extends Migration
             $table->string('moneda_venta')->nullable()->comment('moneda de venta');
             $table->string('nombre_producto')->nullable()->comment('nombre de producto');
             $table->string('nombre_banco_venta')->nullable()->comment('nombre de banco');
+            $table->string('num_operacion_venta')->nullable()->comment('numero de operacion');
             $table->string('observacion_venta')->nullable()->comment('observacion de la venta');
 
             //REFERENCIA

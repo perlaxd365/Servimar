@@ -46,6 +46,14 @@
                                         <td>{{ $detalle->nombre_tipo_pago }}</td>
                                     </tr>
                                     <tr>
+                                        <th>BANCO:</th>
+                                        <td>{{ $detalle->nombre_banco_venta }}</td>
+                                    </tr>
+                                    <tr>
+                                        <th>NÚMERO OPERACIÓN:</th>
+                                        <td>{{ $detalle->num_operacion_venta }}</td>
+                                    </tr>
+                                    <tr>
                                         <th>HORA:</th>
 
                                         <td>{{ Str::substr($detalle->fecha_venta, 10, 6) . Str::substr($detalle->fecha_venta, 19, 3) }}

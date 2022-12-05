@@ -17,7 +17,7 @@ class UserSeeder extends Seeder
     public function run()
     {
         User::create([
-            "id_sede"=>'5',
+            "id_sede"=>'4',
             "name"=>'Cesar Raul Baca',
             "dni"=>'73888312', 
             "email"=>'perlaxd365@gmail.com',
@@ -30,7 +30,7 @@ class UserSeeder extends Seeder
                 'entrada_jornada'   => now()->format('d/m/Y H:i:s A'), 
                 'estado_jornada'    => true,
                 'user_create_jornada' => 'Cesar Raul Baca',
-                'user_sede'         => 'Administracion'
+                'user_sede'         => 'Chata Paita'
             ]
         );
         

@@ -14,6 +14,7 @@ use App\Models\TipoPago;
 use Maatwebsite\Excel\Facades\Excel;
 use Dompdf\Dompdf;
 use Dompdf\Options;
+use Illuminate\Support\Facades\DB;
 use PDF as PDF;
 
 
@@ -122,7 +123,7 @@ class ReporteIndex extends Component
         $fecha_inicio = Carbon::parse($this->fecha_inicio)->format('Y-m-d');
         $fecha_fin = Carbon::parse($this->fecha_fin)->format('Y-m-d');
 
-        $this->listaBusqueda = Venta::select('*')
+        $this->listaBusqueda = Venta::select(DB::raw('*,ventas.user_sede as local'))
             ->where(function ($query) {
                 return $query
                     ->where('clientes.id_cliente', 'LIKE', '%' . $this->id_cliente . '%')
@@ -137,7 +138,7 @@ class ReporteIndex extends Component
             ->join('tipo_pagos', 'tipo_pagos.id_tipo_pago', '=', 'ventas.id_tipo_pago')
             ->whereBetween('ventas.created_at', [$fecha_inicio, $fecha_fin])
             ->where('ventas.estado_venta', '=', 'Activo')
-            ->orderby('fecha_venta', 'desc')
+            ->orderby(DB::raw('ventas.user_sede,fecha_venta'), 'desc')
             ->get();
     }
     public function default()
