@@ -159,7 +159,7 @@ class VentasIndex extends Component
             ->where('ventas.user_create_venta', '=', auth()->user()->name)
             ->orderby('fecha_venta', 'desc')
             ->paginate($this->paginasVentas);
-            
+
 
         //DETALLE DE VENTAS
         $detalleVenta = Venta::select('*')
@@ -307,7 +307,7 @@ class VentasIndex extends Component
 
     public function print($id_venta)
     {
-        
+
         $this->dispatchBrowserEvent('print', ['id' => $id_venta]);
     }
 
@@ -511,5 +511,42 @@ class VentasIndex extends Component
         $this->nombre_emb = null;
         $this->monto_agua = null;
         $this->contometro_agua = null;
+    }
+
+    public function eliminar($id_venta)
+    {
+        $venta = Venta::find($id_venta);
+        $galonaje_venta = $venta->galonaje_venta;
+        $id_producto = $venta->id_producto;
+
+
+        $producto = Product::find($id_producto);
+        //AÑADIR A KARDEX
+        Kardex::create([
+            'id_producto' => $id_producto,
+            'id_tipo_movimiento' => 1,
+            'cantidad_inicial_kar' => $producto->stock_pro,
+            'cantidad_kar' => $galonaje_venta,
+            'total_kar' => $producto->stock_pro+$galonaje_venta,
+            'user_create_kar' => auth()->user()->name,
+        ]);
+        $producto->update([
+            'stock_pro' => $producto->stock_pro + $galonaje_venta,
+
+        ]);
+        //Sede
+        $contometros = Contometro::where('id_venta', $id_venta)->get();
+        foreach ($contometros as $contometro) {
+            $conto = Contometro::find($contometro->id_contometro);
+            $conto->delete();
+        }
+        $venta = Venta::find($id_venta);
+        $venta->update([
+            'estado_venta' => 'Anulado'
+
+        ]);
+
+        $this->dispatchBrowserEvent('respuesta', ['res' => 'Se eliminó la venta correctamente.']);
+
     }
 }

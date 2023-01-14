@@ -14,7 +14,7 @@
                     <th>Punto</th>
                     <th>Producto</th>
                     <th>Precio</th>
-                    <th>Venta</th>
+                    <th>Stock</th>
                     <th>Acción</th>
                     <th>Editar</th>
                 </thead>

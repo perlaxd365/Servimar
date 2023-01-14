@@ -84,7 +84,7 @@ class CreditosIndex extends Component
             ->rightjoin('ventas', 'embarcacions.id', '=', 'ventas.id_embarcacion')
             ->where('embarcacions.id_cliente', '=', $this->id_cliente)
             ->where('creditos.estado_credito', '=', true)
-            ->orderby('embarcacions.id_cliente', 'asc')
+            ->orderby('creditos.fecha_credito', 'asc')
             ->groupby('id_credito')
             ->paginate($this->show);
 

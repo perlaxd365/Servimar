@@ -527,6 +527,7 @@
                                         <th>PAGO</th>
                                         <th>VER</th>
                                         <th>IMPRIMIR</th>
+                                        <th>ELIMINAR</th>
                                     </thead>
                                     <tbody>
                                         <?php $totalGalones = 0;
@@ -544,7 +545,7 @@
                                                 <td>S/ {{ $venta->precio_x_galon_venta }}</td>
                                                 <td>{{ $venta->galonaje_venta }}</td>
                                                 <td>S/ {{ $venta->precio_venta }}</td>
-                                                <td>
+                                                <td  class="text-center">
                                                     <button wire:click="modalDetalle({{ $venta->id_venta }})"
                                                         type="button" class="btn btn-outline-info"
                                                         data-toggle="modal" data-target="#detalleVenta">
@@ -552,11 +553,18 @@
                                                     </button>
 
                                                 </td>
-                                                <td>
+                                                <td class="text-center">
                                                     <button wire:click="print({{ $venta->id_venta }})" type="button"
-                                                        class="btn btn-outline-danger">
+                                                        class="btn btn-outline-warning">
 
                                                         <i class='fa fa-print'></i>
+                                                    </button>
+                                                </td>
+                                                <td  class="text-center">
+                                                    <button wire:click="eliminar({{ $venta->id_venta }})" type="button"
+                                                        class="btn btn-outline-danger">
+
+                                                        <i class='fa fa-trash'></i>
                                                     </button>
                                                 </td>
                                             </tr>
